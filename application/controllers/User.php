@@ -140,7 +140,7 @@ class User extends CI_Controller {
             echo '' . $get_result->contact . '<br>';
         echo '' . $get_result->email . '<br>';
         echo '' . $get_result->address . '<br>';
-        echo'<span class="span-data" name="userid" id="userid" style="visibility:hidden" >' . $get_result->id . '</span>';
+        echo'<span class="span-data" name="userid" id="userid" style="visibility:hidden" >' . $get_result->userID . '</span>';
     }
 
     public function add_user() {

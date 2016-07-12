@@ -207,6 +207,49 @@ class Transaction extends CI_Controller {
         $this->load->view('view-reciept-page', $data);
     }
 
+    public function all() {
+
+        $this->load->helper(array('form', 'url'));
+
+        $query = $this->Md->query("SELECT *,users.name as client FROM transaction INNER JOIN users ON transaction.client = users.userID  WHERE transaction.orgID ='" . $this->session->userdata('orgID') . "' ");
+        //  var_dump($query);
+        if ($query) {
+            $data['payments'] = $query;
+        } else {
+            $data['payments'] = array();
+        }
+        $query = $this->Md->query("SELECT * FROM item where orgID = '" . $this->session->userdata('orgID') . "'");
+        //  var_dump($query);
+        if ($query) {
+            $data['items'] = $query;
+        } else {
+            $data['items'] = array();
+        }
+
+        $this->load->view('transactions-page', $data);
+    }
+    public function payments() {
+
+        $this->load->helper(array('form', 'url'));
+
+        $query = $this->Md->query("SELECT *,users.name as client FROM payment INNER JOIN transaction ON payment.transID = transaction.transID INNER JOIN users ON transaction.client = users.userID  WHERE payment.orgID ='" . $this->session->userdata('orgID') . "' ");
+        //  var_dump($query);
+        if ($query) {
+            $data['payments'] = $query;
+        } else {
+            $data['payments'] = array();
+        }
+        $query = $this->Md->query("SELECT * FROM item where orgID = '" . $this->session->userdata('orgID') . "'");
+        //  var_dump($query);
+        if ($query) {
+            $data['items'] = $query;
+        } else {
+            $data['items'] = array();
+        }
+
+        $this->load->view('payment-page', $data);
+    }
+
     public function invoice() {
 
         $this->load->helper(array('form', 'url'));
@@ -290,6 +333,7 @@ class Transaction extends CI_Controller {
         $client = $e->userid;
         $types = 'credit';
         $created = $e->day;
+        $details = $e->details;
         $users = $this->session->userdata('username');
         $org = $this->session->userdata('orgID');
         $approved = 'false';
@@ -351,20 +395,20 @@ class Transaction extends CI_Controller {
                 $ts = 0;
                 $itemID = $this->GUID();
                 $itema = array('itemID' => $itemID, 'name' => $name, 'transID' => $transactionID, 'description' => $description, 'rate' => $rate, 'qty' => $qty, 'total' => $price, 'orgID' => $this->session->userdata('orgID'));
-                $this->Md->save($itema, 'item');                
+                $this->Md->save($itema, 'item');
             } else {
 
                 $ts++;
             }
         }
         $paymentID = $this->GUID();
-        $payment = array('paymentID' => $paymentID, 'transID' => $transactionID, 'amount' => $amount, 'balance' => $balance, 'created' => $created, 'method' => $method, 'no' => $no, 'userID' => $users, 'approved' => $approved, 'recieved' => $this->session->userdata('username'), 'orgID' =>$this->session->userdata('orgID'));
+        $payment = array('paymentID' => $paymentID, 'transID' => $transactionID, 'amount' => $amount, 'balance' => $balance, 'created' => $created, 'method' => $method, 'no' => $no, 'userID' => $users, 'approved' => $approved, 'recieved' => $this->session->userdata('username'), 'orgID' => $this->session->userdata('orgID'));
         $this->Md->save($payment, 'payment');
-        
 
-        $trans = array('transID' => $transactionID, 'orgID' => $this->session->userdata('orgID'), 'client' => $client, 'type' => $types, 'created' => $created, 'staff' => $users, 'category' => $category,'total' => $total, 'fileID' => $file);
+
+        $trans = array('transID' => $transactionID, 'orgID' => $this->session->userdata('orgID'), 'client' => $client, 'type' => $types, 'created' => $created, 'staff' => $users, 'details' => $details, 'category' => $category, 'total' => $total, 'fileID' => $file);
         $this->Md->save($trans, 'transaction');
-      
+
         echo 'saved';
     }
 
@@ -447,22 +491,21 @@ class Transaction extends CI_Controller {
 
         $this->load->helper(array('form', 'url'));
         $id = $this->input->post('id');
-        $name = $this->input->post('name');
-        $types = $this->input->post('types');
-        $details = $this->input->post('details');
-        $subject = $this->input->post('subject');
+        
+        $info = array('type' => $this->input->post('type'), 'total' => $this->input->post('total'), 'category' => $this->input->post('category'), 'details' => $this->input->post('details'));     
+        $this->Md->update_dynamic($id, 'transID', 'transaction', $info);
+      
+        echo 'INFORMATION UPDATED';
+    }
+     public function updatepayment() {
 
-        $file = array('name' => $name, 'types' => $types, 'details' => $details, 'subject' => $subject, 'created' => date('Y-m-d H:i:s'));
-        $this->Md->update($id, $file, 'files');
-
-        $content = json_encode($file);
-        $query = $this->Md->query("SELECT * FROM client where org = '" . $this->session->userdata('orgid') . "'");
-        if ($query) {
-            foreach ($query as $res) {
-                $syc = array('org' => $this->session->userdata('orgid'), 'object' => 'files', 'contents' => $content, 'action' => 'update', 'oid' => $id, 'created' => date('Y-m-d H:i:s'), 'checksum' => $this->GUID(), 'client' => $res->name);
-                $this->Md->save($syc, 'sync_data');
-            }
-        }
+        $this->load->helper(array('form', 'url'));
+        $id = $this->input->post('id');
+        
+        $info = array('amount' => $this->input->post('amount'), 'method' => $this->input->post('method'), 'balance' => $this->input->post('balance'));     
+        $this->Md->update_dynamic($id, 'paymentID', 'payment', $info);
+       
+        echo 'INFORMATION UPDATED';
     }
 
     public function delete() {

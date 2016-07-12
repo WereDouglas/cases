@@ -34,3 +34,4 @@
 
     <!-- Custom Theme Style -->
     <link href="<?= base_url(); ?>build/css/custom.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>css/mine.css">

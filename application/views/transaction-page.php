@@ -40,11 +40,11 @@
 <script src="<?php echo base_url(); ?>assets/reciept.js"></script>
 
 <div class="span12">  
-   <select class="span-data"  name="type" id="type">
-                <option value="CREDIT" />INCOME
-                <option value="DEBIT" />EXPENSE
-               
-            </select>  
+    <select class="span-data"  name="type" id="type">
+        <option value="CREDIT" />INCOME
+        <option value="DEBIT" />EXPENSE
+
+    </select>  
     <input type="button" class="printdiv-btn btn-primary icon-ok" value="print" />
     <?php echo $this->session->flashdata('msg'); ?>
 </div>
@@ -56,7 +56,8 @@
     ?>
     <header>
         <h1>
-            <select class="span-data"  name="category" id="category">
+            <select class="span-data"  name="selectedcategory" id="selectedcategory" onchange="runer()">
+                <option value="" />
                 <option value="RECEIPT" />RECEIPT
                 <option value="VOUCHER" />VOUCHER
                 <option value="FEE NOTE" />FEE NOTE
@@ -71,7 +72,7 @@
         <span> <img  height="50px" width="100px" class="" src="<?= base_url(); ?>uploads/<?php echo $this->session->userdata('orgimage'); ?>" alt="logo" />
         </span>
     </header>
-   
+
     <article>
         <h1>Recipient</h1>
         <address contenteditable>              
@@ -104,6 +105,7 @@
                 </tr>
             </thead>
             <tbody>
+
                 <tr>
                     <td class="item" name="item"><a class="cut">-</a><span class="span-datas" id="item" contenteditable></span></td>
                     <td class="descript" name="descript"><span class="span-datas" id="descript" contenteditable></span></td>
@@ -111,19 +113,22 @@
                     <td class="qty" name="qty"><span  data-prefix></span><span class="span-datas" id="qty" contenteditable ></span></td>
                     <td class="price" name="price"><span  data-prefix></span><span class="span-datas" id="price"></span></td>
                 </tr>
+                
             </tbody>
         </table>
         <a class="add">+</a>
-        <span class="span-data" name="method" id="method" type="text" value=""  >none</span>
+        <span class="span-data" name="method" id="method" type="text" value=""  >none</span><hr>
+        <span class="span-data" name="category" id="category" type="text" value=""  >none</span>
         <table class="balance">
             <tr>
                 <th>PAID BY:</th>
                 <td>  
                     <select id="selectedmethod" onchange="run()" >
-                        <option value="Cheque"   >Cheque</option>
-                        <option value="Cash" >Cash</option>
-                        <option value="EFT"  >EFT</option>
-                        <option value="RTGS"  >RTGS</option>
+                        <option value=""></option>
+                        <option value="Cheque">Cheque</option>
+                        <option value="Cash">Cash</option>
+                        <option value="EFT">EFT</option>
+                        <option value="RTGS">RTGS</option>
                     </select>
 <!--                    <input class="span-data" data-prefix  name="method" type="hidden" id="method" >-->
                 </td>
@@ -139,6 +144,11 @@
                 <th><span contenteditable>Balance Due</span></th>
                 <td class="span-data" id="balance" name="balance"><span data-prefix></span><span></span></td>
             </tr>
+            <tr>
+                    <th><span contenteditable>Details</span></th>
+                   <td class="span-data" id="details" name="details"><span data-prefix></span><span></span></td>
+         
+                </tr>
         </table>
     </article>
 
@@ -271,6 +281,19 @@ if (is_array($users) && count($users)) {
         } else
         if (myspan.textContent) {
             myspan.textContent = document.getElementById("selectedmethod").value;
+        }
+    }
+    function runer() {
+
+        // document.getElementById("method").textContent=document.getElementById("selectedmethod").value;
+        // document.getElementById("method").innerHTML = document.getElementById("selectedmethod").value;
+        var myspan = document.getElementById('category');
+
+        if (myspan.innerText) {
+            myspan.innerText = document.getElementById("selectedcategory").value;
+        } else
+        if (myspan.textContent) {
+            myspan.textContent = document.getElementById("selectedcategory").value;
         }
     }
 

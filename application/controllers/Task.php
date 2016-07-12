@@ -198,90 +198,20 @@ class Task extends CI_Controller {
 
     public function view() {
 
-        $this->load->helper(array('form', 'url'));
-        $fileid = $this->uri->segment(3);
+        $this->load->helper(array('form', 'url'));     
 
-        $query = $this->Md->query("SELECT * FROM files where id = '" . $fileid . "'");
-        if ($query) {
-            foreach ($query as $res) {
-                $data['name'] = $res->name;
-                $data['details'] = $res->details;
-                $data['types'] = $res->types;
-                $data['no'] = $res->no;
-                $data['created'] = $res->created;
-                $data['subject'] = $res->subject;
-            }
-        }
-        $query = $this->Md->query("SELECT * FROM item where org = '" . $this->session->userdata('orgid') . "' ");
+        
+        $query = $this->Md->query("SELECT * FROM tasks where orgID = '" . $this->session->userdata('orgID') . "'");
         //  var_dump($query);
         if ($query) {
-            $data['items'] = $query;
+            $data['tasks'] = $query;
         } else {
-            $data['items'] = array();
+            $data['tasks'] = array();
         }
-        $query = $this->Md->query("SELECT * FROM users where org = '" . $this->session->userdata('orgid') . "' ");
-        //  var_dump($query);
-        if ($query) {
-            $data['users'] = $query;
-        } else {
-            $data['users'] = array();
-        }
-
-        $query = $this->Md->query("SELECT * FROM transactions where org = '" . $this->session->userdata('orgid') . "' AND file = '" . $fileid . "' ");
-        //  var_dump($query);
-        if ($query) {
-            $data['trans'] = $query;
-        } else {
-            $data['trans'] = array();
-        }
-        //  echo 'we are coming from the controller';
-        $query = $this->Md->query("SELECT * FROM payments where org = '" . $this->session->userdata('orgid') . "'");
-        //  var_dump($query);
-        if ($query) {
-            $data['pay'] = $query;
-        } else {
-            $data['pay'] = array();
-        }
-        $query = $this->Md->query("SELECT * FROM schedule where org = '" . $this->session->userdata('orgid') . "' AND file= '" . $fileid . "' ");
-        //  var_dump($query);
-        if ($query) {
-            $data['sch'] = $query;
-        } else {
-            $data['sch'] = array();
-        }
-        $query = $this->Md->query("SELECT * FROM document where org = '" . $this->session->userdata('orgid') . "' AND cases = '" . $fileid . "' ");
-        //  var_dump($query);
-        if ($query) {
-            $data['docs'] = $query;
-        } else {
-            $data['docs'] = array();
-        }
-        $query = $this->Md->query("SELECT * FROM note where org = '" . $this->session->userdata('orgid') . "' AND fileID= '" . $fileid . "' ");
-        //  var_dump($query);
-        if ($query) {
-            $data['notes'] = $query;
-        } else {
-            $data['notes'] = array();
-        }
-        $query = $this->Md->query("SELECT * FROM bill where org = '" . $this->session->userdata('orgid') . "' AND fileID= '" . $fileid . "' ");
-        //  var_dump($query);
-        if ($query) {
-            $data['bills'] = $query;
-        } else {
-            $data['bills'] = array();
-        }
+        
 
 
-        $query = $this->Md->query("SELECT * FROM attend where org = '" . $this->session->userdata('orgid') . "'");
-        //  var_dump($query);
-        if ($query) {
-            $data['att'] = $query;
-        } else {
-            $data['att'] = array();
-        }
-        $data['fileid'] = $fileid;
-
-        $this->load->view('file-view', $data);
+        $this->load->view('view-tasks', $data);
     }
 
     public function schedule() {
@@ -379,6 +309,33 @@ class Task extends CI_Controller {
                                              Action Failed	</strong>									
 						</div>');
             redirect('file', 'refresh');
+        }
+    }
+     public function updater() {
+        $this->load->helper(array('form', 'url'));
+
+        if (!empty($_POST)) {
+
+            foreach ($_POST as $field_name => $val) {
+                //clean post values
+                $field_id = strip_tags(trim($field_name));
+                $val = strip_tags(trim(mysql_real_escape_string($val)));
+                //from the fieldname:user_id we need to get user_id
+                $split_data = explode(':', $field_id);
+                $user_id = $split_data[1];
+                $field_name = $split_data[0];
+                if (!empty($user_id) && !empty($field_name) && !empty($val)) {
+                    //update the values
+                    $task = array($field_name => $val);
+                   // $this->Md->update($user_id, $task, 'tasks');
+                      $this->Md->update_dynamic($user_id, 'taskID', 'tasks', $task);
+                    echo "Updated";
+                } else {
+                    echo "Invalid Requests";
+                }
+            }
+        } else {
+            echo "Invalid Requests";
         }
     }
 

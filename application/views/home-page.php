@@ -76,7 +76,8 @@
                                     <li><a><i class="fa fa-bar-chart-o"></i>Transactions <span class="fa fa-chevron-down"></span></a>
                                         <ul class="nav child_menu">
                                             <li><a href="<?php echo base_url() . "index.php/transaction"; ?>" target="frame">Add</a></li>
-                                            <li><a href="<?php echo base_url() . "index.php/task/view"; ?>">Expenses</a></li>
+                                            <li><a href="<?php echo base_url() . "index.php/transaction/all"; ?>" target="frame">Transactions</a></li>
+                                             <li><a href="<?php echo base_url() . "index.php/transaction/payments"; ?>" target="frame">Payments</a></li>
                                             
                                         </ul>
                                     </li>
