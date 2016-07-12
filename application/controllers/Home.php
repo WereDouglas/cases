@@ -48,6 +48,15 @@ class Home extends CI_Controller {
         if ($query) {
               $data['tasks'] = $query;
         }
+        
+        $query = $this->Md->query("SELECT * FROM transaction where  orgID='".$this->session->userdata('orgID')."'");
+        if ($query) {
+              $data['transactions'] = $query;
+        }
+        $query = $this->Md->query("SELECT * FROM payment where  orgID='".$this->session->userdata('orgID')."'");
+        if ($query) {
+              $data['payments'] = $query;
+        }
         $this->load->view('home-page', $data);
     }
 
