@@ -60,7 +60,7 @@
 
 
         <?php
-        if (is_array($messagess) && count($messages)) {
+        if (is_array($messages) && count($messages)) {
             foreach ($messages as $loop) {
                 ?>  
 

@@ -18,7 +18,7 @@ class Message extends CI_Controller {
     public function index() {
       
 
-        $query = $this->Md->query("SELECT * FROM message where orgID = '" . $this->session->userdata('orgid') . "'");
+        $query = $this->Md->query("SELECT * FROM message where orgID = '" . $this->session->userdata('orgID') . "'");
         if ($query)
             $data['messages'] = $query;
 
@@ -75,7 +75,7 @@ class Message extends CI_Controller {
                     //update the values
                     $task = array($field_name => $val);
                     // $this->Md->update($user_id, $task, 'tasks');
-                    $this->Md->update_dynamic($user_id, 'taskID', 'tasks', $task);
+                    $this->Md->update_dynamic($user_id, 'messageID', 'message', $task);
                     echo "Updated";
                 } else {
                     echo "Invalid Requests";
