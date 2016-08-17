@@ -285,13 +285,15 @@
     }
 
     if (is_array($sch)) {
+
         foreach ($sch as $loop) {
             $mydate = $loop->date;
             $prior = $loop->priority;
             $days = $loop->period;
 
-            $informations = 'START:' . $loop->startTime . ':' . clean($loop->detail);
-
+            $informations = '' . $loop->startTime . ': ' . clean($loop->details);
+            $informations .= 'A/T:';
+            $informations .= $loop->name . ' ';
             $d = (int) date("d", strtotime($mydate));
             $m = (int) date("m", strtotime($mydate)) - 1;
             $y = (int) date("Y", strtotime($mydate));
@@ -309,22 +311,6 @@
                 case File:
                     $className = 'label-blue';
                     break;
-            }
-
-            if (is_array($att)) {
-                foreach ($att as $val) {
-                    if ($val->taskID == $loop->taskID) {
-
-                        if (is_array($users)) {
-                            foreach ($users as $user) {
-                                if ($user->userID == $val->userID) {
-                                    $information .= 'Att:';
-                                    $information .= $user->name . ' ';
-                                }
-                            }
-                        }
-                    }
-                }
             }
             ?>
                         {

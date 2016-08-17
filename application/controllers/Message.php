@@ -2,7 +2,7 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class File extends CI_Controller {
+class Message extends CI_Controller {
 
     function __construct() {
 
@@ -36,7 +36,7 @@ class File extends CI_Controller {
         if ($query)
             $data['procs'] = $query;
 
-        $this->load->view('file-page', $data);
+        $this->load->view('message-page', $data);
     }
        public function upload() {
 

@@ -18,14 +18,11 @@ class Home extends CI_Controller {
         // $query = $this->Md->query("SELECT * FROM users where org='".$this->session->userdata('orgid')."'");
         $query = $this->Md->query("SELECT * FROM users");
 
-
-//  var_dump($query);
         if ($query) {
             $data['users'] = $query;
         } else {
             $data['users'] = array();
         }
-
         $this->load->view('login-page', $data);
     }
 

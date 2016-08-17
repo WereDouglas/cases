@@ -41,8 +41,8 @@
 
 <div class="span12">  
     <select class="span-data"  name="type" id="type">
-        <option value="CREDIT" />INCOME
-        <option value="DEBIT" />EXPENSE
+        <option value="Income" />Income
+        <option value="Expense" />Expense
 
     </select>  
     <input type="button" class="printdiv-btn btn-primary icon-ok" value="print" />
@@ -52,7 +52,9 @@
 <div class=" jobs span12" class="printableArea">
 
     <?php
-    $no = $this->session->userdata('code') . "/" . date('y') . "/" . date('m') . (int) date('d') . (int) date('H') . (int) date('i') . (int) date('s');
+    $invoice = $this->session->userdata('code') . "/" . date('y') . "/" . date('m') . (int) date('d') . (int) date('H') . (int) date('i') . (int) date('s');
+     $no = "" . date('m') . (int) date('d') . (int) date('H') . (int) date('i') . (int) date('s');
+ 
     ?>
     <header>
         <h1>
@@ -82,8 +84,12 @@
         </address>
         <table class="meta">
             <tr>
-                <th><span contenteditable>RCT/CHQ #</span></th>
-                <td > <span class="span-data" name="no" id="no" type="text" value="" ><?php echo $no; ?></span></td>
+                <th><span contenteditable>Invoice</span></th>
+                <td> <span class="span-data" name="invoice" id="Invoice" type="text" value="" ><?php echo $invoice; ?></span></td>
+            </tr>
+            <tr>
+                <th><span contenteditable>No</span></th>
+                <td> <span class="span-data" name="no" id="no" type="text" value="" ><?php echo $no; ?></span></td>
             </tr>
             <tr>
                 <th><span contenteditable>Date</span></th>

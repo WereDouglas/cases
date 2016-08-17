@@ -347,6 +347,7 @@ class Transaction extends CI_Controller {
         $balance = $e->balance;
         $method = $e->method;
         $no = $e->no;
+        $invoice = $e->invoice;
         $category = $e->category;
         $type = $e->type;
 
@@ -394,19 +395,19 @@ class Transaction extends CI_Controller {
                 $price = $t;
                 $ts = 0;
                 $itemID = $this->GUID();
-                $itema = array('itemID' => $itemID, 'name' => $name, 'transID' => $transactionID, 'description' => $description, 'rate' => $rate, 'qty' => $qty, 'total' => $price, 'orgID' => $this->session->userdata('orgID'));
+                $itema = array('itemID' => $itemID, 'name' => $name, 'transID' => $transactionID, 'description' => $description, 'rate' => $rate, 'qty' => $qty, 'total' => $price, 'orgID' => $this->session->userdata('orgID'), 'action' => 'none');
                 $this->Md->save($itema, 'item');
             } else {
 
                 $ts++;
             }
         }
-        $paymentID = $this->GUID();
-        $payment = array('paymentID' => $paymentID, 'transID' => $transactionID, 'amount' => $amount, 'balance' => $balance, 'created' => $created, 'method' => $method, 'no' => $no, 'userID' => $users, 'approved' => $approved, 'recieved' => $this->session->userdata('username'), 'orgID' => $this->session->userdata('orgID'));
-        $this->Md->save($payment, 'payment');
+       // $paymentID = $this->GUID();
+       // $payment = array('paymentID' => $paymentID, 'transID' => $transactionID, 'amount' => $amount, 'balance' => $balance, 'created' => $created, 'method' => $method, 'no' => $no, 'userID' => $users, 'approved' => $approved, 'recieved' => $this->session->userdata('username'), 'orgID' => $this->session->userdata('orgID'));
+       //$this->Md->save($payment, 'payment');
 
 
-        $trans = array('transID' => $transactionID, 'orgID' => $this->session->userdata('orgID'), 'client' => $client, 'type' => $types, 'created' => $created, 'staff' => $users, 'details' => $details, 'category' => $category, 'total' => $total, 'fileID' => $file);
+        $trans = array('transID' => $transactionID,'no' => $no,'invoice' => $invoice, 'amount' => $amount, 'balance' => $balance, 'method' => $method,'orgID' => $this->session->userdata('orgID'), 'client' => $client, 'type' => $types, 'created' => $created, 'staff' => $this->session->userdata('username'), 'details' => $details, 'category' => $category, 'total' => $total, 'fileID' => $file, 'action' => 'none');
         $this->Md->save($trans, 'transaction');
 
         echo 'saved';
