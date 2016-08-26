@@ -3,12 +3,25 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/wamp/www/caseprofessionals/application/controllers/File.php</file>
-            <file>file:/C:/wamp/www/caseprofessionals/application/controllers/Task.php</file>
-            <file>file:/C:/wamp/www/caseprofessionals/application/controllers/Api.php</file>
+            <file>file:/C:/wamp/www/caseprofessionals/application/config/config.php</file>
+            <file>file:/C:/wamp/www/caseprofessionals/application/views/login-page.php</file>
+            <file>file:/C:/wamp/www/caseprofessionals/application/views/view-tasks.php</file>
+            <file>file:/C:/wamp/www/caseprofessionals/application/views/view-client.php</file>
             <file>file:/C:/wamp/www/caseprofessionals/application/views/view-calendar.php</file>
             <file>file:/C:/wamp/www/caseprofessionals/application/controllers/Upload.php</file>
+            <file>file:/C:/wamp/www/caseprofessionals/application/views/add-file.php</file>
             <file>file:/C:/wamp/www/caseprofessionals/application/controllers/Transaction.php</file>
+            <file>file:/C:/wamp/www/caseprofessionals/application/controllers/Home.php</file>
+            <file>file:/C:/wamp/www/caseprofessionals/application/views/home-page.php</file>
+            <file>file:/C:/wamp/www/caseprofessionals/application/views/view-staff.php</file>
+            <file>file:/C:/wamp/www/caseprofessionals/mailing.php</file>
+            <file>file:/C:/wamp/www/caseprofessionals/application/controllers/Task.php</file>
+            <file>file:/C:/wamp/www/caseprofessionals/application/views/transaction-advanced.php</file>
+            <file>file:/C:/wamp/www/caseprofessionals/application/controllers/Message.php</file>
+            <file>file:/C:/wamp/www/caseprofessionals/application/views/message-page.php</file>
+            <file>file:/C:/wamp/www/caseprofessionals/application/views/add-user.php</file>
+            <file>file:/C:/wamp/www/caseprofessionals/application/controllers/User.php</file>
+            <file>file:/C:/wamp/www/caseprofessionals/application/config/routes.php</file>
         </group>
     </open-files>
 </project-private>

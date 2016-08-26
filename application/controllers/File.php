@@ -38,7 +38,8 @@ class File extends CI_Controller {
 
         $this->load->view('file-page', $data);
     }
-       public function upload() {
+
+    public function upload() {
 
         $this->load->helper(array('form', 'url'));
         if ($this->input->post('action') == 'update') {
@@ -47,36 +48,34 @@ class File extends CI_Controller {
 
             if (!$result) {
                 $id = $this->input->post('userID');
-                $user = array('name' => $this->input->post('name'), 'address' => $this->input->post('address'),'image'=>$this->input->post('image'), 'contact' => $this->input->post('contact'), 'designation' => $this->input->post('designation'), 'status' => $this->input->post('status'), 'address' => $this->input->post('address'), 'category' => $this->input->post('category'));
+                $user = array('name' => $this->input->post('name'), 'address' => $this->input->post('address'), 'image' => $this->input->post('image'), 'contact' => $this->input->post('contact'), 'designation' => $this->input->post('designation'), 'status' => $this->input->post('status'), 'address' => $this->input->post('address'), 'category' => $this->input->post('category'));
 
                 $this->Md->update_dynamic($id, 'userID', 'users', $user);
                 echo 'user information updated';
                 return;
             } else {
-                $users = array('userID' => $this->input->post('userID'), 'orgID' => $this->input->post('orgID'),'image'=>$this->input->post('image'), 'name' => $this->input->post('name'), 'email' => $this->input->post('email'), 'password' => ($this->input->post('password')), 'designation' => $this->input->post('designation'), 'image' => $this->input->post('image'), 'address' => $this->input->post('address'), 'contact' => $this->input->post('contact'), 'category' => $this->input->post('category'), 'created' => $this->input->post('created'), 'status' => $this->input->post('status'), 'action' => 'null');
+                $users = array('userID' => $this->input->post('userID'), 'orgID' => $this->input->post('orgID'), 'image' => $this->input->post('image'), 'name' => $this->input->post('name'), 'email' => $this->input->post('email'), 'password' => ($this->input->post('password')), 'designation' => $this->input->post('designation'), 'image' => $this->input->post('image'), 'address' => $this->input->post('address'), 'contact' => $this->input->post('contact'), 'category' => $this->input->post('category'), 'created' => $this->input->post('created'), 'status' => $this->input->post('status'), 'action' => 'null');
                 $this->Md->save($users, 'users');
                 echo "Information saved online";
                 return;
             }
         }
         if ($this->input->post('action') == 'create') {
-            
-              $files = array('fileID' => $this->input->post('fileID'), 'client' => $this->input->post('client'), 'lawyer' =>$this->input->post('lawyer'),  'orgID' => $this->session->userdata('orgID'), 'details' =>$this->input->post('details'), 'name' => $this->input->post('name'), 'type' => $this->input->post('type'), 'created' => date('Y-m-d H:i:s'), 'status' => $this->input->post('status'), 'no' => $this->input->post('no'), 'subject' => $this->input->post('subject'), 'citation' => $this->input->post('citation'), 'law' => $this->input->post('law'));
-              $this->Md->save($files, 'file');
+
+            $files = array('fileID' => $this->input->post('fileID'), 'client' => $this->input->post('client'), 'lawyer' => $this->input->post('lawyer'), 'orgID' => $this->session->userdata('orgID'), 'details' => $this->input->post('details'), 'name' => $this->input->post('name'), 'type' => $this->input->post('type'), 'created' => date('Y-m-d H:i:s'), 'status' => $this->input->post('status'), 'no' => $this->input->post('no'), 'subject' => $this->input->post('subject'), 'citation' => $this->input->post('citation'), 'law' => $this->input->post('law'));
+            $this->Md->save($files, 'file');
 
             echo "File information saved online";
             return;
         }
         if ($this->input->post('action') == 'delete') {
-             $query = $this->Md->cascade($this->input->post('fileID'), 'file', 'fileID');
-         
+            $query = $this->Md->cascade($this->input->post('fileID'), 'file', 'fileID');
         }
     }
 
-
     public function add() {
 
-        $query = $this->Md->query("SELECT * FROM users where orgID = '" . $this->session->userdata('orgID')."' ");
+        $query = $this->Md->query("SELECT * FROM users where orgID = '" . $this->session->userdata('orgID') . "' ");
 
         if ($query) {
             $data['users'] = $query;
@@ -206,87 +205,14 @@ class File extends CI_Controller {
         $this->load->helper(array('form', 'url'));
         $fileid = $this->uri->segment(3);
 
-        $query = $this->Md->query("SELECT * FROM files where id = '" . $fileid . "'");
-        if ($query) {
-            foreach ($query as $res) {
-                $data['name'] = $res->name;
-                $data['details'] = $res->details;
-                $data['types'] = $res->types;
-                $data['no'] = $res->no;
-                $data['created'] = $res->created;
-                $data['subject'] = $res->subject;
-            }
-        }
-        $query = $this->Md->query("SELECT * FROM item where org = '" . $this->session->userdata('orgid') . "' ");
-        //  var_dump($query);
-        if ($query) {
-            $data['items'] = $query;
-        } else {
-            $data['items'] = array();
-        }
-        $query = $this->Md->query("SELECT * FROM users where org = '" . $this->session->userdata('orgid') . "' ");
-        //  var_dump($query);
-        if ($query) {
-            $data['users'] = $query;
-        } else {
-            $data['users'] = array();
-        }
+        $query = $this->Md->query("SELECT * FROM file where orgID = '" . $this->session->userdata('orgID') . "'");
 
-        $query = $this->Md->query("SELECT * FROM transactions where org = '" . $this->session->userdata('orgid') . "' AND file = '" . $fileid . "' ");
-        //  var_dump($query);
         if ($query) {
-            $data['trans'] = $query;
+            $data['files'] = $query;
         } else {
-            $data['trans'] = array();
+            $data['files'] = array();
         }
-        //  echo 'we are coming from the controller';
-        $query = $this->Md->query("SELECT * FROM payments where org = '" . $this->session->userdata('orgid') . "'");
-        //  var_dump($query);
-        if ($query) {
-            $data['pay'] = $query;
-        } else {
-            $data['pay'] = array();
-        }
-        $query = $this->Md->query("SELECT * FROM schedule where org = '" . $this->session->userdata('orgid') . "' AND file= '" . $fileid . "' ");
-        //  var_dump($query);
-        if ($query) {
-            $data['sch'] = $query;
-        } else {
-            $data['sch'] = array();
-        }
-        $query = $this->Md->query("SELECT * FROM document where org = '" . $this->session->userdata('orgid') . "' AND cases = '" . $fileid . "' ");
-        //  var_dump($query);
-        if ($query) {
-            $data['docs'] = $query;
-        } else {
-            $data['docs'] = array();
-        }
-        $query = $this->Md->query("SELECT * FROM note where org = '" . $this->session->userdata('orgid') . "' AND fileID= '" . $fileid . "' ");
-        //  var_dump($query);
-        if ($query) {
-            $data['notes'] = $query;
-        } else {
-            $data['notes'] = array();
-        }
-        $query = $this->Md->query("SELECT * FROM bill where org = '" . $this->session->userdata('orgid') . "' AND fileID= '" . $fileid . "' ");
-        //  var_dump($query);
-        if ($query) {
-            $data['bills'] = $query;
-        } else {
-            $data['bills'] = array();
-        }
-
-
-        $query = $this->Md->query("SELECT * FROM attend where org = '" . $this->session->userdata('orgid') . "'");
-        //  var_dump($query);
-        if ($query) {
-            $data['att'] = $query;
-        } else {
-            $data['att'] = array();
-        }
-        $data['fileid'] = $fileid;
-
-        $this->load->view('file-view', $data);
+        $this->load->view('view-file', $data);
     }
 
     public function schedule() {
@@ -333,9 +259,9 @@ class File extends CI_Controller {
         } else {
             $data['files'] = array();
         }
-        $query = $this->Md->query("SELECT * FROM users where  orgID='".$this->session->userdata('orgID')."'");
+        $query = $this->Md->query("SELECT * FROM users where  orgID='" . $this->session->userdata('orgID') . "'");
         if ($query) {
-              $data['users'] = $query;
+            $data['users'] = $query;
         }
         $this->load->view('view-file', $data);
     }
@@ -352,40 +278,17 @@ class File extends CI_Controller {
 
         $this->load->helper(array('form', 'url'));
         $id = $this->input->post('id');
-       
+
         $file = array('name' => $this->input->post('name'), 'type' => $this->input->post('type'), 'details' => $this->input->post('details'), 'subject' => $this->input->post('subject'), 'client' => $this->input->post('client'), 'lawyer' => $this->input->post('lawyer'), 'no' => $this->input->post('no'), 'type' => $this->input->post('type'), 'citation' => $this->input->post('citation'), 'law' => $this->input->post('law'), 'status' => $this->input->post('status'));
-        $this->Md-> update_dynamic($id, 'fileID', 'file', $file);
+        $this->Md->update_dynamic($id, 'fileID', 'file', $file);
         echo 'FILE INFORMATION UPDATED';
-       
     }
 
     public function delete() {
         $this->load->helper(array('form', 'url'));
-        $id = $this->uri->segment(3);
-        $query = $this->Md->delete($id, 'files');
-        if ($this->db->affected_rows() > 0) {
-
-            $query = $this->Md->query("SELECT * FROM client where org = '" . $this->session->userdata('orgid') . "'");
-            if ($query) {
-                foreach ($query as $res) {
-                    $syc = array('object' => 'files', 'contents' => '', 'action' => 'delete', 'oid' => $id, 'created' => date('Y-m-d H:i:s'), 'checksum' => $this->GUID(), 'client' => $res->name);
-                    $this->Md->save($syc, 'sync_data');
-                }
-            }
-            $this->session->set_flashdata('msg', '<div class="alert alert-error">
-                                                   
-                                                <strong>
-                                                Information deleted	</strong>									
-						</div>');
-            redirect('file', 'refresh');
-        } else {
-            $this->session->set_flashdata('msg', '<div class="alert alert-error">
-                                                   
-                                                <strong>
-                                             Action Failed	</strong>									
-						</div>');
-            redirect('file', 'refresh');
-        }
+        $fileID = $this->uri->segment(3);
+        $query = $this->Md->cascade($fileID, 'file', 'fileID');
+         redirect('/file/view', 'refresh');
     }
 
     public function create() {
@@ -404,13 +307,19 @@ class File extends CI_Controller {
         }
         $no = $this->session->userdata('code') . "/" . $app . "/" . date('y') . "/" . date('m') . (int) date('d') . (int) date('H') . (int) date('i') . (int) date('ss');
         $orgID = $this->session->userdata('orgID');
-        $files = array('fileID' => $this->GUID(), 'client' => $this->input->post('client'), 'lawyer' =>$this->input->post('lawyer'),  'orgID' => $this->session->userdata('orgID'), 'details' =>$this->input->post('details'), 'name' => $this->input->post('name'), 'type' => $this->input->post('type'), 'created' => date('Y-m-d H:i:s'), 'status' => $this->input->post('status'), 'no' => $no, 'subject' => $this->input->post('subject'), 'citation' => $this->input->post('citation'), 'law' => $this->input->post('law'), 'action' => 'none');
-        $this->Md->save($files, 'file');
-        $this->session->set_flashdata('msg', '<div class="alert alert-success">
+        if ($this->input->post('client') != "" || $this->input->post('name') != "") {
+            $files = array('fileID' => $this->GUID(), 'client' => $this->input->post('client'), 'lawyer' => $this->input->post('lawyer'), 'orgID' => $this->session->userdata('orgID'), 'details' => $this->input->post('details'), 'name' => $this->input->post('name'), 'type' => $this->input->post('type'), 'created' => date('Y-m-d H:i:s'), 'status' => 'Active', 'no' => $no, 'subject' => $this->input->post('subject'), 'citation' => $this->input->post('citation'), 'law' => $this->input->post('law'), 'action' => 'none');
+            $this->Md->save($files, 'file');
+
+            $this->session->set_flashdata('msg', '<div class="alert alert-success">
                                    <strong>New File Saved</strong>									
 						</div>');
+        } else {
 
-        redirect('/file/create', 'refresh');
+            $this->session->set_flashdata('msg', '<div class="alert alert-erro"><strong>Invalid fields</strong></div>');
+        }
+
+        redirect('/file/view', 'refresh');
     }
 
 }

@@ -1,4 +1,4 @@
-  <?php
+<?php
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -66,7 +66,7 @@ class Task extends CI_Controller {
             $data['files'] = array();
         }
 
-        $query = $this->Md->query("SELECT * FROM  tasks INNER JOIN attend ON tasks.taskID=attend.taskID where tasks.orgID = '" . $this->session->userdata('orgID') . "' ");
+        $query = $this->Md->query("SELECT * FROM  tasks where orgID = '" . $this->session->userdata('orgID') . "' ");
         if ($query) {
             $data['sch'] = $query;
         } else {
@@ -93,7 +93,7 @@ class Task extends CI_Controller {
 
             if (!$result) {
                 $id = $this->input->post('taskID');
-                $sch = array('taskID' => $this->input->post('taskID'), 'date' => $this->input->post('date'), 'priority' => $this->input->post('priority'), 'period' => $this->input->post('period'), 'details' => $this->input->post('details'), 'orgID' =>  $this->input->post('orgID'), 'startTime' => $this->input->post('startTime'), 'endTime' => $this->input->post('endTime'), 'trigger' => $this->input->post('trigger'), 'userID' => $this->input->post('userID'), 'created' => date('Y-m-d'), 'fileID' => $this->input->post('file'));
+                $sch = array('taskID' => $this->input->post('taskID'), 'date' => $this->input->post('date'), 'priority' => $this->input->post('priority'), 'period' => $this->input->post('period'), 'details' => $this->input->post('details'), 'orgID' => $this->input->post('orgID'), 'startTime' => $this->input->post('startTime'), 'endTime' => $this->input->post('endTime'), 'trigger' => $this->input->post('trigger'), 'userID' => $this->input->post('userID'), 'created' => date('Y-m-d'), 'fileID' => $this->input->post('file'));
 
                 $this->Md->update_dynamic($id, 'taskID', 'tasks', $sch);
                 echo 'Schedule information updated';
@@ -116,9 +116,7 @@ class Task extends CI_Controller {
             // $query = $this->Md->delete($id, 'files');
             $query = $this->Md->cascade($this->input->post('taskID'), 'tasks', 'taskID');
             $query = $this->Md->cascade($this->input->post('taskID'), 'attend', 'taskID');
-          //  $query = $this->Md->cascade($this->input->post('taskID'), 'attend', 'taskID');
-       
-            
+            //  $query = $this->Md->cascade($this->input->post('taskID'), 'attend', 'taskID');
         }
     }
 
@@ -132,7 +130,8 @@ class Task extends CI_Controller {
             return;
         }
     }
-     public function upload_msg() {
+
+    public function upload_msg() {
 
         $this->load->helper(array('form', 'url'));
         if ($this->input->post('action') == 'create') {
@@ -142,6 +141,7 @@ class Task extends CI_Controller {
             return;
         }
     }
+
     public function import() {
 
         $orgid = $this->session->userdata('orgid');
@@ -261,7 +261,7 @@ class Task extends CI_Controller {
         $this->load->helper(array('form', 'url'));
 
 
-        $query = $this->Md->query("SELECT * FROM tasks where orgID = '" . $this->session->userdata('orgID') . "'");
+        $query = $this->Md->query("SELECT * FROM tasks where orgID = '" . $this->session->userdata('orgID') . "' AND date='" . date('Y-m-d') . "'");
         //  var_dump($query);
         if ($query) {
             $data['tasks'] = $query;
@@ -270,6 +270,17 @@ class Task extends CI_Controller {
         }
 
         $this->load->view('view-tasks', $data);
+    }
+
+    public function delete() {
+
+        $this->load->helper(array('form', 'url'));
+        $taskID = $this->uri->segment(3);
+        $query = $this->Md->cascade($taskID, 'tasks', 'taskID');
+        $query = $this->Md->cascade($taskID, 'attend', 'taskID');
+        $query = $this->Md->cascade($taskID, 'message', 'taskID');
+
+        redirect('task/view', 'refresh');
     }
 
     public function schedule() {
@@ -341,35 +352,6 @@ class Task extends CI_Controller {
         echo 'FILE INFORMATION UPDATED';
     }
 
-    public function delete() {
-        $this->load->helper(array('form', 'url'));
-        $id = $this->uri->segment(3);
-        $query = $this->Md->delete($id, 'files');
-        if ($this->db->affected_rows() > 0) {
-
-            $query = $this->Md->query("SELECT * FROM client where org = '" . $this->session->userdata('orgid') . "'");
-            if ($query) {
-                foreach ($query as $res) {
-                    $syc = array('object' => 'files', 'contents' => '', 'action' => 'delete', 'oid' => $id, 'created' => date('Y-m-d H:i:s'), 'checksum' => $this->GUID(), 'client' => $res->name);
-                    $this->Md->save($syc, 'sync_data');
-                }
-            }
-            $this->session->set_flashdata('msg', '<div class="alert alert-error">
-                                                   
-                                                <strong>
-                                                Information deleted	</strong>									
-						</div>');
-            redirect('file', 'refresh');
-        } else {
-            $this->session->set_flashdata('msg', '<div class="alert alert-error">
-                                                   
-                                                <strong>
-                                             Action Failed	</strong>									
-						</div>');
-            redirect('file', 'refresh');
-        }
-    }
-
     public function updater() {
         $this->load->helper(array('form', 'url'));
 
@@ -404,33 +386,35 @@ class Task extends CI_Controller {
 
         $day = $this->input->post('day');
         if ($day == "") {
-            $day = date('d-m-Y');
+            $day = date('Y-m-d');
         }
         $notify = $this->input->post('trig');
         $notify = 'False';
         if ($notify != "") {
             $notify = 'True';
         }
-
         $taskID = $this->GUID();
 
-        $sch = array('taskID' => $taskID, 'date' => $this->input->post('date'), 'priority' => $this->input->post('priority'), 'period' => $this->input->post('period'), 'details' => $this->input->post('details'), 'orgID' => $this->session->userdata('orgID'), 'startTime' => $this->input->post('startTime'), 'endTime' => $this->input->post('endTime'), 'trigger' => $notify, 'userID' => $this->session->userdata('userID'), 'created' => date('Y-m-d'), 'fileID' => $this->input->post('file'), 'action' => 'none');
+        $sch = array('taskID' => $taskID, 'date' => $this->input->post('date'), 'priority' => $this->input->post('priority'), 'period' => $this->input->post('period'), 'details' => $this->input->post('details'), 'orgID' => $this->session->userdata('orgID'), 'startTime' => $this->input->post('startTime'), 'endTime' => $this->input->post('endTime'), 'trigger' => $notify, 'userID' => $this->session->userdata('username'), 'created' => date('Y-m-d'), 'fileID' => $this->input->post('file'), 'action' => 'none');
         $id = $this->Md->save($sch, 'tasks');
 
-        $message = "Reminder " . 'You have a meeting on ' . $this->input->post('date') . ' at' . $this->input->post('startTime') . ' to ' . $this->input->post('endTime') . ' Details: ' . $this->input->post('details');
+        $message = "Reminder " . 'You have a meeting on ' . $this->input->post('date') . ' at ' . $this->input->post('startTime') . ' to ' . $this->input->post('endTime') . ' Details: ' . $this->input->post('details');
         $attend = $this->input->post('attend');
         foreach ($attend as $t) {
-            $schs = array('attendID' => $this->GUID(), 'orgID' => $this->session->userdata('orgID'), 'userID' => $t, 'taskID' => $taskID, 'action' => 'none');
-            $id = $this->Md->save($schs, 'attend');
+
             if ($notify == "True") {
                 $schedule = $day;                // echo $email;
-                $email = $this->Md->query_cell("SELECT * FROM users where userID= '" . $t . "'", 'email');
-                $phone = $this->Md->query_cell("SELECT * FROM users where userID= '" . $t . "'", 'contact');
-                $mail = array('messageID' => $this->GUID(), 'body' => $message, 'subject' => 'REMINDER', 'date' => $this->input->post('date'), 'to' => $email, 'created' => date('Y-m-d H:i:s'), 'from' => $this->session->userdata('orgemail'), 'sent' => 'false', 'type' => 'email', 'orgID' => $this->session->userdata('orgID'), 'action' => 'none');
-                $this->Md->save($mail, 'message');
 
-                $mails = array('messageID' => $this->GUID(), 'body' => $message, 'subject' => 'REMINDER', 'date' => $this->input->post('date'), 'to' => $phone, 'created' => date('Y-m-d H:i:s'), 'from' => $this->session->userdata('name'), 'sent' => 'false', 'type' => 'sms', 'orgID' => $this->session->userdata('orgID'), 'action' => 'none');
-                $this->Md->save($mails, 'message');
+         
+              $emails = $this->Md->query_cell("SELECT * FROM users where userID= '" .$t . "'", 'email');
+                $phones = $this->Md->query_cell("SELECT * FROM users where userID= '" . $t . "'", 'contact');
+                $names = $this->Md->query_cell("SELECT * FROM users where userID= '" . $t . "'", 'name');
+           
+                $schs = array('attendID' => $this->GUID(), 'orgID' => $this->session->userdata('orgID'), 'userID' => $t, 'taskID' => $taskID, 'action' => 'none', 'name' => $names, 'contact' => $phones);
+                $id = $this->Md->save($schs, 'attend');
+
+                $mail = array('messageID' => $this->GUID(), 'body' => $message, 'subject' => 'REMINDER', 'date' => $this->input->post('date'), 'to' => $names, 'created' => date('Y-m-d H:i:s'), 'from' => $this->session->userdata('orgemail'), 'sent' => 'false', 'type' => 'email', 'orgID' => $this->session->userdata('orgID'), 'action' => 'none', 'taskID' => $taskID, 'contact' => $phones, 'email' => $emails);
+                $this->Md->save($mail, 'message');               
 
                 echo $information = 'Saved and mail will be sent on' . $schedule;
             }
@@ -440,6 +424,45 @@ class Task extends CI_Controller {
                                                  Schedule added dated ' . $day . '</strong>									
 						</div>');
         redirect('task/add', 'refresh');
+    }
+
+    public function generate_post() {
+
+        $this->load->helper(array('form', 'url'));
+        $gen = "";
+        $start = $this->input->post('starts');
+        $end = $this->input->post('ends');
+        $gen = $start . " to " . $end;
+
+        echo '<h3>' . $gen . '</h3>';
+
+        $sql[] = NULL;
+        unset($sql);
+        if ($start != "" && $end != "") {
+
+            $sql[] = "date BETWEEN '$start' AND '$end' ";
+        }
+        $sql[] = "orgID = '" . $this->session->userdata('orgID') . "'";
+        $query = "SELECT * FROM tasks";
+
+        if (!empty($sql)) {
+            $query .= ' WHERE ' . implode(' AND ', $sql);
+        }
+
+        $get_result = $this->Md->query($query);
+
+        if ($get_result) {
+
+            if ($query) {
+                $data['tasks'] = $get_result;
+            } else {
+                $data['tasks'] = array();
+            }
+            $this->load->view('view-tasks', $data);
+        } else {
+            $data = "No such data";
+            $this->load->view('view-tasks', $data);
+        }
     }
 
 }

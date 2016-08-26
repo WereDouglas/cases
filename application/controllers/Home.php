@@ -41,6 +41,10 @@ class Home extends CI_Controller {
         if ($query) {
               $data['messages'] = $query;
         }
+        $query = $this->Md->query("SELECT * FROM message where  orgID='".$this->session->userdata('orgID')."' AND sent='false'");
+        if ($query) {
+              $data['notsent'] = $query;
+        }
         $query = $this->Md->query("SELECT * FROM tasks where  orgID='".$this->session->userdata('orgID')."'");
         if ($query) {
               $data['tasks'] = $query;
@@ -134,6 +138,7 @@ class Home extends CI_Controller {
                 $newdata = array(
                     'userID' => $resv->userID,
                     'orgID' => $resv->orgID,
+                    'username' => $resv->name,
                     'email' => $resv->email,
                     'userimage' => $resv->image,
                     'category' => $resv->category,

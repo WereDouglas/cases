@@ -38,37 +38,38 @@
                         </div>
 
                         <div class="clearfix"></div>
-
                         <!-- sidebar menu -->
                         <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
                             <div class="menu_section">
-                                <h3>General</h3>
+                                <h3>Home</h3>
                                 <ul class="nav side-menu">
-                                    <li><a><i class="fa fa-home"></i> Home <span class="fa fa-chevron-down"></span></a>
-                                        <ul class="nav child_menu">
-                                            <li><a href="index.html">Schedules</a></li>
-                                            <li><a href="index.html">Organisation</a></li>
-                                            <li><a href="<?php echo base_url() . "index.php/user/add"; ?>" target="frame">Add user</a></li>
-                                            <li><a href="<?php echo base_url() . "index.php/user/view"; ?>" target="frame">View</a></li>
-                                        </ul>
+                                    <li><a href="<?php echo base_url() . "index.php/task/add"; ?>" target="frame"><i class="fa fa-calendar"></i> Calendar <span class="fa fa-chevron-down"></span></a>
+
+<!--                                        <ul class="nav child_menu">
+                                            <li><a ha href="<?php echo base_url() . "index.php/task/add"; ?>" target="frame">Schedules</a></li>
+
+
+                                        </ul>-->
                                     </li>
-                                    <li><a><i class="fa fa-edit"></i>Clients<span class="fa fa-chevron-down"></span></a>
+                                    <li><a href="<?php echo base_url() . "index.php/time/"; ?>" target="frame"><i class="fa fa-times-circle"></i> Time sheet <span class="fa fa-chevron-down"></span></a> </li>
+
+                                    <li><a><i class="fa fa-edit"></i>Files<span class="fa fa-chevron-down"></span></a>
                                         <ul class="nav child_menu">
                                             <li><a href="<?php echo base_url() . "index.php/file/add"; ?>" target="frame">New</a></li>
                                             <li><a href="<?php echo base_url() . "index.php/file/view"; ?>" target="frame">View</a></li>
 
                                         </ul>
                                     </li>
-                                    <li><a><i class="fa fa-desktop"></i>Files<span class="fa fa-chevron-down"></span></a>
+                                    <li><a><i class="fa fa-user"></i>Users<span class="fa fa-chevron-down"></span></a>
                                         <ul class="nav child_menu">
-                                            <li><a href="<?php echo base_url() . "index.php/file/add"; ?>" target="frame">New</a></li>
-                                            <li><a href="<?php echo base_url() . "index.php/file/table"; ?>" target="frame">View</a></li>
-
+                                            <li><a href="<?php echo base_url() . "index.php/user/add"; ?>" target="frame">Add user</a></li>
+                                            <li><a href="<?php echo base_url() . "index.php/user/clients"; ?>" target="frame">Clients</a></li>
+                                            <li><a href="<?php echo base_url() . "index.php/user/staff"; ?>" target="frame">Staff</a></li>
                                         </ul>
                                     </li>
                                     <li><a><i class="fa fa-table"></i>Tasks <span class="fa fa-chevron-down"></span></a>
                                         <ul class="nav child_menu">
-                                            <li><a href="<?php echo base_url() . "index.php/task/add"; ?>" target="frame">Calendar</a></li>
+
                                             <li><a href="<?php echo base_url() . "index.php/task/view"; ?>" target="frame">All</a></li>
 
                                         </ul>
@@ -77,15 +78,14 @@
                                         <ul class="nav child_menu">
                                             <li><a href="<?php echo base_url() . "index.php/transaction"; ?>" target="frame">Add</a></li>
                                             <li><a href="<?php echo base_url() . "index.php/transaction/all"; ?>" target="frame">Transactions</a></li>
-                                             <li><a href="<?php echo base_url() . "index.php/transaction/payments"; ?>" target="frame">Payments</a></li>
-                                            
+                                            <li><a href="<?php echo base_url() . "index.php/transaction/income"; ?>" target="frame">Income</a></li>
+                                            <li><a href="<?php echo base_url() . "index.php/transaction/expense"; ?>" target="frame">Expense</a></li>
+                                            <li><a href="<?php echo base_url() . "index.php/transaction/advanced"; ?>" target="frame">Advanced</a></li>
+
                                         </ul>
                                     </li>
-                                    <li><a><i class="fa fa-clone"></i> Documents<span class="fa fa-chevron-down"></span></a>
-                                        <ul class="nav child_menu">
-                                            <li><a href="fixed_sidebar.html">Fixed Sidebar</a></li>
-                                            <li><a href="fixed_footer.html">Fixed Footer</a></li>
-                                        </ul>
+                                    <li><a href="<?php echo base_url() . "index.php/document"; ?>" target="frame"><i class="fa fa-clone"></i> Documents</a>
+
                                     </li>
                                 </ul>
                             </div>
@@ -93,8 +93,8 @@
                                 <h3>Settings</h3>
                                 <ul class="nav side-menu">
                                     <li><a href="<?php echo base_url() . "index.php/message/"; ?>" target="frame"><i class="fa fa-envelope-o"></i> Messages </a></li>                                  
-                                                  
-                                    <li><a href="javascript:void(0)"><i class="fa fa-laptop"></i> Landing Page <span class="label label-success pull-right">Coming Soon</span></a></li>
+
+                                    <li><a href="<?php echo base_url() . "files/Cp.msi"; ?>"><i class="fa fa-laptop"></i> Desktop application<span class="label label-success pull-right">Coming Soon</span></a></li>
                                 </ul>
                             </div>
 
@@ -138,13 +138,7 @@
                                     </a>
                                     <ul class="dropdown-menu dropdown-usermenu pull-right">
                                         <li><a href="javascript:;"> Profile</a></li>
-                                        <li>
-                                            <a href="javascript:;">
-                                                <span class="badge bg-red pull-right">50%</span>
-                                                <span>Settings</span>
-                                            </a>
-                                        </li>
-                                        <li><a href="javascript:;">Help</a></li>
+
                                         <li><a href="<?php echo base_url() . "index.php/home/logout"; ?>"><i class="fa fa-sign-out pull-right"></i> Log Out</a></li>
                                     </ul>
                                 </li>
@@ -152,7 +146,7 @@
                                 <li role="presentation" class="dropdown">
                                     <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
                                         <i class="fa fa-envelope-o"></i>
-                                        <span class="badge bg-green">6</span>
+                                        <span class="badge bg-green"><?php echo count($notsent); ?></span>
                                     </a>
                                     <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
                                         <li>
@@ -160,57 +154,32 @@
                                                 <span class="image"> <img  height="50px" width="100px" class="" src="<?= base_url(); ?>uploads/<?php echo $this->session->userdata('userimage'); ?>" alt="........" /></span>
                                                 <span>
                                                     <span><?php echo $this->session->userdata('username'); ?></span>
-                                                    <span class="time">3 mins ago</span>
-                                                </span>
-                                                <span class="message">
-                                                    Film festivals used to be do-or-die moments for movie makers. They were where...
-                                                </span>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a>
-                                                <span class="image"> <img  height="50px" width="100px" class="" src="<?= base_url(); ?>uploads/<?php echo $this->session->userdata('userimage'); ?>" alt="........" /></span>
-                                                <span>
-                                                    <span><?php echo $this->session->userdata('username'); ?></span>
-                                                    <span class="time">3 mins ago</span>
-                                                </span>
-                                                <span class="message">
 
                                                 </span>
+
                                             </a>
                                         </li>
-                                        <li>
-                                            <a>
-                                                <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
-                                                <span>
-                                                    <span>John Smith</span>
-                                                    <span class="time">3 mins ago</span>
-                                                </span>
-                                                <span class="message">
-                                                    Film festivals used to be do-or-die moments for movie makers. They were where...
-                                                </span>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a>
-                                                <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
-                                                <span>
-                                                    <span>John Smith</span>
-                                                    <span class="time">3 mins ago</span>
-                                                </span>
-                                                <span class="message">
-                                                    Film festivals used to be do-or-die moments for movie makers. They were where...
-                                                </span>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <div class="text-center">
-                                                <a>
-                                                    <strong>See All Alerts</strong>
-                                                    <i class="fa fa-angle-right"></i>
-                                                </a>
-                                            </div>
-                                        </li>
+                                        <?php
+                                        if (is_array($notsent) && count($notsent)) {
+                                            foreach ($notsent as $loop) {
+                                                ?>  
+                                                <li>
+                                                    <a>
+                                                        <span>
+                                                            <span><?php echo $loop->subject; ?></span>
+                                                            <span class="time"><?php echo $loop->date; ?></span>
+                                                        </span>
+
+                                                    </a>
+                                                </li>
+
+
+                                                <?php
+                                            }
+                                        }
+                                        ?>
+
+
                                     </ul>
                                 </li>
                             </ul>
@@ -226,32 +195,27 @@
                         <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
                             <span class="count_top"><i class="fa fa-user"></i> Total Users</span>
                             <div class="count"><?php echo count($users) ?></div>
-                            <span class="count_bottom"><i class="green">4% </i> From last Week</span>
+
                         </div>
                         <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
                             <span class="count_top"><i class="fa fa-envelope-square"></i> Messages</span>
                             <div class="count"><?php echo count($messages) ?></div>
-                            <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i>3% </i> From last Week</span>
                         </div>
                         <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
                             <span class="count_top"><i class="fa fa-folder-open"></i> Files</span>
                             <div class="count green"><?php echo count($files) ?></div>
-                            <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i>34% </i> From last Week</span>
                         </div>
                         <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
                             <span class="count_top"><i class="fa fa-calendar"></i>Tasks</span>
                             <div class="count"><?php echo count($tasks) ?></div>
-                            <span class="count_bottom"><i class="red"><i class="fa fa-sort-desc"></i>12% </i> From last Week</span>
                         </div>
                         <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
                             <span class="count_top"><i class="fa fa-user"></i> Transactions</span>
                             <div class="count"><?php echo count($transactions) ?></div>
-                            <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i>34% </i> From last Week</span>
                         </div>
                         <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
                             <span class="count_top"><i class="fa fa-user"></i> Payments</span>
                             <div class="count"><?php echo count($payments) ?></div>
-                            <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i>34% </i> From last Week</span>
                         </div>
                     </div>
                     <!-- /top tiles -->
@@ -264,7 +228,7 @@
                                     // obj.style.width = obj.contentWindow.document.body.scrollHeight + 'px';
                                 }
                             </script>
-                            <iframe id="frame" name="frame" frameborder="no" border="0" onload="resizeIframe(this)" scrolling="no"  style="padding: 10px;" width="100%" class="span12" src="<?php echo base_url() . "index.php/home/start"; ?>"> </iframe>         
+                            <iframe id="frame" name="frame" frameborder="no" border="0" onload="resizeIframe(this)" scrolling="no"  style="padding: 10px;" width="100%" class="span12" src="<?php echo base_url() . "index.php/task/add"; ?>"> </iframe>         
 
                         </div>
 
@@ -278,7 +242,7 @@
                 <!-- footer content -->
                 <footer>
                     <div class="pull-right">
-                        Gentelella - Bootstrap Admin Template by <a href="https://colorlib.com">Colorlib</a>
+                        Case professional <small><a href="novariss.com">Novariss Ltd</a></small>
                     </div>
                     <div class="clearfix"></div>
                 </footer>

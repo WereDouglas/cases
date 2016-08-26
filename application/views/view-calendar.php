@@ -1,4 +1,5 @@
 <!-- Bootstrap -->
+<?php //var_dump($sch); ?>
 <link href="<?php echo base_url(); ?>vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
 <!-- Font Awesome -->
 <link href="<?php echo base_url(); ?>vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
@@ -23,16 +24,6 @@
                 <h3>Calendar <small>Click to add/edit events</small></h3>
             </div>
 
-            <div class="title_right">
-                <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Search for...">
-                        <span class="input-group-btn">
-                            <button class="btn btn-default" type="button">Go!</button>
-                        </span>
-                    </div>
-                </div>
-            </div>
         </div>
 
         <div class="clearfix"></div>
@@ -69,9 +60,6 @@
                             </div>
                             <div class="row-fluid">
                                 <label for="form-field-select-4">Choose Attendees</label>
-
-
-
                                 <input class="easyui-combobox" name="attend[]" style="width:100%;height:26px" data-options="
                                        url:'<?php echo base_url() ?>index.php/task/users',
                                        method:'get',
@@ -88,7 +76,7 @@
                                 <input class="easyui-combobox" name="file" style="width:100%;height:26px" data-options="
                                        url:'<?php echo base_url() ?>index.php/task/files',
                                        method:'get',
-                                       valueField:'fileID',
+                                       valueField:'name',
                                        textField:'name',
                                        multiple:false,
                                        panelHeight:'auto'

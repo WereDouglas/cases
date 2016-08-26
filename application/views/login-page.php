@@ -68,7 +68,7 @@
                                 <br />
 
                                 <div>
-                                    <h1><i class="fa fa-paw"></i>   <img  height="50px" width="50px" class="nav" src="<?= base_url(); ?>images/cp_logo.png" alt="Logo" /></h1>
+                                    <h1><img  height="50px" width="50px" class="nav" src="<?= base_url(); ?>images/cp_logo.png" alt="Logo" /></h1>
                                     <p>©2016 All Rights Reserved.</p>
                                 </div>
                             </div>
@@ -354,7 +354,7 @@
                                 <br />
 
                                 <div>
-                                    <h1><i class="fa fa-paw"></i>  <img  height="50px" width="50px" class="nav" src="<?= base_url(); ?>images/cp_logo.png" alt="Logo" /></h1>
+                                    <h1> <img  height="50px" width="50px" class="nav" src="<?= base_url(); ?>images/cp_logo.png" alt="Logo" /></h1>
                                     <p>©2016 All Rights Reserved. Vuga Ltd</p>
                                 </div>
                             </div>

@@ -53,71 +53,32 @@ class User extends CI_Controller {
 						</div>');
                 redirect('/user/add', 'refresh');
             }
-
             ///organisation image uploads
             $file_element_name = 'userfile';
-
-            $config['upload_path'] = 'uploads/';
-            // $config['upload_path'] = '/uploads/';
+            $new_name = $userid;
+            $config['file_name'] = $userid;
+            $config['upload_path'] = 'uploads/';           
             $config['allowed_types'] = '*';
             $config['encrypt_name'] = FALSE;
+            $config['allowed_types'] = 'jpg';
 
             $this->load->library('upload', $config);
             if (!$this->upload->do_upload($file_element_name)) {
                 $status = 'error';
                 $msg = $this->upload->display_errors('', '');
-                $this->session->set_flashdata('msg', '<div class="alert alert-error">                                                   
-                                                <strong>' . $msg . '</strong></div>');
+                $this->session->set_flashdata('msg', '<div class="alert alert-error"> <strong>' . $msg . '</strong></div>');
             }
             $data = $this->upload->data();
-
             $submitted = date('Y-m-d');
             $userfile = $data['file_name'];
-
-            $users = array('userID' => $this->GUID(), 'orgID' => $this->session->userdata('orgID'), 'name' => $this->input->post('name'), 'email' => $this->input->post('email'), 'password' => md5($this->input->post('name')), 'designation' => $this->input->post('designation'), 'image' => $userfile, 'address' => $this->input->post('address'), 'contact' => $this->input->post('contact'), 'category' => $this->input->post('category'), 'created' => date('Y-m-d H:i:s'), 'status' => 'Active');
+            $users = array('userID' => $userid, 'orgID' => $this->session->userdata('orgID'), 'name' => $this->input->post('name'), 'email' => $this->input->post('email'), 'password' => md5($this->input->post('name')), 'designation' => $this->input->post('designation'), 'image' => $userfile, 'address' => $this->input->post('address'), 'contact' => $this->input->post('contact'), 'category' => $this->input->post('category'), 'created' => date('Y-m-d H:i:s'), 'status' => 'Active','action'=>'none');
             $this->Md->save($users, 'users');
 
-            $this->session->set_flashdata('msg', '<div class="alert alert-success">
-                                   <strong>Information saved</strong>									
-						</div>');
+            $this->session->set_flashdata('msg', '<div class="alert alert-success">  <strong>Information saved</strong></div>');
 
-            redirect('/user/view', 'refresh');
+            redirect('/user/add', 'refresh');
         }
-    }
-
-    public function upload() {
-
-        $this->load->helper(array('form', 'url'));
-        if ($this->input->post('action') == 'update') {
-
-            $result = $this->Md->check($this->input->post('userID'), 'userID', 'users');
-
-            if (!$result) {
-                $id = $this->input->post('userID');
-                $user = array('name' => $this->input->post('name'), 'address' => $this->input->post('address'),'image'=>$this->input->post('image'), 'contact' => $this->input->post('contact'), 'designation' => $this->input->post('designation'), 'status' => $this->input->post('status'), 'address' => $this->input->post('address'), 'category' => $this->input->post('category'));
-
-                $this->Md->update_dynamic($id, 'userID', 'users', $user);
-                echo 'user information updated';
-                return;
-            } else {
-                $users = array('userID' => $this->input->post('userID'), 'orgID' => $this->input->post('orgID'),'image'=>$this->input->post('image'), 'name' => $this->input->post('name'), 'email' => $this->input->post('email'), 'password' => ($this->input->post('password')), 'designation' => $this->input->post('designation'), 'image' => $this->input->post('image'), 'address' => $this->input->post('address'), 'contact' => $this->input->post('contact'), 'category' => $this->input->post('category'), 'created' => $this->input->post('created'), 'status' => $this->input->post('status'), 'action' => 'null');
-                $this->Md->save($users, 'users');
-                echo "Information saved online";
-                return;
-            }
-        }
-        if ($this->input->post('action') == 'create') {
-
-            $users = array('userID' => $this->input->post('userID'), 'orgID' => $this->input->post('orgID'), 'name' => $this->input->post('name'), 'email' => $this->input->post('email'), 'password' => ($this->input->post('password')), 'designation' => $this->input->post('designation'), 'image' => $this->input->post('image'), 'address' => $this->input->post('address'), 'contact' => $this->input->post('contact'), 'category' => $this->input->post('category'), 'created' => $this->input->post('created'), 'status' => $this->input->post('status'), 'action' => 'null');
-            $this->Md->save($users, 'users');
-            echo "Information saved online";
-            return;
-        }
-        if ($this->input->post('action') == 'delete') {
-              $query = $this->Md->cascade($this->input->post('userID'), 'users', 'userID');
-         
-        }
-    }
+    } 
 
     public function api() {
         $orgid = urldecode($this->uri->segment(3));
@@ -175,7 +136,7 @@ class User extends CI_Controller {
             echo '' . $get_result->contact . '<br>';
         echo '' . $get_result->email . '<br>';
         echo '' . $get_result->address . '<br>';
-        echo'<span class="span-data" name="userid" id="userid" style="visibility:hidden" >' . $get_result->userID . '</span>';
+        echo'<span class="span-data" name="userid" id="userid" style="visibility:hidden" >' . $get_result->name . '</span>';
     }
 
     public function add_user() {
@@ -218,16 +179,26 @@ class User extends CI_Controller {
         }
     }
 
-    public function view() {
+    public function clients() {
 
         $this->load->helper(array('form', 'url'));
 
 
-        $query = $this->Md->query("SELECT * FROM users where  orgID='" . $this->session->userdata('orgID') . "'");
+        $query = $this->Md->query("SELECT * FROM users where  orgID='" . $this->session->userdata('orgID') . "' AND category='Client'");
         if ($query) {
             $data['users'] = $query;
         }
-        $this->load->view('view-user', $data);
+        $this->load->view('view-client', $data);
+    }
+
+    public function staff() {
+
+        $this->load->helper(array('form', 'url'));
+        $query = $this->Md->query("SELECT * FROM users where  orgID='" . $this->session->userdata('orgID') . "' AND category='Staff'");
+        if ($query) {
+            $data['users'] = $query;
+        }
+        $this->load->view('view-staff', $data);
     }
 
     public function users() {
@@ -291,41 +262,11 @@ class User extends CI_Controller {
 
     public function delete() {
 
-        if ($this->session->userdata('level') == 1) {
-            $this->load->helper(array('form', 'url'));
-            $id = $this->uri->segment(3);
-            $this->Md->remove($id, 'users', 'image');
-            $query = $this->Md->cascade($id, 'contact', 'users');
-            $query = $this->Md->delete($id, 'users');
-            if ($this->db->affected_rows() > 0) {
+        $this->load->helper(array('form', 'url'));
+        $userID = $this->uri->segment(3);
+        $query = $this->Md->cascade($userID, 'users', 'userID');
 
-                $query = $this->Md->query("SELECT * FROM client where org = '" . $this->session->userdata('orgid') . "'");
-                if ($query) {
-                    foreach ($query as $res) {
-                        $syc = array('object' => 'users', 'contents' => '', 'action' => 'delete', 'oid' => $id, 'created' => date('Y-m-d H:i:s'), 'checksum' => $this->GUID(), 'client' => $res->name);
-                        $this->Md->save($syc, 'sync_data');
-                    }
-                }
-                $this->session->set_flashdata('msg', '<div class="alert alert-error">                                                   
-                                                <strong>
-                                                Information deleted	</strong>									
-						</div>');
-                redirect('user/client', 'refresh');
-            } else {
-                $this->session->set_flashdata('msg', '<div class="alert alert-error">
-                                                   
-                                                <strong>
-                                             Action Failed	</strong>									
-						</div>');
-                redirect('user/client', 'refresh');
-            }
-        } else {
-            $this->session->set_flashdata('msg', '<div class="alert alert-error">                                                   
-                                                <strong>
-                                                 You cannot carry out this action ' . '	</strong>									
-						</div>');
-            redirect('/user', 'refresh');
-        }
+        redirect('user/client', 'refresh');
     }
 
     public function user() {

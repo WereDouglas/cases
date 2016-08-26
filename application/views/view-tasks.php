@@ -38,6 +38,28 @@
 </style>
 
 <?php echo $this->session->flashdata('msg'); ?>
+   <form  enctype="multipart/form-data" class="form-horizontal form-label-left"  action='<?= base_url(); ?>index.php/task/generate_post'  method="post">
+
+            <div class="box-body">
+                <div class="col-md-2">
+                    <label>Start date</label>
+                    <input class="easyui-datebox" name="starts" id="starts" data-options="formatter:myformatter,parser:myparser" ></input>
+                </div>
+                <div class="col-md-2">
+                    <label>End date</label>
+                    <input class="easyui-datebox" name="ends" id="ends" data-options="formatter:myformatter,parser:myparser" ></input>
+                </div>
+
+
+                <div class="col-md-6">
+                    <button type="submit"  class="btn  btn-small btn-flat">View</button>
+
+                    <button type="reset"  class="btn btn-small btn-flat">Reset</button>
+                </div>
+                <span class="info-box status" id="status"></span>
+           
+            </div><!-- /.box-body -->
+        </form>
 
 <table class="table zebra-style span12">
     <thead>
@@ -73,12 +95,8 @@
                     </td>
 
                     <td>
-        <!--                            <a href="#"  value="<?php echo $loop->id; ?>"  id="myLink" onclick="NavigateToSite(this)" class="tooltip-error text-danger" data-rel="tooltip" title="reset">
-                            <span class="red">
-                                <i class="icon-lock bigger-120 text-danger"></i>
-                                Reset
-                            </span>
-                        </a>-->
+                   <a class="btn-danger btn-small icon-remove" href="<?php echo base_url() . "index.php/task/delete/" .$loop->taskID; ?>">delete</a>
+                      
 
                     </td>
                 </tr>

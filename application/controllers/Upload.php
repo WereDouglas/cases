@@ -39,6 +39,39 @@ class Upload extends CI_Controller {
         $this->load->view('upload-page', $data);
     }
 
+    public function user() {
+
+        $this->load->helper(array('form', 'url'));
+        if ($this->input->post('action') == 'update') {
+
+            $result = $this->Md->check($this->input->post('userID'), 'userID', 'users');
+
+            if (!$result) {
+                $id = $this->input->post('userID');
+                $user = array('name' => $this->input->post('name'), 'address' => $this->input->post('address'), 'image' => $this->input->post('image'), 'contact' => $this->input->post('contact'), 'designation' => $this->input->post('designation'), 'status' => $this->input->post('status'), 'address' => $this->input->post('address'), 'category' => $this->input->post('category'));
+
+                $this->Md->update_dynamic($id, 'userID', 'users', $user);
+                echo 'user information updated';
+                return;
+            } else {
+                $users = array('userID' => $this->input->post('userID'), 'orgID' => $this->input->post('orgID'), 'image' => $this->input->post('image'), 'name' => $this->input->post('name'), 'email' => $this->input->post('email'), 'password' => ($this->input->post('password')), 'designation' => $this->input->post('designation'), 'image' => $this->input->post('image'), 'address' => $this->input->post('address'), 'contact' => $this->input->post('contact'), 'category' => $this->input->post('category'), 'created' => $this->input->post('created'), 'status' => $this->input->post('status'), 'action' => 'none');
+                $this->Md->save($users, 'users');
+                echo "Information saved online";
+                return;
+            }
+        }
+        if ($this->input->post('action') == 'create') {
+
+            $users = array('userID' => $this->input->post('userID'), 'orgID' => $this->input->post('orgID'), 'name' => $this->input->post('name'), 'email' => $this->input->post('email'), 'password' => ($this->input->post('password')), 'designation' => $this->input->post('designation'), 'image' => $this->input->post('image'), 'address' => $this->input->post('address'), 'contact' => $this->input->post('contact'), 'category' => $this->input->post('category'), 'created' => $this->input->post('created'), 'status' => $this->input->post('status'), 'action' => 'none');
+            $this->Md->save($users, 'users');
+            echo "Information saved online";
+            return;
+        }
+        if ($this->input->post('action') == 'delete') {
+            $query = $this->Md->cascade($this->input->post('userID'), 'users', 'userID');
+        }
+    }
+
     public function file() {
 
         $this->load->helper(array('form', 'url'));
@@ -80,12 +113,12 @@ class Upload extends CI_Controller {
             $result = $this->Md->check($this->input->post('transID'), 'transID', 'transaction');
 
             if (!$result) {
-                $trans = array('transID' => $this->input->post('transID'), 'no' => $this->input->post('no'), 'invoice' => $this->input->post('invoice'), 'balance' => $this->input->post('balance'), 'method' => $this->input->post('method'), 'orgID' => $this->input->post('orgID'), 'client' => $this->input->post('client'), 'type' => $this->input->post('type'), 'created' => $this->input->post('created'), 'staff' => $this->input->post('staff'), 'details' => $this->input->post('details'), 'category' => $this->input->post('category'), 'total' => $this->input->post('total'), 'fileID' => $this->input->post('file'), 'method' => $this->input->post('method'), 'paid' => $this->input->post('paid'), 'dueDate' => $this->input->post('dueDate'), 'vat' => $this->input->post('vat'), 'status' => $this->input->post('status'), 'action' => 'none');
+                $trans = array('transID' => $this->input->post('transID'), 'no' => $this->input->post('no'), 'invoice' => $this->input->post('invoice'), 'balance' => $this->input->post('balance'), 'method' => $this->input->post('method'), 'orgID' => $this->input->post('orgID'), 'client' => $this->input->post('client'), 'type' => $this->input->post('type'), 'created' => $this->input->post('created'), 'staff' => $this->input->post('staff'), 'details' => $this->input->post('details'), 'category' => $this->input->post('category'), 'total' => $this->input->post('total'), 'fileID' => $this->input->post('fileID'), 'method' => $this->input->post('method'), 'paid' => $this->input->post('paid'), 'dueDate' => $this->input->post('dueDate'), 'vat' => $this->input->post('vat'), 'status' => $this->input->post('status'), 'action' => 'none');
                 $this->Md->update_dynamic($this->input->post('transID'), 'transID', 'transaction', $trans);
                 echo 'Transaction information updated';
                 return;
             } else {
-                $trans = array('transID' => $this->input->post('transID'), 'no' => $this->input->post('no'), 'invoice' => $this->input->post('invoice'), 'balance' => $this->input->post('balance'), 'method' => $this->input->post('method'), 'orgID' => $this->input->post('orgID'), 'client' => $this->input->post('client'), 'type' => $this->input->post('type'), 'created' => $this->input->post('created'), 'staff' => $this->input->post('staff'), 'details' => $this->input->post('details'), 'category' => $this->input->post('category'), 'total' => $this->input->post('total'), 'fileID' => $this->input->post('file'), 'method' => $this->input->post('method'), 'paid' => $this->input->post('paid'), 'dueDate' => $this->input->post('dueDate'), 'vat' => $this->input->post('vat'), 'status' => $this->input->post('status'), 'action' => 'none');
+                $trans = array('transID' => $this->input->post('transID'), 'no' => $this->input->post('no'), 'invoice' => $this->input->post('invoice'), 'balance' => $this->input->post('balance'), 'method' => $this->input->post('method'), 'orgID' => $this->input->post('orgID'), 'client' => $this->input->post('client'), 'type' => $this->input->post('type'), 'created' => $this->input->post('created'), 'staff' => $this->input->post('staff'), 'details' => $this->input->post('details'), 'category' => $this->input->post('category'), 'total' => $this->input->post('total'), 'fileID' => $this->input->post('fileID'), 'method' => $this->input->post('method'), 'paid' => $this->input->post('paid'), 'dueDate' => $this->input->post('dueDate'), 'vat' => $this->input->post('vat'), 'status' => $this->input->post('status'), 'action' => 'none');
                 $this->Md->save($trans, 'transaction');
                 echo "Information saved online";
                 return;
@@ -93,7 +126,7 @@ class Upload extends CI_Controller {
         }
         if ($this->input->post('action') == 'create') {
 
-            $trans = array('transID' => $this->input->post('transID'), 'no' => $this->input->post('no'), 'invoice' => $this->input->post('invoice'), 'balance' => $this->input->post('balance'), 'method' => $this->input->post('method'), 'orgID' => $this->input->post('orgID'), 'client' => $this->input->post('client'), 'type' => $this->input->post('type'), 'created' => $this->input->post('created'), 'staff' => $this->input->post('staff'), 'details' => $this->input->post('details'), 'category' => $this->input->post('category'), 'total' => $this->input->post('total'), 'fileID' => $this->input->post('file'), 'method' => $this->input->post('method'), 'paid' => $this->input->post('paid'), 'dueDate' => $this->input->post('dueDate'), 'vat' => $this->input->post('vat'), 'status' => $this->input->post('status'), 'action' => 'none');
+            $trans = array('transID' => $this->input->post('transID'), 'no' => $this->input->post('no'), 'invoice' => $this->input->post('invoice'), 'balance' => $this->input->post('balance'), 'method' => $this->input->post('method'), 'orgID' => $this->input->post('orgID'), 'client' => $this->input->post('client'), 'type' => $this->input->post('type'), 'created' => $this->input->post('created'), 'staff' => $this->input->post('staff'), 'details' => $this->input->post('details'), 'category' => $this->input->post('category'), 'total' => $this->input->post('total'), 'fileID' => $this->input->post('fileID'), 'method' => $this->input->post('method'), 'paid' => $this->input->post('paid'), 'dueDate' => $this->input->post('dueDate'), 'vat' => $this->input->post('vat'), 'status' => $this->input->post('status'), 'action' => 'none');
             $this->Md->save($trans, 'transaction');
             echo "Transaction information saved online";
             return;
@@ -165,7 +198,7 @@ class Upload extends CI_Controller {
             // $query = $this->Md->delete($id, 'files');
             $query = $this->Md->cascade($this->input->post('taskID'), 'tasks', 'taskID');
             $query = $this->Md->cascade($this->input->post('taskID'), 'attend', 'taskID');
-            //  $query = $this->Md->cascade($this->input->post('taskID'), 'attend', 'taskID');
+            $query = $this->Md->cascade($this->input->post('taskID'), 'message', 'taskID');
         }
     }
 
@@ -178,14 +211,16 @@ class Upload extends CI_Controller {
             return;
         }
     }
+
     public function msg() {
 
         $this->load->helper(array('form', 'url'));
         if ($this->input->post('action') == 'create') {
-            $mails = array('messageID' => $this->input->post('messageID'), 'body' => $this->input->post('body'), 'subject' => $this->input->post('subject'), 'date' => $this->input->post('date'), 'to' => $this->input->post('to'), 'created' => $this->input->post('created'), 'from' => $this->input->post('from'), 'sent' => $this->input->post('sent'), 'type' => $this->input->post('type'), 'orgID' => $this->input->post('orgID'),'action' => 'none', 'contact' => $this->input->post('contact'), 'email' => $this->input->post('email'));
+            $mails = array('messageID' => $this->input->post('messageID'), 'taskID' => $this->input->post('taskID'), 'body' => $this->input->post('body'), 'subject' => $this->input->post('subject'), 'date' => $this->input->post('date'), 'to' => $this->input->post('to'), 'created' => $this->input->post('created'), 'from' => $this->input->post('from'), 'sent' => $this->input->post('sent'), 'type' => $this->input->post('type'), 'orgID' => $this->input->post('orgID'), 'action' => 'none', 'contact' => $this->input->post('contact'), 'email' => $this->input->post('email'));
             $this->Md->save($mails, 'message');
             echo "Attendance Information saved online";
             return;
         }
     }
+
 }

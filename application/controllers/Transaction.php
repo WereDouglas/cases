@@ -211,7 +211,7 @@ class Transaction extends CI_Controller {
 
         $this->load->helper(array('form', 'url'));
 
-        $query = $this->Md->query("SELECT *,users.name as client FROM transaction INNER JOIN users ON transaction.client = users.userID  WHERE transaction.orgID ='" . $this->session->userdata('orgID') . "' ");
+        $query = $this->Md->query("SELECT *  FROM transaction  WHERE orgID ='" . $this->session->userdata('orgID') . "' ");
         //  var_dump($query);
         if ($query) {
             $data['payments'] = $query;
@@ -228,6 +228,73 @@ class Transaction extends CI_Controller {
 
         $this->load->view('transactions-page', $data);
     }
+
+    public function income() {
+
+        $this->load->helper(array('form', 'url'));
+
+        $query = $this->Md->query("SELECT *  FROM transaction  WHERE orgID ='" . $this->session->userdata('orgID') . "' AND type='Income'");
+        //  var_dump($query);
+        if ($query) {
+            $data['payments'] = $query;
+        } else {
+            $data['payments'] = array();
+        }
+        $query = $this->Md->query("SELECT * FROM item where orgID = '" . $this->session->userdata('orgID') . "'");
+        //  var_dump($query);
+        if ($query) {
+            $data['items'] = $query;
+        } else {
+            $data['items'] = array();
+        }
+
+        $this->load->view('income-page', $data);
+    }
+
+    public function expense() {
+
+        $this->load->helper(array('form', 'url'));
+
+        $query = $this->Md->query("SELECT *  FROM transaction  WHERE orgID ='" . $this->session->userdata('orgID') . "' AND type='Expense'  ");
+        //  var_dump($query);
+        if ($query) {
+            $data['payments'] = $query;
+        } else {
+            $data['payments'] = array();
+        }
+        $query = $this->Md->query("SELECT * FROM item where orgID = '" . $this->session->userdata('orgID') . "'");
+        //  var_dump($query);
+        if ($query) {
+            $data['items'] = $query;
+        } else {
+            $data['items'] = array();
+        }
+
+        $this->load->view('expense-page', $data);
+    }
+
+    public function advanced() {
+
+        $this->load->helper(array('form', 'url'));
+
+        $query = $this->Md->query("SELECT *  FROM transaction  WHERE orgID ='" . $this->session->userdata('orgID') . "' AND created='".  date('Y-m-d')."'");
+        //  var_dump($query);
+        if ($query) {
+            $data['payments'] = $query;
+        } else {
+            $data['payments'] = array();
+        }
+        $query = $this->Md->query("SELECT * FROM item where orgID = '" . $this->session->userdata('orgID') . "'");
+        //  var_dump($query);
+        if ($query) {
+            $data['items'] = $query;
+        } else {
+            $data['items'] = array();
+        }
+
+        $this->load->view('transaction-advanced', $data);
+    }
+
     public function payments() {
 
         $this->load->helper(array('form', 'url'));
@@ -338,7 +405,7 @@ class Transaction extends CI_Controller {
         $org = $this->session->userdata('orgID');
         $approved = 'false';
         $total = $e->total;
-        $file = ' ';
+        $file = 'none';
         if ($e->fileid != "") {
             $file = $e->fileid;
         }
@@ -402,12 +469,12 @@ class Transaction extends CI_Controller {
                 $ts++;
             }
         }
-       // $paymentID = $this->GUID();
-       // $payment = array('paymentID' => $paymentID, 'transID' => $transactionID, 'amount' => $amount, 'balance' => $balance, 'created' => $created, 'method' => $method, 'no' => $no, 'userID' => $users, 'approved' => $approved, 'recieved' => $this->session->userdata('username'), 'orgID' => $this->session->userdata('orgID'));
-       //$this->Md->save($payment, 'payment');
+        // $paymentID = $this->GUID();
+        // $payment = array('paymentID' => $paymentID, 'transID' => $transactionID, 'amount' => $amount, 'balance' => $balance, 'created' => $created, 'method' => $method, 'no' => $no, 'userID' => $users, 'approved' => $approved, 'recieved' => $this->session->userdata('username'), 'orgID' => $this->session->userdata('orgID'));
+        //$this->Md->save($payment, 'payment');
 
 
-        $trans = array('transID' => $transactionID,'no' => $no,'invoice' => $invoice, 'amount' => $amount, 'balance' => $balance, 'method' => $method,'orgID' => $this->session->userdata('orgID'), 'client' => $client, 'type' => $types, 'created' => $created, 'staff' => $this->session->userdata('username'), 'details' => $details, 'category' => $category, 'total' => $total, 'fileID' => $file, 'action' => 'none');
+        $trans = array('transID' => $transactionID, 'no' => $no, 'invoice' => $invoice, 'amount' => $amount, 'balance' => $balance, 'method' => $method, 'orgID' => $this->session->userdata('orgID'), 'client' => $client, 'type' => $types, 'created' => $created, 'staff' => $this->session->userdata('username'), 'details' => $details, 'category' => $category, 'total' => $total, 'fileID' => $file, 'action' => 'none');
         $this->Md->save($trans, 'transaction');
 
         echo 'saved';
@@ -492,61 +559,30 @@ class Transaction extends CI_Controller {
 
         $this->load->helper(array('form', 'url'));
         $id = $this->input->post('id');
-        
-        $info = array('type' => $this->input->post('type'), 'total' => $this->input->post('total'), 'category' => $this->input->post('category'), 'details' => $this->input->post('details'));     
+
+        $info = array('type' => $this->input->post('type'), 'total' => $this->input->post('total'), 'category' => $this->input->post('category'), 'details' => $this->input->post('details'));
         $this->Md->update_dynamic($id, 'transID', 'transaction', $info);
-      
+
         echo 'INFORMATION UPDATED';
     }
-     public function updatepayment() {
+
+    public function updatepayment() {
 
         $this->load->helper(array('form', 'url'));
         $id = $this->input->post('id');
-        
-        $info = array('amount' => $this->input->post('amount'), 'method' => $this->input->post('method'), 'balance' => $this->input->post('balance'));     
+
+        $info = array('amount' => $this->input->post('amount'), 'method' => $this->input->post('method'), 'balance' => $this->input->post('balance'));
         $this->Md->update_dynamic($id, 'paymentID', 'payment', $info);
-       
+
         echo 'INFORMATION UPDATED';
     }
 
     public function delete() {
-
-        if ($this->session->userdata('level') == 1) {
-            $this->load->helper(array('form', 'url'));
-            $id = $this->uri->segment(3);
-            $query = $this->Md->delete($id, 'transactions');
-            //cascade($id,$table,$field)
-            $query = $this->Md->cascade($id, 'payments', 'transactionID');
-            $query = $this->Md->cascade($id, 'item', 'transactionID');
-            if ($this->db->affected_rows() > 0) {
-                $query = $this->Md->query("SELECT * FROM client where org = '" . $this->session->userdata('orgid') . "'");
-                if ($query) {
-                    foreach ($query as $res) {
-                        $syc = array('object' => 'transactions', 'contents' => $id, 'action' => 'delete', 'oid' => $id, 'created' => date('Y-m-d H:i:s'), 'checksum' => $this->GUID(), 'client' => $res->name);
-                        $this->Md->save($syc, 'sync_data');
-                    }
-                }
-                $this->session->set_flashdata('msg', '<div class="alert alert-error">
-                                                   
-                                                <strong>
-                                                Information deleted	</strong>									
-						</div>');
-                redirect('reciept/payment', 'refresh');
-            } else {
-                $this->session->set_flashdata('msg', '<div class="alert alert-error">
-                                                   
-                                                <strong>
-                                             Action Failed	</strong>									
-						</div>');
-                redirect('reciept/payment', 'refresh');
-            }
-        } else {
-            $this->session->set_flashdata('msg', '<div class="alert alert-error">                                                   
-                                                <strong>
-                                                 You cannot carry out this action ' . '	</strong>									
-						</div>');
-            redirect('reciept/payment', 'refresh');
-        }
+        $this->load->helper(array('form', 'url'));
+        $transID = $this->uri->segment(3);
+        $query = $this->Md->cascade($transID, 'transaction', 'transID');
+        $query = $this->Md->cascade($transID, 'item', 'transID');
+        redirect('/transaction/all', 'refresh');
     }
 
     public function add() {
@@ -605,6 +641,141 @@ class Transaction extends CI_Controller {
             redirect('/file', 'refresh');
         }
         redirect('/file', 'refresh');
+    }
+
+    public function updater() {
+        $this->load->helper(array('form', 'url'));
+
+        if (!empty($_POST)) {
+
+            foreach ($_POST as $field_name => $val) {
+                //clean post values
+                $field_id = strip_tags(trim($field_name));
+                $val = strip_tags(trim(mysql_real_escape_string($val)));
+                //from the fieldname:user_id we need to get user_id
+                $split_data = explode(':', $field_id);
+                $user_id = $split_data[1];
+                $field_name = $split_data[0];
+                if (!empty($user_id) && !empty($field_name) && !empty($val)) {
+                    //update the values
+                    $task = array($field_name => $val);
+                    // $this->Md->update($user_id, $task, 'tasks');
+                    $this->Md->update_dynamic($user_id, 'transID', 'transaction', $task);
+                    echo "Updated";
+                } else {
+                    echo "Invalid Requests";
+                }
+            }
+        } else {
+            echo "Invalid Requests";
+        }
+    }
+
+    public function generate() {
+
+        $this->load->helper(array('form', 'url'));
+        $gen = "";
+        $start = $this->input->post('start');
+        $end = $this->input->post('end');
+        $gen = $start . " to " . $end;
+
+        echo '<h3>' . $gen . '</h3>';
+
+        $sql[] = NULL;
+        unset($sql);
+        if ($start != "" && $end != "") {
+
+            $sql[] = "created BETWEEN '$start' AND '$end' ";
+        }
+
+        $query = "SELECT * FROM transaction";
+
+        if (!empty($sql)) {
+            $query .= ' WHERE ' . implode(' AND ', $sql);
+        }
+
+        $get_result = $this->Md->query($query);
+
+        if ($get_result) {
+
+            echo '<div class="scroll">  
+                 <table id="datatables" class="table table-striped table-bordered scroll ">
+            <thead>
+                <tr>
+                    <th>DATE</th>
+                    <th>CLIENT</th>                   
+                    <th>CATEGORY</th>
+                    <th>TYPE</th>
+                    <th>DETAILS</th>
+                    <th>TOTAL</th>                   
+                    <th>CREATED:</th>                  
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>';
+
+            if (is_array($get_result) && count($get_result)) {
+                foreach ($get_result as $loop) {
+
+                    echo '<tr class="odd">'
+                    . '<td id="created:"' . $loop->transID . '" contenteditable="true"><span class="green">' . $loop->created . '</span></td>
+                    <td id="client:"' . $loop->transID . '" contenteditable="true">' . $loop->client . '</td>
+                    <td id="category:"' . $loop->category . '" contenteditable="true">' . $loop->category . '</td>
+                    <td id="type:"' . $loop->type . '" contenteditable="true"><span class="red">' . $loop->type . '</span></td>
+                    <td id="details:"' . $loop->details . '" contenteditable="true"><span class="blue">' . $loop->details . '</span></td>
+                    <td id="total:"' . $loop->total . '" contenteditable="true"><span class="green">' . $loop->total . '</span></td>
+                    <td>' . $loop->created . '</td>
+                    <td>  <a class="btn-danger btn-small icon-remove" href="' . base_url() . "index.php/transaction/delete/" . $loop->transID . '">delete' . '</a></td>
+                    </tr>
+                  ';
+                }
+                echo ' </tbody>   </table></div>';
+            } else {
+
+                echo ' no values ';
+            }
+        }
+    }
+
+    public function generate_post() {
+
+        $this->load->helper(array('form', 'url'));
+        $gen = "";
+        $start = $this->input->post('starts');
+        $end = $this->input->post('ends');
+        $gen = $start . " to " . $end;
+
+        echo '<h3>' . $gen . '</h3>';
+
+        $sql[] = NULL;
+        unset($sql);
+        if ($start != "" && $end != "") {
+
+            $sql[] = "created BETWEEN '$start' AND '$end' ";
+        }
+        $sql[] = "orgID = '" . $this->session->userdata('orgID') . "'";
+        $query = "SELECT * FROM transaction";
+
+        if (!empty($sql)) {
+            $query .= ' WHERE ' . implode(' AND ', $sql);
+        }
+
+        $get_result = $this->Md->query($query);
+
+        if ($get_result) {
+            //  var_dump($query);
+            if ($query) {
+                $data['payments'] = $get_result;
+            } else {
+                $data['payments'] = array();
+            }
+
+            $this->load->view('transaction-advanced', $data);
+        }
+        else{
+            $data = "No such data";
+            $this->load->view('transaction-advanced', $data);
+        }
     }
 
 }
