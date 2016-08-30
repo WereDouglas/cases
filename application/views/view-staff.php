@@ -20,6 +20,7 @@
                     <th>CATEGORY</th>
                     <th>RESET PASSWORD</th>
                     <th>CREATED:</th>
+                    <th>DETAILS</th>
                     <th>ACTION</th>
                 </tr>
             </thead>
@@ -44,7 +45,7 @@
                                 <?php
                                 if ($loop->image != "") {
                                     ?>
-                                    <img  height="50px" width="50px"  src="<?= base_url(); ?>uploads/<?php echo $loop->userID.".jpg"; ?>" alt="logo" />
+                                    <img  height="50px" width="50px"  src="<?= base_url(); ?>uploads/<?php echo $loop->userID . ".jpg"; ?>" alt="logo" />
                                     <?php
                                 } else {
                                     ?>
@@ -133,9 +134,13 @@
                             <td class="edit_td">
                                 <?php echo $created; ?>
                             </td>   
+                            <td class="edit_td">
+                                <a class="btn btn-primary btn-xs" href="<?php echo base_url() . "index.php/user/profile/" . $name; ?>"><li class="fa fa-folder">View</li></a>
+
+                            </td>   
 
                             <td class="center">
-                                <a class="btn-danger btn-small icon-remove" href="<?php echo base_url() . "index.php/user/delete/" . $id; ?>">delete</a>
+                                <a class="btn btn-danger btn-xs" href="<?php echo base_url() . "index.php/user/delete/" . $id; ?>"><li class="fa fa-trash">Delete</li></a>
                             </td>
 
                         </tr>

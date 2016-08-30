@@ -5,11 +5,11 @@
         <div class="x_panel">
 
             <div class="">
-<?php echo $this->session->flashdata('msg'); ?>
+                <?php echo $this->session->flashdata('msg'); ?>
                 <form  enctype="multipart/form-data" class="form-horizontal form-label-left"  action='<?= base_url(); ?>index.php/user/create'  method="post">
 
                     <span class="section">USER INFORMATION</span>
-                     <div class=" item form-group">
+                    <div class=" item form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Designation</label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
                             <select class="optional form-control col-md-7 col-xs-12"  data-placeholder="Choose a title" name="designation" id="designation">
@@ -65,7 +65,7 @@
                             <input type="email" id="email2" name="confirm_email" data-validate-linked="email" required="required" class="form-control col-md-7 col-xs-12">
                         </div>
                     </div>
-                   
+
                     <div class="item form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="number">Contact <span class="required">*</span>
                         </label>
@@ -73,10 +73,10 @@
                             <input type="number" id="contact" name="contact" required="required" class="form-control col-md-7 col-xs-12">
                         </div>
                     </div>
-                    
-                    
+
+
                     <div class="item form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="password" >Password</label><span class="required">*</span>
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="password" >Password<span class="required">*</span></label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
                             <input id="password" type="password" name="password" data-validate-length="6" class="form-control col-md-7 col-xs-12" required="required">
                         </div>
@@ -87,12 +87,28 @@
                             <input id="password2" type="password" name="password2" data-validate-linked="password" class="form-control col-md-7 col-xs-12" required="required">
                         </div>
                     </div>
-                    
+
                     <div class="item form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="textarea">Address <span class="required">*</span>
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
                             <textarea id="textarea" required="required" name="address" class="form-control col-md-7 col-xs-12"></textarea>
+                        </div>
+                    </div>
+
+
+                    <div class=" item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Supervisor</label>
+                        <div class="col-md-6 col-sm-5 col-xs-12">
+
+                            <input class="easyui-combobox form-control" name="supervisor" id="supervisor" style="width:100%;height:26px" data-options="
+                                   url:'<?php echo base_url() ?>index.php/task/staff',
+                                   method:'get',
+                                   valueField:'name',
+                                   textField:'name',
+                                   multiple:false,
+                                   panelHeight:'auto'
+                                   ">
                         </div>
                     </div>
                     <div class="ln_solid"></div>

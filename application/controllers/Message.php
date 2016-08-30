@@ -15,7 +15,7 @@ class Message extends CI_Controller {
 
     public function index() {
 
-        $query = $this->Md->query("SELECT * FROM message where  orgID='" . $this->session->userdata('orgID') . "'");
+        $query = $this->Md->query("SELECT * FROM message where  orgID='" . $this->session->userdata('orgID') . "' AND date= '".  date('Y-m-d')."'");
         if ($query) {
             $data['messages'] = $query;
         }
@@ -68,7 +68,7 @@ class Message extends CI_Controller {
 
         $this->load->library('email');
         $today = date('Y-m-d');
-        $get_result = $this->Md->query("SELECT * FROM message WHERE  date='" . $today . "' AND sent ='false' OR sent ='true'");
+        $get_result = $this->Md->query("SELECT * FROM message WHERE  date='" . $today . "' AND sent ='false'");
         foreach ($get_result as $res) {
             if ($res->email != "") {
 
@@ -88,6 +88,74 @@ class Message extends CI_Controller {
     public function users() {
         $query = $this->Md->query("SELECT * FROM users where  org='" . $this->session->userdata('orgid') . "'");
         echo json_encode($query);
+    }
+
+    public function updater() {
+        $this->load->helper(array('form', 'url'));
+
+        if (!empty($_POST)) {
+
+            foreach ($_POST as $field_name => $val) {
+                //clean post values
+                $field_id = strip_tags(trim($field_name));
+                $val = strip_tags(trim(mysql_real_escape_string($val)));
+                //from the fieldname:user_id we need to get user_id
+                $split_data = explode(':', $field_id);
+                $user_id = $split_data[1];
+                $field_name = $split_data[0];
+                if (!empty($user_id) && !empty($field_name) && !empty($val)) {
+                    //update the values
+                    $task = array($field_name => $val);
+                    // $this->Md->update($user_id, $task, 'tasks');
+                    $this->Md->update_dynamic($user_id, 'messageID', 'message', $task);
+                    echo "Updated";
+                } else {
+                    echo "Invalid Requests";
+                }
+            }
+        } else {
+            echo "Invalid Requests";
+        }
+    }
+
+    public function generate_post() {
+
+        $this->load->helper(array('form', 'url'));
+        $gen = "";
+        $start = $this->input->post('starts');
+        $end = $this->input->post('ends');
+        $gen = $start . " to " . $end;
+
+        echo '<h3>' . $gen . '</h3>';
+
+        $sql[] = NULL;
+        unset($sql);
+        if ($start != "" && $end != "") {
+
+            $sql[] = "date BETWEEN '$start' AND '$end' ";
+        }
+        $sql[] = "orgID = '" . $this->session->userdata('orgID') . "'";
+        $query = "SELECT * FROM message";
+
+        if (!empty($sql)) {
+            $query .= ' WHERE ' . implode(' AND ', $sql);
+        }
+
+        $get_result = $this->Md->query($query);
+
+        if ($get_result) {
+            //  var_dump($query);
+            if ($query) {
+                $data['messages'] = $get_result;
+            } else {
+                $data['messages'] = array();
+            }
+            $this->load->view('message-page', $data);
+        } else {
+
+            $data = "";
+            $this->load->view('message-page', $data);
+        }
     }
 
     public function delete() {

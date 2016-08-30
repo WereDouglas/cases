@@ -57,7 +57,7 @@ class User extends CI_Controller {
             $file_element_name = 'userfile';
             $new_name = $userid;
             $config['file_name'] = $userid;
-            $config['upload_path'] = 'uploads/';           
+            $config['upload_path'] = 'uploads/';
             $config['allowed_types'] = '*';
             $config['encrypt_name'] = FALSE;
             $config['allowed_types'] = 'jpg';
@@ -71,14 +71,14 @@ class User extends CI_Controller {
             $data = $this->upload->data();
             $submitted = date('Y-m-d');
             $userfile = $data['file_name'];
-            $users = array('userID' => $userid, 'orgID' => $this->session->userdata('orgID'), 'name' => $this->input->post('name'), 'email' => $this->input->post('email'), 'password' => md5($this->input->post('name')), 'designation' => $this->input->post('designation'), 'image' => $userfile, 'address' => $this->input->post('address'), 'contact' => $this->input->post('contact'), 'category' => $this->input->post('category'), 'created' => date('Y-m-d H:i:s'), 'status' => 'Active','action'=>'none');
+            $users = array('userID' => $userid, 'orgID' => $this->session->userdata('orgID'), 'name' => $this->input->post('name'), 'email' => $this->input->post('email'), 'password' => md5($this->input->post('name')), 'designation' => $this->input->post('designation'), 'image' => $userfile, 'address' => $this->input->post('address'), 'contact' => $this->input->post('contact'), 'supervisor' => $this->input->post('supervisor'), 'category' => $this->input->post('category'), 'created' => date('Y-m-d H:i:s'), 'status' => 'Active', 'action' => 'none');
             $this->Md->save($users, 'users');
 
             $this->session->set_flashdata('msg', '<div class="alert alert-success">  <strong>Information saved</strong></div>');
 
             redirect('/user/add', 'refresh');
         }
-    } 
+    }
 
     public function api() {
         $orgid = urldecode($this->uri->segment(3));
@@ -201,8 +201,18 @@ class User extends CI_Controller {
         $this->load->view('view-staff', $data);
     }
 
+    public function charges() {
+
+        $this->load->helper(array('form', 'url'));
+        $query = $this->Md->query("SELECT * FROM users where  orgID='" . $this->session->userdata('orgID') . "' AND category='Staff'");
+        if ($query) {
+            $data['users'] = $query;
+        }
+        $this->load->view('view-charges', $data);
+    }
+
     public function users() {
-        $query = $this->Md->query("SELECT * FROM users where types <>'client' AND org='" . $this->session->userdata('orgid') . "'");
+        $query = $this->Md->query("SELECT * FROM users where types <>'client' AND orgID='" . $this->session->userdata('orgID') . "'");
         //  var_dump($query);
         if ($query) {
             $data['users'] = $query;
@@ -210,6 +220,56 @@ class User extends CI_Controller {
             $data['users'] = array();
         }
         $this->load->view('user-page', $data);
+    }
+
+    public function profile() {
+        
+        $this->load->helper(array('form', 'url'));
+        $name =  urldecode( $this->uri->segment(3));
+        
+        $query = $this->Md->query("SELECT * FROM events where orgID = '" . $this->session->userdata('orgID') . "'AND user='" . $name. "' ");
+
+        if ($query) {
+            $data['events'] = $query;
+        } else {
+            $data['events'] = array();
+        }
+        $query = $this->Md->query("SELECT * FROM users where name ='" .$name . "' AND orgID='" . $this->session->userdata('orgID') . "'");
+
+        if ($query) {
+            $data['users'] = $query;
+        } else {
+            $data['users'] = array();
+        }
+        $this->load->helper(array('form', 'url'));
+        $query = $this->Md->query("SELECT * FROM file where orgID = '" . $this->session->userdata('orgID') . "' AND lawyer='" .$name . "' ");
+
+        if ($query) {
+            $data['files'] = $query;
+        } else {
+            $data['files'] = array();
+        }
+        $query = $this->Md->query("SELECT * FROM  tasks where orgID = '" . $this->session->userdata('orgID') . "' AND userID = '" . $name  . "' ");
+        if ($query) {
+            $data['sch'] = $query;
+        } else {
+            $data['sch'] = array();
+        }
+        $query = $this->Md->query("SELECT * FROM attend where orgID = '" . $this->session->userdata('orgID') . "'");
+        //  var_dump($query);
+        if ($query) {
+            $data['att'] = $query;
+        } else {
+            $data['att'] = array();
+        }
+        $query = $this->Md->query("SELECT * FROM document where orgID = '" . $this->session->userdata('orgID') . "' AND lawyer = '" . $name  . "' OR client = '" . $name  . "' ");
+
+        if ($query) {
+            $data['docs'] = $query;
+        } else {
+            $data['docs'] = array();
+        }
+        $this->load->view('user-profile', $data);
     }
 
     public function GUID() {
@@ -396,6 +456,34 @@ class User extends CI_Controller {
             redirect('/user/client', 'refresh');
         }
         $this->client();
+    }
+
+    public function updater() {
+        $this->load->helper(array('form', 'url'));
+
+        if (!empty($_POST)) {
+
+            foreach ($_POST as $field_name => $val) {
+                //clean post values
+                $field_id = strip_tags(trim($field_name));
+                $val = strip_tags(trim(mysql_real_escape_string($val)));
+                //from the fieldname:user_id we need to get user_id
+                $split_data = explode(':', $field_id);
+                $user_id = $split_data[1];
+                $field_name = $split_data[0];
+                if (!empty($user_id) && !empty($field_name) && !empty($val)) {
+                    //update the values
+                    $task = array($field_name => $val);
+                    // $this->Md->update($user_id, $task, 'tasks');
+                    $this->Md->update_dynamic($user_id, 'userID', 'users', $task);
+                    echo "Updated";
+                } else {
+                    echo "Invalid Requests";
+                }
+            }
+        } else {
+            echo "Invalid Requests";
+        }
     }
 
 }

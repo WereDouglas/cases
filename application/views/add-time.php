@@ -18,14 +18,14 @@
         // $start = urldecode($this->uri->segment(3));
         $start = $this->uri->segment(3);
         $end = $this->uri->segment(4);
-          $resource = urldecode($this->uri->segment(5));
+        $resource = urldecode($this->uri->segment(5));
         // basic sanity check
         new DateTime($start) or die("invalid date (start)");
         new DateTime($end) or die("invalid date (end)");
         ?>
 
-        <form id="f">
-            <h4>New task for <?php echo $resource = urldecode($this->uri->segment(5));?></h4>
+        <form id="f" style="padding: 10px;">
+            <h6>New task for <?php echo $resource; ?></h6>
 
             <div class=" item form-group">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Title</label>
@@ -36,24 +36,20 @@
             <div class=" item form-group">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Start</label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
-                    <?php print (new DateTime($start))->format('d/M/y g:i A') ?>
-                    <input type="hidden" id="start" name="start" value="<?php echo $start ?>" />
+                    <?php echo $start; ?> to  <?php echo $end; ?>
+                    <input type="hidden" id="start" name="start" value="<?php echo $start; ?>" />
+                     <input type="hidden" id="end" name="end" value="<?php echo $end; ?>" />
+                    <input type="hidden" id="resource" name="resource" value="<?php echo $resource; ?>" />
                 </div>
             </div> 
-            <div class=" item form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12">End</label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
-                    <?php print (new DateTime($end))->format('d/M/y g:i A') ?>
-                    <input type="hidden" id="end" name="end" value="<?php echo $end ?>" />
-                </div>
-            </div> 
-            <div class=" item form-group">
+            
+<!--            <div class=" item form-group">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Details</label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
-                    <input type="hidden" id="resource" name="resource" value="<?php echo $resource ?>" />
+                    
                     <input type="Text" class="col-md-6 col-sm-6 col-xs-12" id="details" name="details" value="" />
                 </div>
-            </div> 
+            </div> -->
 
             <div class=" item form-group">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">File/Case</label>

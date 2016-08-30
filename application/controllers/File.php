@@ -199,6 +199,64 @@ class File extends CI_Controller {
             echo json_encode($result);
         }
     }
+      public function profile() {
+        
+        $this->load->helper(array('form', 'url'));
+        $name =  urldecode( $this->uri->segment(3));
+        
+        $query = $this->Md->query("SELECT * FROM events where orgID = '" . $this->session->userdata('orgID') . "'AND user='" . $name. "' ");
+
+        if ($query) {
+            $data['events'] = $query;
+        } else {
+            $data['events'] = array();
+        }
+        $query = $this->Md->query("SELECT * FROM users where name ='" .$name . "' AND orgID='" . $this->session->userdata('orgID') . "'");
+
+        if ($query) {
+            $data['users'] = $query;
+        } else {
+            $data['users'] = array();
+        }
+        $this->load->helper(array('form', 'url'));
+        $query = $this->Md->query("SELECT * FROM file where orgID = '" . $this->session->userdata('orgID') . "' AND name='" .$name . "' ");
+
+        if ($query) {
+            $data['files'] = $query;
+        } else {
+            $data['files'] = array();
+        }
+        $query = $this->Md->query("SELECT * FROM  tasks where orgID = '" . $this->session->userdata('orgID') . "' AND fileID = '" . $name  . "' ");
+        if ($query) {
+            $data['sch'] = $query;
+        } else {
+            $data['sch'] = array();
+        }
+        $query = $this->Md->query("SELECT * FROM attend where orgID = '" . $this->session->userdata('orgID') . "'");
+        //  var_dump($query);
+        if ($query) {
+            $data['att'] = $query;
+        } else {
+            $data['att'] = array();
+        }
+        $query = $this->Md->query("SELECT * FROM document where orgID = '" . $this->session->userdata('orgID') . "' AND fileID = '" . $name  . "'");
+
+        if ($query) {
+            $data['docs'] = $query;
+        } else {
+            $data['docs'] = array();
+        }
+         $query = $this->Md->query("SELECT * FROM transaction where orgID = '" . $this->session->userdata('orgID') . "'  AND fileID = '" . $name  . "' ");
+        //  var_dump($query);
+        if ($query) {
+            $data['trans'] = $query;
+        } else {
+            $data['trans'] = array();
+        }
+        $this->load->view('file-profile', $data);
+    }
+
+   
 
     public function view() {
 
@@ -288,7 +346,7 @@ class File extends CI_Controller {
         $this->load->helper(array('form', 'url'));
         $fileID = $this->uri->segment(3);
         $query = $this->Md->cascade($fileID, 'file', 'fileID');
-         redirect('/file/view', 'refresh');
+        redirect('/file/view', 'refresh');
     }
 
     public function create() {
@@ -305,10 +363,12 @@ class File extends CI_Controller {
                 $app = "G";
                 break;
         }
+        $contact = $this->Md->query_cell("SELECT * FROM users where name= '" . $this->input->post('client') . "' AND orgID='" . $this->session->userdata('orgID') . "'", 'contact');
+
         $no = $this->session->userdata('code') . "/" . $app . "/" . date('y') . "/" . date('m') . (int) date('d') . (int) date('H') . (int) date('i') . (int) date('ss');
         $orgID = $this->session->userdata('orgID');
         if ($this->input->post('client') != "" || $this->input->post('name') != "") {
-            $files = array('fileID' => $this->GUID(), 'client' => $this->input->post('client'), 'lawyer' => $this->input->post('lawyer'), 'orgID' => $this->session->userdata('orgID'), 'details' => $this->input->post('details'), 'name' => $this->input->post('name'), 'type' => $this->input->post('type'), 'created' => date('Y-m-d H:i:s'), 'status' => 'Active', 'no' => $no, 'subject' => $this->input->post('subject'), 'citation' => $this->input->post('citation'), 'law' => $this->input->post('law'), 'action' => 'none');
+            $files = array('fileID' => $this->GUID(), 'client' => $this->input->post('client'), 'contact' => $contact, 'lawyer' => $this->input->post('lawyer'), 'orgID' => $this->session->userdata('orgID'), 'details' => $this->input->post('details'), 'name' => $this->input->post('name'), 'opened' => $this->input->post('opened'), 'type' => $this->input->post('type'), 'created' => date('Y-m-d'), 'status' => 'Active', 'no' => $no, 'subject' => $this->input->post('subject'), 'case' => $this->input->post('case'), 'note' => $this->input->post('note'), 'progress' => $this->input->post('progress'), 'citation' => $this->input->post('citation'), 'law' => $this->input->post('law'), 'action' => 'none');
             $this->Md->save($files, 'file');
 
             $this->session->set_flashdata('msg', '<div class="alert alert-success">
@@ -320,6 +380,93 @@ class File extends CI_Controller {
         }
 
         redirect('/file/view', 'refresh');
+    }
+
+    public function advanced() {
+
+        $this->load->helper(array('form', 'url'));
+        $query = $this->Md->query("SELECT * FROM file where orgID = '" . $this->session->userdata('orgID') . "' ");
+
+        if ($query) {
+            $data['files'] = $query;
+        } else {
+            $data['files'] = array();
+        }
+
+
+        $this->load->view('file-advanced', $data);
+    }
+
+    public function updater() {
+        $this->load->helper(array('form', 'url'));
+
+        if (!empty($_POST)) {
+
+            foreach ($_POST as $field_name => $val) {
+                //clean post values
+                $field_id = strip_tags(trim($field_name));
+                $val = strip_tags(trim(mysql_real_escape_string($val)));
+                //from the fieldname:user_id we need to get user_id
+                $split_data = explode(':', $field_id);
+                $user_id = $split_data[1];
+                $field_name = $split_data[0];
+                if (!empty($user_id) && !empty($field_name) && !empty($val)) {
+                    //update the values
+                    $task = array($field_name => $val);
+                    // $this->Md->update($user_id, $task, 'tasks');
+                    $this->Md->update_dynamic($user_id, 'fileID', 'file', $task);
+                    echo "Updated";
+                } else {
+                    echo "Invalid Requests";
+                }
+            }
+        } else {
+            echo "Invalid Requests";
+        }
+    }
+
+    public function generate_post() {
+
+        $this->load->helper(array('form', 'url'));
+        $gen = "";
+        $name = $this->input->post('name');
+        $client = $this->input->post('client');
+
+        $gen = $name;
+
+        echo '<h3>' . $gen . '</h3>';
+
+        $sql[] = NULL;
+        unset($sql);
+        if ($name != "") {
+
+            $sql[] = "name= '$name'";
+        }
+        if ($client != "") {
+
+            $sql[] = "client= '$client'";
+        }
+        $sql[] = "orgID = '" . $this->session->userdata('orgID') . "'";
+        $query = "SELECT * FROM file";
+
+        if (!empty($sql)) {
+            $query .= ' WHERE ' . implode(' AND ', $sql);
+        }
+        $get_result = $this->Md->query($query);
+
+        if ($get_result) {
+
+            if ($query) {
+                $data['files'] = $get_result;
+            } else {
+                $data['files'] = array();
+            }
+
+            $this->load->view('file-advanced', $data);
+        } else {
+            $data = "No such data";
+            $this->load->view('file-advanced', $data);
+        }
     }
 
 }

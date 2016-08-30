@@ -1,9 +1,8 @@
-<!DOCTYPE html>
 <html>
     <head>
         <title></title>
-
-        <link type="text/css" rel="stylesheet" href="<?= base_url(); ?>media/layout.css" />
+        <link href="<?php echo base_url(); ?>vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link type="text/css" rel="stylesheet" href="<?= base_url(); ?>media/layout.css?<?php echo "me";?>" />
 
         <link type="text/css" rel="stylesheet" href="<?= base_url(); ?>themes/scheduler_8.css" />    
         <link type="text/css" rel="stylesheet" href="<?= base_url(); ?>themes/bubble_default.css" />    
@@ -13,7 +12,7 @@
         <script src="<?= base_url(); ?>js/jquery-1.9.1.min.js" type="text/javascript"></script>	
         <!-- daypilot libraries -->
         <script src="<?= base_url(); ?>js/daypilot/daypilot-all.min.js" type="text/javascript"></script>
-        <link href="<?php echo base_url(); ?>vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+
 
     </head>
     <body>
@@ -56,7 +55,6 @@
                     }
                 };
                 nav.init();
-
 
                 var dp = new DayPilot.Scheduler("scheduler");
 
@@ -151,7 +149,6 @@
                         args.allowed = false;
                     }
                 };
-
                 // event creating
                 // http://api.daypilot.org/daypilot-scheduler-ontimerangeselected/
                 dp.onTimeRangeSelected = function (args) {
@@ -184,7 +181,7 @@
                 }
 
             </script>
-          
+
         </div>
         <div class="clear">
         </div>

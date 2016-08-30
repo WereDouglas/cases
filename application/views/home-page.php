@@ -43,20 +43,32 @@
                             <div class="menu_section">
                                 <h3>Home</h3>
                                 <ul class="nav side-menu">
-                                    <li><a href="<?php echo base_url() . "index.php/task/add"; ?>" target="frame"><i class="fa fa-calendar"></i> Calendar <span class="fa fa-chevron-down"></span></a>
+                                    <li><a href="<?php echo base_url() . "index.php/task/add"; ?>" target="frame"><i class="fa fa-calendar"></i> Calendar </a>
 
-<!--                                        <ul class="nav child_menu">
-                                            <li><a ha href="<?php echo base_url() . "index.php/task/add"; ?>" target="frame">Schedules</a></li>
-
-
-                                        </ul>-->
+                                        <!--                                        <ul class="nav child_menu">
+                                                                                    <li><a ha href="<?php echo base_url() . "index.php/task/add"; ?>" target="frame">Schedules</a></li>
+                                        
+                                        
+                                                                                </ul>-->
                                     </li>
-                                    <li><a href="<?php echo base_url() . "index.php/time/"; ?>" target="frame"><i class="fa fa-times-circle"></i> Time sheet <span class="fa fa-chevron-down"></span></a> </li>
+
+                                    <li><a><i class="fa fa-laptop"></i>Time sheet<span class="fa fa-chevron-down"></span></a>
+                                        <ul class="nav child_menu">
+
+                                            <li><a href="<?php echo base_url() . "index.php/time/"; ?>" target="frame">View</a></li>
+                                            <li><a href="<?php echo base_url() . "index.php/time/advanced"; ?>" target="frame">Advanced</a></li>
+
+                                        </ul>
+                                    </li>
+
+
+
 
                                     <li><a><i class="fa fa-edit"></i>Files<span class="fa fa-chevron-down"></span></a>
                                         <ul class="nav child_menu">
                                             <li><a href="<?php echo base_url() . "index.php/file/add"; ?>" target="frame">New</a></li>
                                             <li><a href="<?php echo base_url() . "index.php/file/view"; ?>" target="frame">View</a></li>
+                                            <li><a href="<?php echo base_url() . "index.php/file/advanced"; ?>" target="frame">Advanced</a></li>
 
                                         </ul>
                                     </li>
@@ -65,6 +77,7 @@
                                             <li><a href="<?php echo base_url() . "index.php/user/add"; ?>" target="frame">Add user</a></li>
                                             <li><a href="<?php echo base_url() . "index.php/user/clients"; ?>" target="frame">Clients</a></li>
                                             <li><a href="<?php echo base_url() . "index.php/user/staff"; ?>" target="frame">Staff</a></li>
+                                            <li><a href="<?php echo base_url() . "index.php/user/charges"; ?>" target="frame">Charges</a></li>
                                         </ul>
                                     </li>
                                     <li><a><i class="fa fa-table"></i>Tasks <span class="fa fa-chevron-down"></span></a>
@@ -137,7 +150,7 @@
                                         <span class=" fa fa-angle-down"></span>
                                     </a>
                                     <ul class="dropdown-menu dropdown-usermenu pull-right">
-                                        <li><a href="javascript:;"> Profile</a></li>
+                                        <li><a href="<?php echo base_url() . "index.php/user/profile/".$this->session->userdata('username'); ?>" target="frame"> Profile</a></li>
 
                                         <li><a href="<?php echo base_url() . "index.php/home/logout"; ?>"><i class="fa fa-sign-out pull-right"></i> Log Out</a></li>
                                     </ul>
@@ -167,6 +180,36 @@
                                                     <a>
                                                         <span>
                                                             <span><?php echo $loop->subject; ?></span>
+                                                            <span class="time"><?php echo $loop->date; ?></span>
+                                                        </span>
+
+                                                    </a>
+                                                </li>
+
+
+                                                <?php
+                                            }
+                                        }
+                                        ?>
+
+
+                                    </ul>
+                                </li>
+                                <li role="presentation" class="dropdown">
+                                    <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
+                                        <i class="fa fa-calendar"></i>
+                                        <span class="badge bg-red"><?php echo count($notcomplete); ?></span>
+                                    </a>
+                                    <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
+
+                                        <?php
+                                        if (is_array($notcomplete) && count($notcomplete)) {
+                                            foreach ($notcomplete as $loop) {
+                                                ?>  
+                                                <li>
+                                                    <a>
+                                                        <span>
+                                                            <span><?php echo $loop->name . ' for ' . $loop->user; ?></span>
                                                             <span class="time"><?php echo $loop->date; ?></span>
                                                         </span>
 
@@ -242,8 +285,9 @@
                 <!-- footer content -->
                 <footer>
                     <div class="pull-right">
-                        Case professional <small><a href="novariss.com">Novariss Ltd</a></small>
-                    </div>
+                        Case professional <small><a href="novariss.com">  <img height="20px" width="150px"  class="nav" src="<?= base_url(); ?>images/novariss.png" alt="Logo" />
+                  </a></small>
+                        </div>
                     <div class="clearfix"></div>
                 </footer>
                 <!-- /footer content -->

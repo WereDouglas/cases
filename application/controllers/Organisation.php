@@ -173,16 +173,6 @@ class Organisation extends CI_Controller {
       
         $orgID = $this->GUID();
         $userID = $this->GUID();
-        
-        $result = $this->Md->check($email, 'email', 'users');
-
-        if (!$result) {
-            $this->session->set_flashdata('msg', '<div class="alert alert-error">                                                   
-                                                <strong>
-                                                 Email already in use please try again	</strong>									
-						</div>');
-            redirect('/home', 'refresh');
-        }
 
         $result_org = $this->Md->check($code, 'code', 'org');
 
@@ -230,11 +220,11 @@ class Organisation extends CI_Controller {
         $orgfile = $data['file_name'];
         $userfile = $data['file_name'];
 
-        $users = array('userID' => $userID, 'image' => 'default.png', 'email' => $this->input->post('userEmail'), 'name' => $this->input->post('username'), 'orgID' => $orgID, 'address' => $this->input->post('address'), 'contact' => $this->input->post('contact'), 'password' => md5($this->input->post('password')), 'category' => 'Staff', 'designation' =>'Administrator', 'created' => date('Y-m-d H:i:s'), 'status' => 'Active');
+        $users = array('userID' => $userID, 'image' => 'default.png', 'email' => $this->input->post('userEmail'), 'name' => $this->input->post('username'), 'orgID' => $orgID, 'address' => $this->input->post('address'), 'contact' => $this->input->post('contact'), 'password' => md5($this->input->post('password')), 'category' => 'Staff', 'designation' =>'Administrator', 'created' => date('Y-m-d H:i:s'), 'status' => 'Active','action'=>'none');
         $this->Md->save($users, 'users');
 
 
-        $org = array('orgID' => $orgID, 'image' => $orgfile, 'name' => $this->input->post('name'), 'ends' => $ends, 'starts' => $starts, 'currency' =>$this->input->post('currency') , 'status' => 'Active', 'region' => $this->input->post('region'), 'address' => $this->input->post('address'), 'license' => $license, 'country' => $this->input->post('country'), 'code' => $this->input->post('code'), 'city' => $this->input->post('city'), 'email' =>$this->input->post('companyEmail') );
+        $org = array('orgID' => $orgID, 'image' => $orgfile, 'name' => $this->input->post('name'), 'ends' => $ends, 'starts' => $starts, 'currency' =>$this->input->post('currency') , 'status' => 'Active', 'region' => $this->input->post('region'), 'address' => $this->input->post('address'), 'license' => $license, 'country' => $this->input->post('country'), 'code' => $this->input->post('code'), 'city' => $this->input->post('city'), 'email' =>$this->input->post('companyEmail'),'action'=>'none');
         $this->Md->save($org, 'org');
 
         $this->session->set_flashdata('msg', '<div class="alert alert-success">

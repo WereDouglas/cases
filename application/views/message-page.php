@@ -38,6 +38,33 @@
 </style>
 
 <?php echo $this->session->flashdata('msg'); ?>
+<div class="col-md-12 col-sm-12 col-xs-12">
+    <form  enctype="multipart/form-data" class="form-horizontal form-label-left"  action='<?= base_url(); ?>index.php/message/generate_post'  method="post">
+
+        <div class="box-body">
+            <div class="col-md-2">
+                <label class="col-md-6 col-sm-6 col-xs-6">Start date</label>
+                <input class="easyui-datebox" name="starts" id="starts" data-options="formatter:myformatter,parser:myparser" ></input>
+            </div>
+            <div class="col-md-2">
+                <label class="col-md-6 col-sm-6 col-xs-6">End date</label>
+                <input class="easyui-datebox" name="ends" id="ends" data-options="formatter:myformatter,parser:myparser" ></input>
+            </div>
+
+
+            <div class="col-md-6">
+                <button type="submit"  class="btn  btn-small btn-flat">Generate</button>
+
+                <button type="reset"  class="btn btn-small btn-flat">Reset</button>
+            </div>
+           
+           
+        </div><!-- /.box-body -->
+    </form>
+
+
+</div>
+<div class="col-md-12 col-sm-12 col-xs-12"> <span class="info-box status col-md-12 col-sm-12 col-xs-12" id="status"></span></div>
 
 <table class="table zebra-style span12">
     <thead>
@@ -77,7 +104,7 @@
                     <td id="type:<?php echo $loop->messageID; ?>" contenteditable="true"><?php echo $loop->type; ?></td>
                     <td id="contact:<?php echo $loop->messageID; ?>" contenteditable="true"><?php echo $loop->contact; ?></td>
                     <td id="email:<?php echo $loop->messageID; ?>" contenteditable="true"><?php echo $loop->email; ?></td>
-                   
+
 
                     <td>
         <!--                            <a href="#"  value="<?php echo $loop->id; ?>"  id="myLink" onclick="NavigateToSite(this)" class="tooltip-error text-danger" data-rel="tooltip" title="reset">
@@ -137,8 +164,6 @@
                 }
             });
         });
-
-
 
         jQuery('.s_download').click(function () {
             var semail = jQuery("#itzurkarthi_email").val();

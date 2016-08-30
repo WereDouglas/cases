@@ -27,36 +27,44 @@ class Home extends CI_Controller {
     }
 
     public function home() {
+        if ($this->session->userdata('orgID') == "") {
+            $this->session->sess_destroy();
+            redirect('home', 'refresh');
+        }
 
         // $query = $this->Md->query("SELECT * FROM users where org='".$this->session->userdata('orgid')."'");
-      $query = $this->Md->query("SELECT * FROM users where  orgID='".$this->session->userdata('orgID')."'");
+        $query = $this->Md->query("SELECT * FROM users where  orgID='" . $this->session->userdata('orgID') . "'");
         if ($query) {
-              $data['users'] = $query;
+            $data['users'] = $query;
         }
-        $query = $this->Md->query("SELECT * FROM file where  orgID='".$this->session->userdata('orgID')."'");
+        $query = $this->Md->query("SELECT * FROM file where  orgID='" . $this->session->userdata('orgID') . "'");
         if ($query) {
-              $data['files'] = $query;
+            $data['files'] = $query;
         }
-        $query = $this->Md->query("SELECT * FROM message where  orgID='".$this->session->userdata('orgID')."'");
+        $query = $this->Md->query("SELECT * FROM message where  orgID='" . $this->session->userdata('orgID') . "'");
         if ($query) {
-              $data['messages'] = $query;
+            $data['messages'] = $query;
         }
-        $query = $this->Md->query("SELECT * FROM message where  orgID='".$this->session->userdata('orgID')."' AND sent='false'");
+        $query = $this->Md->query("SELECT * FROM events where  orgID='" . $this->session->userdata('orgID') . "' AND status<>'complete' AND date='" . date('Y-m-d') . "'");
         if ($query) {
-              $data['notsent'] = $query;
+            $data['notcomplete'] = $query;
         }
-        $query = $this->Md->query("SELECT * FROM tasks where  orgID='".$this->session->userdata('orgID')."'");
+        $query = $this->Md->query("SELECT * FROM message where  orgID='" . $this->session->userdata('orgID') . "' AND sent='false' AND date='" . date('Y-m-d') . "'");
         if ($query) {
-              $data['tasks'] = $query;
+            $data['notsent'] = $query;
         }
-        
-        $query = $this->Md->query("SELECT * FROM transaction where  orgID='".$this->session->userdata('orgID')."'");
+        $query = $this->Md->query("SELECT * FROM tasks where  orgID='" . $this->session->userdata('orgID') . "'");
         if ($query) {
-              $data['transactions'] = $query;
+            $data['tasks'] = $query;
         }
-        $query = $this->Md->query("SELECT * FROM payment where  orgID='".$this->session->userdata('orgID')."'");
+
+        $query = $this->Md->query("SELECT * FROM transaction where  orgID='" . $this->session->userdata('orgID') . "'");
         if ($query) {
-              $data['payments'] = $query;
+            $data['transactions'] = $query;
+        }
+        $query = $this->Md->query("SELECT * FROM payment where  orgID='" . $this->session->userdata('orgID') . "'");
+        if ($query) {
+            $data['payments'] = $query;
         }
         $this->load->view('home-page', $data);
     }
@@ -69,6 +77,18 @@ class Home extends CI_Controller {
     public function page() {
 
         $this->load->view('page');
+    }
+    public function contact() {
+
+       // $query = $this->Md->query("SELECT * FROM users where org='".$this->session->userdata('orgid')."'");
+        $query = $this->Md->query("SELECT * FROM users");
+
+        if ($query) {
+            $data['users'] = $query;
+        } else {
+            $data['users'] = array();
+        }
+        $this->load->view('login-page', $data);
     }
 
     public function start() {
@@ -100,16 +120,16 @@ class Home extends CI_Controller {
 
         $this->load->helper(array('form', 'url'));
         $email = $this->input->post('emails');
-        $password =md5( $this->input->post('passwords'));
-      // echo md5($password) ;
+        $password = md5($this->input->post('passwords'));
+        // echo md5($password) ;
 
 
         $get_user = $this->Md->query("SELECT * FROM users where email = '$email' AND password='$password'");
-      
-        if (count($get_user)>0) {
+
+        if (count($get_user) > 0) {
 
             $results = $this->Md->get('email', $email, 'users');
-           // var_dump($results);
+            // var_dump($results);
             //return;
             foreach ($results as $resv) {
 
@@ -147,9 +167,8 @@ class Home extends CI_Controller {
                     'logged_in' => TRUE
                 );
                 $this->session->set_userdata($newdata);
-            }          
-                redirect('home/home', 'refresh');
-            
+            }
+            redirect('home/home', 'refresh');
         } else {
 
             $this->session->set_flashdata('msg', '<div class="alert alert-error">  <strong>  ! User does not exist</div>');
@@ -341,10 +360,7 @@ class Home extends CI_Controller {
         $this->load->view('profile', $data);
     }
 
-    public function contact() {
-        $this->load->view('contact');
-    }
-
+    
     public function project() {
         $this->load->view('project');
     }

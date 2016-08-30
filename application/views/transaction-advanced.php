@@ -6,32 +6,30 @@
 <div class="col-md-12 x_panel">
 
     <h2>Transactions</h2>
-     <input type="button" name="exportExcel" class="btn  btn-small btn-flat" id="exportExcel" onclick="ExportToExcel('datatables')" value="Export">
 
-        <form  enctype="multipart/form-data" class="form-horizontal form-label-left"  action='<?= base_url(); ?>index.php/transaction/generate_post'  method="post">
+    <form  enctype="multipart/form-data" class="form-horizontal form-label-left"  action='<?= base_url(); ?>index.php/transaction/generate_post'  method="post">
 
-            <div class="box-body">
-                <div class="col-md-2">
-                    <label>Start date</label>
-                    <input class="easyui-datebox" name="starts" id="starts" data-options="formatter:myformatter,parser:myparser" ></input>
-                </div>
-                <div class="col-md-2">
-                    <label>End date</label>
-                    <input class="easyui-datebox" name="ends" id="ends" data-options="formatter:myformatter,parser:myparser" ></input>
-                </div>
+        <div class="box-body">
+            <div class="col-md-2">
+                <label>Start</label>
+                <input class="easyui-datebox col-md-6" name="starts" id="starts" data-options="formatter:myformatter,parser:myparser" ></input>
+            </div>
+            <div class="col-md-2">
+                <label>End</label>
+                <input class="easyui-datebox col-md-6" name="ends" id="ends" data-options="formatter:myformatter,parser:myparser" ></input>
+            </div>
+            <div class="col-md-6">
+                <button type="submit"  class="btn  btn-small btn-flat">Generate</button>
 
+                <button type="reset"  class="btn btn-small btn-flat">Reset</button>
+                <input type="button" name="exportExcel" class="btn  btn-small btn-flat" id="exportExcel" onclick="ExportToExcel('datatables')" value="Export">
 
-                <div class="col-md-6">
-                    <button type="submit"  class="btn  btn-small btn-flat">Generate</button>
+            </div>           
+            <span id="loading" class="col-lg-12"  name ="loading"><img src="<?= base_url(); ?>images/loading.gif" alt="loading.........." /></span><br>
 
-                    <button type="reset"  class="btn btn-small btn-flat">Reset</button>
-                </div>
-                <span class="info-box status" id="status"></span>
-                <span id="loading" class="col-lg-12"  name ="loading"><img src="<?= base_url(); ?>images/loading.gif" alt="loading.........." /></span><br>
-
-            </div><!-- /.box-body -->
-        </form>
-
+        </div><!-- /.box-body -->
+    </form>
+    <span class="info-box status col-lg-12" id="status"></span>
     <div class="x_content scroll">
 
         <table id="datatables" class="table table-striped table-bordered scroll ">
@@ -44,7 +42,9 @@
                     <th>DETAILS</th>
                     <th>TOTAL</th>                   
                     <th>CREATED:</th>                  
-                    <th></th>
+                    <th>METHOD</th>
+                    <th>STATUS</th>
+                </tr>
                 </tr>
             </thead>
             <tbody>
@@ -53,7 +53,6 @@
                     foreach ($payments as $loop) {
                         ?>  
                         <tr class="odd">
-
                             <td id="created:<?php echo $loop->transID; ?>" contenteditable="true">
                                 <span class="green"><?php echo $loop->created; ?></span> 
                             </td>
@@ -64,6 +63,8 @@
                             <td id="details:<?php echo $loop->transID; ?>" contenteditable="true"><?php echo $loop->details; ?></td>
                             <td id="total:<?php echo $loop->transID; ?>" contenteditable="true"><span class="green"><?php echo $loop->total; ?></span> </td>
                             <td id="created:<?php echo $loop->transID; ?>" contenteditable="true"><span class="green"><?php echo $loop->created; ?></span> </td>
+                            <td id="method:<?php echo $loop->transID; ?>" contenteditable="true"><span class="green"><?php echo $loop->method; ?></span> </td>
+                            <td id="status:<?php echo $loop->transID; ?>" contenteditable="true"><span class="green"><?php echo $loop->status; ?></span> </td>
 
 
                         </tr>
@@ -74,7 +75,7 @@
 
             </tbody>
         </table>
-       
+
 
 
     </div>
@@ -150,5 +151,5 @@
         this.download = "my-custom-filename.xls";
         return true;
     }
-  
+
 </script>

@@ -18,7 +18,6 @@
                 height: 100%;
             }
         </style>
-        <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500">
 
         <!-- Bootstrap -->
         <link href="<?= base_url(); ?>vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -28,24 +27,135 @@
         <!-- NProgress -->
         <link href="<?= base_url(); ?>vendors/nprogress/nprogress.css" rel="stylesheet">
         <!-- Animate.css -->
-        <link href="https://colorlib.com/polygon/gentelella/css/animate.min.css" rel="stylesheet">
+        <link href="<?= base_url(); ?>css/animate.min.css" rel="stylesheet">
 
         <!-- Custom Theme Style -->
         <link href="<?= base_url(); ?>build/css/custom.min.css" rel="stylesheet">
         <link rel="stylesheet" href="<?= base_url(); ?>css/mine.css" />
     </head>
-
     <body class="login">
-        <div>
-            <a class="hiddenanchor" id="signup"></a>
-            <a class="hiddenanchor" id="signin"></a>
+        <div class="col-md-12">
+            <div class="col-md-6">
+                <h1><img  height="50px" width="50px" class="nav" src="<?= base_url(); ?>images/cp_logo.png" alt="Logo" />Case professional</h1>
+            </div>
+            <div class="col-md-6" style=" margin-top: 23px;">
+                <input type="text" class="form-control" placeholder="Search for...">               
 
-            <div class="login_wrapper">
-                <div class="animate form login_form">
-                    <section class="login_content">
+            </div>
+
+        </div>
+
+        <div class="col-md-12">
+            <a href="#signin" class="to_register btn-default btn "> Log in </a> | <a href="#signup" class="to_register btn-default btn "> Create Account </a> 
+        </div>
+        <div class="clearfix"></div>
+        <a class="hiddenanchor" id="signup"></a>
+        <a class="hiddenanchor" id="signin"></a>
+        <a class="hiddenanchor" id="contact"></a>
+
+        <div class="login_wrapper">
+            <div class="animate form login_form">
+                <section class="login_content">
+
+                    <div class=" col-md-8" >
+                        <div class="x_content">
+
+                            <div class="bs-example" data-example-id="simple-jumbotron">
+                                <h2>About</h2>
+                                <p>Practice and case management software provides attorneys with a convenient method of effectively managing client and case information, including contacts, calendaring, documents, and other specifics by facilitating automation in law practices. It can be used to share information with other attorneys in the firm and will help prevent having to enter duplicate data in conjunction with billing programs and data processors. Many programs link with personal digital assistants (PDAs) so that calendars and schedules are always handy. Some case management packages are Web-based, with more on the way, allowing anytime access to all features.</p>
+
+                            </div>
+
+                        </div>
+                        <div class="x_content">
+                            <ul class="list-unstyled timeline">
+                                <li>
+                                    <div class="block">
+                                        <div class="tags">
+                                            <a href="" class="tag">
+                                                <span>Case & File  Management</span>
+                                            </a>
+                                        </div>
+                                        <div class="block_content">
+                                            <p class="excerpt">Information on all of your cases and matters is accessible through a centralized database; Manages to-do lists; Fast & flexible searching; Conflicts of interest checking; Checks statue of limitations </p>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="block">
+                                        <div class="tags">
+                                            <a href="" class="tag">
+                                                <span>Time Tracking</span>
+                                            </a>
+                                        </div>
+                                        <div class="block_content">
+                                            <p class="excerpt">Records billable time on an hourly, contingent, transactional, or user defined fee individually or firm-wide; Links to time, billing, and accounting programs </p>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="block">
+                                        <div class="tags">
+                                            <a href="" class="tag">
+                                                <span>Document Assembly</span>
+                                            </a>
+                                        </div>
+                                        <div class="block_content">                                           
+                                            <p class="excerpt">Case profession helps organise and arrange files on your local computer and manage your cloud back up storage on google cloud storage </p>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="block">
+                                        <div class="tags">
+                                            <a href="" class="tag">
+                                                <span>Calendaring & Docketing</span>
+                                            </a>
+                                        </div>
+                                        <div class="block_content">
+                                            <p class="excerpt">Allows staff to view tasks, deadlines, appointments, and meetings by day, week, month, or year; Calculates calendar dates; Schedules appointments and meetings</p>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+
+                        </div>
+                        <div class=" col-md-3" >
+                            <div class="x_content">
+                                <form id="station-form" name="login-form" enctype="multipart/form-data"  action='<?= base_url(); ?>index.php/home/contact'  method="post">
+
+                                    <h2>Contact us</h2>
+
+
+                                    <div>
+                                        <input type="text" class="form-control" name="emailer" placeholder="Your email" required="" />
+                                    </div>
+                                    <div>
+                                        <input type="text" class="form-control" name="sender" placeholder="Your name" required="" />
+                                    </div>
+                                    <div>
+                                        <textarea class="form-control">Message</textarea>
+                                    </div>
+                                    <br>
+                                    <div>
+                                        <button class="btn btn-default submit" type="submit">Send</button><br>
+                                    </div>
+                                    <div class="clearfix"></div>
+
+                                </form> 
+
+                            </div>
+
+                        </div>   
+
+
+
+                    </div>   
+
+                    <div class= "col-md-4">
                         <form id="station-form" name="login-form" enctype="multipart/form-data"  action='<?= base_url(); ?>index.php/home/login'  method="post">
 
-                            <h1>Login Form</h1>
+                            Login
 
                             <?php echo $this->session->flashdata('msg'); ?>
                             <div>
@@ -59,28 +169,93 @@
                             </div>
                             <div class="clearfix"></div>
                             <div class="separator">
-                                <a class="reset_pass" href="#">Lost your password?</a>
-                                <p class="change_link">New to site?
+                                <p class="change_link"> <a class="reset_pass" href="#">Lost your password?</a></p>
+                                <p class="change_link">
                                     <a href="#signup" class="to_register"> Create Account </a>
                                 </p>
-
                                 <div class="clearfix"></div>
                                 <br />
+                            </div>
+                            <h4>Features</h4>
+                            <span class="label label-default">Messaging</span>
+                            <span class="label label-primary">Reminders</span>
+                            <span class="label label-success">Analytics</span>
+                            <span class="label label-info">Time sheets</span>
+                            <span class="label label-warning">Mobile app</span>
+                            <span class="label label-danger">Windows Desktop application</span>
+                            <div class="col-md-12 align-center">
+                                <img  class="nav" height="20px" width="150px" src="<?= base_url(); ?>images/novariss.png" alt="Logo" />
+                            </div> 
 
-                                <div>
-                                    <h1><img  height="50px" width="50px" class="nav" src="<?= base_url(); ?>images/cp_logo.png" alt="Logo" /></h1>
-                                    <p>©2016 All Rights Reserved.</p>
+                        </form> 
+                    </div>
+
+
+                </section>
+            </div>
+
+            <div id="register" class="animate form registration_form">
+                <section class="login_content">
+
+                    <div class="col-md-8">
+                        <div id="mainb" style="height:250px;" class= "col-md-12"></div>
+                        <div class="x_panel" style="height:600px;">
+                            <div class="x_title">
+                                <h2>Pricing</h2>                                   
+                                <div class="clearfix"></div>
+                            </div>
+
+                            <div class="x_content">
+                                <div class="row">
+                                    <div class="col-md-12">
+
+                                        <!-- price element -->
+                                        <div class="col-md-4 col-sm-6 col-xs-12">
+                                            <div class="pricing">
+                                                <div class="title">
+                                                    <h2>Below 50</h2>
+                                                    <h4>3000 UGX</h4>
+                                                    <span>Monthly</span>
+
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <!-- price element -->
+
+                                        <!-- price element -->
+                                        <div class="col-md-4 col-sm-6 col-xs-12">
+                                            <div class="pricing ui-ribbon-container">
+
+                                                <div class="title">
+                                                    <h2>Below 250</h2>
+                                                    <h4>2000 UGX</h4>
+                                                    <span>Monthly</span>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4 col-sm-6 col-xs-12">
+                                            <div class="pricing">
+                                                <div class="title">
+                                                    <h2>Above 250</h2>
+                                                    <h4>1000 UGX</h4>
+                                                    <span>Monthly</span>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <!-- price element -->
+                                    </div>
                                 </div>
                             </div>
-                        </form>
-                    </section>
-                </div>
-
-                <div id="register" class="animate form registration_form">
-                    <section class="login_content">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
                         <form id="station-form" name="login-form" enctype="multipart/form-data"  action='<?= base_url(); ?>index.php/organisation/register'  method="post">
 
-                            <h1>Create Account</h1>
+                            <h4>Create Account</h4>
                             <div>
                                 <input type="text" class="form-control" id="name" name="name" placeholder="Organisation name" required="" />
                                 <span id="loading_name"  name ="loading_name"><img src="<?= base_url(); ?>images/loading.gif" alt="loading......" /></span>
@@ -108,11 +283,9 @@
                             <div>
                                 <input type="password" class="form-control" name="password" placeholder="Password" required="" />
                             </div>
-
                             <div>
                                 <div id="locationField">
-                                    <input id="autocomplete" name="address" class="form-control" placeholder="Enter your address"
-                                           onFocus="geolocate()" type="text"></input>
+                                    <input id="autocomplete" name="address" class="form-control" placeholder="Enter your address" onFocus="geolocate()" type="text"></input>
                                 </div>
                             </div>
                             <div>
@@ -124,15 +297,19 @@
                             <div>
                                 <input class="field form-control" name="city" id="locality" disabled="true" placeholder="State"></input>
                             </div>
+                            <br />
                             <div>
                                 <input name="region" class="field form-control"id="administrative_area_level_1" disabled="true"></input>
                             </div>
+                            <br />
                             <div>
                                 <input type="hidden" class="field form-control" id="postal_code"  disabled="true" placeholder="Zip Code"></input>
                             </div>
+                            <br />
                             <div>
                                 <input name="country" class="field form-control" id="country" disabled="true" placeholder="Country"></input>
                             </div>
+                            <br />
                             <div>
 
                                 <script>
@@ -353,17 +530,15 @@
                                 <div class="clearfix"></div>
                                 <br />
 
-                                <div>
-                                    <h1> <img  height="50px" width="50px" class="nav" src="<?= base_url(); ?>images/cp_logo.png" alt="Logo" /></h1>
-                                    <p>©2016 All Rights Reserved. Vuga Ltd</p>
-                                </div>
                             </div>
                         </form>
-                    </section>
-                </div>
-            </div>
+                    </div>
+                </section>
+            </div>   
+
         </div>
-    </body>
+    </div>
+</body>
 </html>
 <script src="<?= base_url(); ?>vendors/jquery/dist/jquery.min.js"></script>
 <!-- Bootstrap -->
@@ -462,3 +637,287 @@
 
 
 </script>
+<script src="<?= base_url(); ?>vendors/echarts/dist/echarts.min.js"></script>
+<script>
+    var theme = {
+        color: [
+            '#26B99A', '#34495E', '#BDC3C7', '#3498DB',
+            '#9B59B6', '#8abb6f', '#759c6a', '#bfd3b7'
+        ],
+        title: {
+            itemGap: 8,
+            textStyle: {
+                fontWeight: 'normal',
+                color: '#408829'
+            }
+        },
+        dataRange: {
+            color: ['#1f610a', '#97b58d']
+        },
+        toolbox: {
+            color: ['#408829', '#408829', '#408829', '#408829']
+        },
+        tooltip: {
+            backgroundColor: 'rgba(0,0,0,0.5)',
+            axisPointer: {
+                type: 'line',
+                lineStyle: {
+                    color: '#408829',
+                    type: 'dashed'
+                },
+                crossStyle: {
+                    color: '#408829'
+                },
+                shadowStyle: {
+                    color: 'rgba(200,200,200,0.3)'
+                }
+            }
+        },
+        dataZoom: {
+            dataBackgroundColor: '#eee',
+            fillerColor: 'rgba(64,136,41,0.2)',
+            handleColor: '#408829'
+        },
+        grid: {
+            borderWidth: 0
+        },
+        categoryAxis: {
+            axisLine: {
+                lineStyle: {
+                    color: '#408829'
+                }
+            },
+            splitLine: {
+                lineStyle: {
+                    color: ['#eee']
+                }
+            }
+        },
+        valueAxis: {
+            axisLine: {
+                lineStyle: {
+                    color: '#408829'
+                }
+            },
+            splitArea: {
+                show: true,
+                areaStyle: {
+                    color: ['rgba(250,250,250,0.1)', 'rgba(200,200,200,0.1)']
+                }
+            },
+            splitLine: {
+                lineStyle: {
+                    color: ['#eee']
+                }
+            }
+        },
+        timeline: {
+            lineStyle: {
+                color: '#408829'
+            },
+            controlStyle: {
+                normal: {color: '#408829'},
+                emphasis: {color: '#408829'}
+            }
+        },
+        k: {
+            itemStyle: {
+                normal: {
+                    color: '#68a54a',
+                    color0: '#a9cba2',
+                    lineStyle: {
+                        width: 1,
+                        color: '#408829',
+                        color0: '#86b379'
+                    }
+                }
+            }
+        },
+        map: {
+            itemStyle: {
+                normal: {
+                    areaStyle: {
+                        color: '#ddd'
+                    },
+                    label: {
+                        textStyle: {
+                            color: '#c12e34'
+                        }
+                    }
+                },
+                emphasis: {
+                    areaStyle: {
+                        color: '#99d2dd'
+                    },
+                    label: {
+                        textStyle: {
+                            color: '#c12e34'
+                        }
+                    }
+                }
+            }
+        },
+        force: {
+            itemStyle: {
+                normal: {
+                    linkStyle: {
+                        strokeColor: '#408829'
+                    }
+                }
+            }
+        },
+        chord: {
+            padding: 4,
+            itemStyle: {
+                normal: {
+                    lineStyle: {
+                        width: 1,
+                        color: 'rgba(128, 128, 128, 0.5)'
+                    },
+                    chordStyle: {
+                        lineStyle: {
+                            width: 1,
+                            color: 'rgba(128, 128, 128, 0.5)'
+                        }
+                    }
+                },
+                emphasis: {
+                    lineStyle: {
+                        width: 1,
+                        color: 'rgba(128, 128, 128, 0.5)'
+                    },
+                    chordStyle: {
+                        lineStyle: {
+                            width: 1,
+                            color: 'rgba(128, 128, 128, 0.5)'
+                        }
+                    }
+                }
+            }
+        },
+        gauge: {
+            startAngle: 225,
+            endAngle: -45,
+            axisLine: {
+                show: true,
+                lineStyle: {
+                    color: [[0.2, '#86b379'], [0.8, '#68a54a'], [1, '#408829']],
+                    width: 8
+                }
+            },
+            axisTick: {
+                splitNumber: 10,
+                length: 12,
+                lineStyle: {
+                    color: 'auto'
+                }
+            },
+            axisLabel: {
+                textStyle: {
+                    color: 'auto'
+                }
+            },
+            splitLine: {
+                length: 18,
+                lineStyle: {
+                    color: 'auto'
+                }
+            },
+            pointer: {
+                length: '90%',
+                color: 'auto'
+            },
+            title: {
+                textStyle: {
+                    color: '#333'
+                }
+            },
+            detail: {
+                textStyle: {
+                    color: 'auto'
+                }
+            }
+        },
+        textStyle: {
+            fontFamily: 'Arial, Verdana, sans-serif'
+        }
+    };
+
+    var echartBarLine = echarts.init(document.getElementById('mainb'), theme);
+
+    echartBarLine.setOption({
+        title: {
+            x: 'center',
+            y: 'top',
+            padding: [0, 0, 20, 0],
+            text: 'Service usage statistics',
+            textStyle: {
+                fontSize: 15,
+                fontWeight: 'normal'
+            }
+        },
+        tooltip: {
+            trigger: 'axis'
+        },
+        toolbox: {
+            show: true,
+            feature: {
+                dataView: {
+                    show: true,
+                    readOnly: false,
+                    title: "Text View",
+                    lang: [
+                        "Text View",
+                        "Close",
+                        "Refresh",
+                    ],
+                },
+                restore: {
+                    show: true,
+                    title: 'Restore'
+                },
+                saveAsImage: {
+                    show: true,
+                    title: 'Save'
+                }
+            }
+        },
+        calculable: true,
+        legend: {
+            data: ['Messaging', 'Scheduling', 'Time Sheets'],
+            y: 'bottom'
+        },
+        xAxis: [{
+                type: 'category',
+                data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+            }],
+        yAxis: [{
+                type: 'value',
+                name: 'Count',
+                axisLabel: {
+                    formatter: '{value} count'
+                }
+            }, {
+                type: 'value',
+                name: 'Number',
+                axisLabel: {
+                    formatter: '{value} No'
+                }
+            }],
+        series: [{
+                name: 'Messaging',
+                type: 'bar',
+                data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3]
+            }, {
+                name: 'Scheduling',
+                type: 'bar',
+                data: [2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2, 48.7, 18.8, 6.0, 2.3]
+            }, {
+                name: 'Time Sheets',
+                type: 'line',
+                yAxisIndex: 1,
+                data: [2.0, 2.2, 3.3, 4.5, 6.3, 10.2, 20.3, 23.4, 23.0, 16.5, 12.0, 6.2]
+            }]
+    });
+</script>
+

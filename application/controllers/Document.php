@@ -16,9 +16,28 @@ class Document extends CI_Controller {
     }
 
     public function index() {
-       
 
-        $this->load->view('document-page', $data);
+        $this->load->helper(array('form', 'url'));
+        $query = $this->Md->query("SELECT * FROM document where orgID = '" . $this->session->userdata('orgID') . "' ");
+
+        if ($query) {
+            $data['docs'] = $query;
+        } else {
+            $data['docs'] = array();
+        }
+        $query = $this->Md->query("SELECT * FROM file where orgID = '" . $this->session->userdata('orgID') . "'");
+        //  var_dump($query);
+        if ($query) {
+            $data['files'] = $query;
+        } else {
+            $data['files'] = array();
+        }
+        $query = $this->Md->query("SELECT * FROM users where  orgID='" . $this->session->userdata('orgID') . "'");
+        if ($query) {
+            $data['users'] = $query;
+        }
+
+        $this->load->view('view-document', $data);
     }
 
     public function upload() {
@@ -54,6 +73,33 @@ class Document extends CI_Controller {
             $query = $this->Md->cascade($this->input->post('fileID'), 'file', 'fileID');
         }
     }
+      public function updater() {
+        $this->load->helper(array('form', 'url'));
+
+        if (!empty($_POST)) {
+
+            foreach ($_POST as $field_name => $val) {
+                //clean post values
+                $field_id = strip_tags(trim($field_name));
+                $val = strip_tags(trim(mysql_real_escape_string($val)));
+                //from the fieldname:user_id we need to get user_id
+                $split_data = explode(':', $field_id);
+                $user_id = $split_data[1];
+                $field_name = $split_data[0];
+                if (!empty($user_id) && !empty($field_name) && !empty($val)) {
+                    //update the values
+                    $task = array($field_name => $val);
+                    // $this->Md->update($user_id, $task, 'tasks');
+                    $this->Md->update_dynamic($user_id, 'documentID', 'document', $task);
+                    echo "Updated";
+                } else {
+                    echo "Invalid Requests";
+                }
+            }
+        } else {
+            echo "Invalid Requests";
+        }
+    }
 
     public function add() {
 
@@ -68,98 +114,7 @@ class Document extends CI_Controller {
         $this->load->view('add-file', $data);
     }
 
-    public function import() {
-
-        $orgid = $this->session->userdata('orgid');
-
-        if (isset($_POST["Import"])) {
-            $filename = $_FILES["file"]["tmp_name"];
-            // echo $filename;
-            if ($_FILES["file"]["size"] > 0) {
-                $file = fopen($filename, "r");
-                $file = $filename;
-
-                $objPHPExcel = PHPExcel_IOFactory::load($file);
-                //      Get worksheet dimensions
-                $sheet = $objPHPExcel->getSheet(0);
-                $highestRow = $sheet->getHighestRow();
-                $highestColumn = $sheet->getHighestColumn();
-                // Loop through each row of the worksheet in turn
-                for ($row = 1; $row < 2; $row++) {
-                    //  Read a row of data into an array
-                    // echo $row;
-                    $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row, NULL, TRUE, FALSE);
-                    // var_dump($rowData[0]);
-                    // echo count($rowData[0]);
-                    for ($m = 0; $m < count($rowData[0]); $m++) {
-                        // echo $rowData[0][$m]."<br> ";
-                    }
-                }
-                for ($row = 2; $row <= $highestRow; $row++) {
-                    //  Read a row of data into an array
-                    // echo $row;
-                    $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row, NULL, TRUE, FALSE);
-
-                    // var_dump($rowData);
-                    for ($d = 0; $d < count($rowData); $d++) {
-                        // var_dump($rowData[$d]);
-                        //echo $rowData[$d][0] . "<br>";
-                        $fileid = $this->GUID();
-                        //get($field, $value, $table)
-                        $namer = $this->Md->get('name', $rowData[$d][4], 'files');
-                        $filer = $this->Md->get('no', $rowData[$d][1], 'files');
-                        //echo $name.'<br>';
-                        //return;
-                        // var_dump($namer);
-                        // return;
-                        if (strlen($rowData[$d][0]) > 2 && count($namer) == 0 && count($filer) == 0) {
-                            //$users = array('id' => $userid, 'image' => " ", 'email' => $rowData[$d][2], 'name' => $rowData[$d][0], 'org' => $this->session->userdata('orgid'), 'address' => $rowData[$d][4], 'sync' => $rowData[$d][1], 'oid' => " ", 'contact' => $rowData[$d][3], 'password' => " ", 'types' => 'client', 'level' => '4', 'created' => date('Y-m-d H:i:s'), 'status' => 'T');
-                            //$users = $this->Md->query_cell("SELECT * FROM users where name = '" .$rowData[$d][0] . "'", 'id');                         
-                            $query = $this->Md->query("SELECT * FROM users where name LIKE '" . $rowData[$d][0] . "' AND org= '" . $this->session->userdata('orgid') . "' LIMIT 1");
-                            if ($query) {
-                                foreach ($query as $res) {
-                                    $clientid = $res->id;
-                                }
-                            }
-                            $query2 = $this->Md->query("SELECT * FROM users where name LIKE '" . $rowData[$d][10] . "' AND org= '" . $this->session->userdata('orgid') . "'  LIMIT 1");
-                            if ($query2) {
-                                foreach ($query2 as $res2) {
-                                    $userid = $res2->id;
-                                }
-                            }
-                            if ($clientid == " " || $userid == " ") {
-
-                                continue;
-                            }
-                            //date('Y-m-d', strtotime($date))
-                            $files = array('id' => $fileid, 'users' => $clientid, 'org' => $orgid, 'details' => $rowData[$d][3], 'name' => $rowData[$d][4], 'types' => $rowData[$d][2], 'created' => date('d-m-Y', strtotime($rowData[$d][9])), 'status' => 'T', 'no' => $rowData[$d][1], 'subject' => $rowData[$d][6], 'citation' => $rowData[$d][7], 'law' => $rowData[$d][8], 'co' => $userid);
-                            $this->Md->save($files, 'files');
-                            $contents = array('id' => $fileid, 'users' => $clientid, 'org' => $orgid, 'details' => $rowData[$d][3], 'name' => $rowData[$d][4], 'types' => $rowData[$d][2], 'created' => date('d-m-Y', strtotime($rowData[$d][9])), 'status' => 'T', 'no' => $rowData[$d][1], 'subject' => $rowData[$d][6], 'citation' => $rowData[$d][7], 'law' => $rowData[$d][8], 'co' => $userid);
-                            $content = json_encode($contents);
-                            $query = $this->Md->query("SELECT * FROM client where org = '" . $this->session->userdata('orgid') . "'");
-                            if ($query) {
-                                foreach ($query as $res) {
-                                    $syc = array('org' => $this->session->userdata('orgid'), 'object' => 'files', 'contents' => $content, 'action' => 'create', 'oid' => $fileid, 'created' => date('Y-m-d H:i:s'), 'checksum' => $this->GUID(), 'client' => $res->name);
-                                    $this->Md->save($syc, 'sync_data');
-                                }
-                            }
-                            echo 'saving';
-                        } else {
-
-                            echo 'Repeated';
-                        }
-                    }
-                }
-                //  Insert row data array into your database of choice here
-            }
-//send the data in an array format
-
-            fclose($file);
-        }
-
-        echo '<div class="alert alert-info">   <strong>Information uploaded!  </strong>	</div>';
-        redirect('file', 'refresh');
-    }
+  
 
     public function clients() {
         $query = $this->Md->query("SELECT * FROM users  where orgID = '" . $this->session->userdata('orgID') . "' ORDER BY name DESC");
@@ -270,38 +225,46 @@ class Document extends CI_Controller {
         $this->load->helper(array('form', 'url'));
         $fileID = $this->uri->segment(3);
         $query = $this->Md->cascade($fileID, 'file', 'fileID');
-         redirect('/file/view', 'refresh');
+        redirect('/file/view', 'refresh');
     }
 
     public function create() {
 
         $this->load->helper(array('form', 'url'));
-        $types = $this->input->post('type');
 
-        $app = "O";
-        switch ($types) {
-            case Litigation:
-                $app = "L";
-                break;
-            case General:
-                $app = "G";
-                break;
-        }
-        $no = $this->session->userdata('code') . "/" . $app . "/" . date('y') . "/" . date('m') . (int) date('d') . (int) date('H') . (int) date('i') . (int) date('ss');
+        //user information
+        $documentID = $this->GUID();
+      
         $orgID = $this->session->userdata('orgID');
-        if ($this->input->post('client') != "" || $this->input->post('name') != "") {
-            $files = array('fileID' => $this->GUID(), 'client' => $this->input->post('client'), 'lawyer' => $this->input->post('lawyer'), 'orgID' => $this->session->userdata('orgID'), 'details' => $this->input->post('details'), 'name' => $this->input->post('name'), 'type' => $this->input->post('type'), 'created' => date('Y-m-d H:i:s'), 'status' => 'Active', 'no' => $no, 'subject' => $this->input->post('subject'), 'citation' => $this->input->post('citation'), 'law' => $this->input->post('law'), 'action' => 'none');
-            $this->Md->save($files, 'file');
 
-            $this->session->set_flashdata('msg', '<div class="alert alert-success">
-                                   <strong>New File Saved</strong>									
-						</div>');
-        } else {
+        if ($this->input->post('name') != "") {
 
-            $this->session->set_flashdata('msg', '<div class="alert alert-erro"><strong>Invalid fields</strong></div>');
+         
+            ///organisation image uploads
+            $file_element_name = 'userfile';
+            $new_name = $this->input->post('name');
+            $config['file_name'] = $new_name;
+            $config['upload_path'] = 'documents/';
+            $config['allowed_types'] = '*';
+            $config['encrypt_name'] = FALSE;          
+
+            $this->load->library('upload', $config);
+            if (!$this->upload->do_upload($file_element_name)) {
+                $status = 'error';
+                $msg = $this->upload->display_errors('', '');
+                $this->session->set_flashdata('msg', '<div class="alert alert-error"> <strong>' . $msg . '</strong></div>');
+            }
+            $data = $this->upload->data();
+            $submitted = date('Y-m-d');
+            $userfile = $data['file_name'];
+            $doc = array('documentID' => $documentID, 'orgID' => $this->session->userdata('orgID'), 'name' => $this->input->post('name'), 'fileID' => $this->input->post('file'), 'fileUrl' => $userfile, 'created' => date('Y-m-d'), 'action' => 'none', 'lawyer' => $this->input->post('lawyer'), 'client' => $this->input->post('client'), 'sync' => 'true','note' => $this->input->post('note'),'details' => $this->input->post('details'));
+            $this->Md->save($doc, 'document');
+
+            $this->session->set_flashdata('msg', '<div class="alert alert-success">  <strong>Information saved</strong></div>');
+
+            redirect('/document/', 'refresh');
         }
-
-        redirect('/file/view', 'refresh');
     }
+
 
 }

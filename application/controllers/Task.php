@@ -48,6 +48,14 @@ class Task extends CI_Controller {
         $query = $this->Md->query("SELECT * FROM file WHERE  orgID='" . $this->session->userdata('orgID') . "'");
         echo json_encode($query);
     }
+     public function staff() {
+        $query = $this->Md->query("SELECT * FROM users WHERE  orgID='" . $this->session->userdata('orgID') . "' AND category='Staff'");
+        echo json_encode($query);
+    }
+     public function client() {
+        $query = $this->Md->query("SELECT * FROM users WHERE  orgID='" . $this->session->userdata('orgID') . "' AND category='client'");
+        echo json_encode($query);
+    }
 
     public function add() {
 

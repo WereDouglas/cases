@@ -20,7 +20,9 @@
                     <th>STATUS</th>
                     <th>CLIENT</th>
                     <th>LAWYER</th>
+                    
                     <th>CREATED:</th>
+                     <th>VIEW</th>
                     <th>ACTION</th>
                 </tr>
             </thead>
@@ -137,10 +139,14 @@
                         </td>
                         <td class="edit_td">
                             <?php echo $created; ?>
-                        </td>   
+                        </td> 
+                        <td class="edit_td">
+                                <a class="btn btn-primary btn-xs" href="<?php echo base_url() . "index.php/file/profile/" . $name; ?>"><li class="fa fa-folder">View</li></a>
+
+                            </td>   
 
                         <td class="center">
-                            <a class="btn-danger btn-small icon-remove" href="<?php echo base_url() . "index.php/file/delete/" . $id; ?>">delete</a>
+                            <a class="btn btn-danger btn-danger btn-xs" href="<?php echo base_url() . "index.php/file/delete/" . $id; ?>"><li class="fa fa-trash">Remove</li></a>
                         </td>
 
                     </tr>
