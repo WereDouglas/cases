@@ -1,5 +1,8 @@
 <?php require_once(APPPATH . 'views/header-page.php'); ?>
-<link rel="stylesheet" href="<?= base_url(); ?>css/mine.css" />
+<?php
+$no = $this->session->userdata('code') . "/" . date('y') . "/" . date('m') . (int) date('d') . (int) date('H') . (int) date('i') . (int) date('ss');
+?>
+
 <div class="row">
     <div class="col-md-12 col-sm-12 col-xs-12">
         <div class="x_panel">
@@ -9,6 +12,13 @@
                 <form  enctype="multipart/form-data" class="form-horizontal form-label-left"  action='<?= base_url(); ?>index.php/file/create'  method="post">
 
                     <span class="section">FILE INFORMATION</span>
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">File<span class="required"></span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input id="case" class="form-control col-md-7 col-xs-12"  name="no" placeholder="<?php echo $no; ?>" value="<?php echo $no; ?>"  type="text">
+                        </div>
+                    </div>
                     <div class="col-md-6 col-sm-6 col-xs-6">
                         <div class=" item form-group">
                             <label class="control-label col-md-3 col-sm-3 col-xs-12">Type</label>
@@ -43,9 +53,9 @@
                                 <select class="optional form-control col-md-7 col-xs-12"  data-placeholder="Choose a title" name="client" id="client">
                                     <option value="" />
                                     <?php
-                                    foreach ($users as $user) {
+                                    foreach ($clients as $client) {
                                         ?>
-                                        <option value="<?php echo $user->name; ?>" /><?php echo $user->name; ?>
+                                        <option value="<?php echo $client->name; ?>" /><?php echo $client->name; ?>
 
                                         <?php
                                     }
@@ -72,7 +82,7 @@
                                 </select> 
                             </div>
                         </div>
-                       
+
                         <div class="item form-group">
                             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Case no <span class="required"></span>
                             </label>
@@ -88,7 +98,21 @@
                                 <input id="name" class="form-control col-md-7 col-xs-12" data-validate-length-range="6" data-validate-words="2" name="name" placeholder="Name" required="required" type="text">
                             </div>
                         </div>
-                        
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Contact Person <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input id="contact_person" class="form-control col-md-7 col-xs-12" data-validate-length-range="6" data-validate-words="2" name="contact_person" placeholder="Contact person" required="required" type="text">
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Contact number(phone) <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input id="contact_number" class="form-control col-md-7 col-xs-12"  data-validate-words="2" name="contact_number" placeholder="Contact number" required="required" type="number">
+                            </div>
+                        </div>
+
                         <div class="item form-group">
                             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Subject <span class="required">*</span>
                             </label>
@@ -97,7 +121,7 @@
                             </div>
                         </div>
                         <div class="item form-group">
-                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Citation <span class="required">*</span>
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Citation/Peugeon No.<span class="required">*</span>
                             </label>
                             <div class="col-md-6 col-sm-6 col-xs-12">
                                 <input id="name" class="form-control col-md-7 col-xs-12" name="citation" placeholder="Citation" type="text">
@@ -106,7 +130,6 @@
                     </div>
                     <div class="col-md-6 col-sm-6 col-xs-6">
 
- 
                         <div class="item form-group">
                             <label class="control-label col-md-3 col-sm-3 col-xs-12 align-left">Details</label>
                             <div class="col-md-6 col-sm-6 col-xs-12">
@@ -120,7 +143,6 @@
                                     <option value="" />
                                     <option value="Active" />Active
                                     <option value="Passive" />Passive
-
                                 </select>
                             </div>
                         </div>
@@ -136,13 +158,18 @@
                                 <textarea class="span12" id="form-field-9" name="progress" id="progress" data-maxlength="20"></textarea>
                             </div>
                         </div>
-                        <div class=" item form-group">
+                        <div class="form-group">
                             <label class="control-label col-md-3 col-sm-3 col-xs-12 align-left">Date opened</label>
                             <div class="col-md-6 col-sm-6 col-xs-12 align-left">
-                                <input class="easyui-datebox" name="opened" id="opened" ></input>
+                                <input class="easyui-datebox" name="opened" id="opened"/>
                             </div>
                         </div>
-
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12 align-left">Date due</label>
+                            <div class="col-md-6 col-sm-6 col-xs-12 align-left">
+                                <input class="easyui-datebox" name="due" id="due" ></input>
+                            </div>
+                        </div>
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-3 align-right">
                                 <button id="send" type="submit" class="btn btn-success align-right">Submit</button>
@@ -150,14 +177,11 @@
                             </div>
                         </div>
                     </div>
-
-
                 </form>
             </div>
         </div>
     </div>
 </div>
-<script type="text/javascript" src="<?= base_url(); ?>js/jquery.js"></script>
-<script type="text/javascript" src="<?= base_url(); ?>js/jquery.easyui.min.js"></script>
+
 
 <?php require_once(APPPATH . 'views/footer-page.php'); ?>

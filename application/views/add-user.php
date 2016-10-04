@@ -18,24 +18,14 @@
                                 <option value="Contract" />Contract
                                 <option value="Of counsel" />Of counsel
                                 <option value="Clerk" />Clerk
-                                <option value="Paralegal" />Paralegal
+                                <option value="Paralegal" />Para legal
                                 <option value="Administrator" />Administrator
                                 <option value="Client" />Client
                             </select>
                         </div>
 
                     </div>
-                    <div class=" item form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Category</label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                            <select class="optional form-control col-md-7 col-xs-12" data-placeholder="Choose level of authority" name="category" id="category">
-                                <option value="Client" />Client
-                                <option value="Staff" />Staff
-
-                            </select>
-                        </div>
-
-                    </div>
+                   
                     <div class="item form-group">                    
                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Profile picture</label>  
                         <div class="col-md-6 col-sm-6 col-xs-12">
@@ -58,13 +48,7 @@
                             <input type="email" id="email" name="email" required="required" class="form-control col-md-7 col-xs-12">
                         </div>
                     </div>
-                    <div class="item form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">Confirm Email <span class="required">*</span>
-                        </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                            <input type="email" id="email2" name="confirm_email" data-validate-linked="email" required="required" class="form-control col-md-7 col-xs-12">
-                        </div>
-                    </div>
+                   
 
                     <div class="item form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="number">Contact <span class="required">*</span>
@@ -76,9 +60,9 @@
 
 
                     <div class="item form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="password" >Password<span class="required">*</span></label>
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="password" >System access password<span class="required">*</span></label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                            <input id="password" type="password" name="password" data-validate-length="6" class="form-control col-md-7 col-xs-12" required="required">
+                            <input id="password" type="password" name="password" data-validate-length="4" class="form-control col-md-7 col-xs-12" required="required">
                         </div>
                     </div>
                     <div class="item form-group">

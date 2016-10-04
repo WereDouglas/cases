@@ -85,10 +85,6 @@
                                        ">
                             </div>
 
-                            <label>
-                                <input name="trig" type="checkbox" />
-                                <span class="lbl"> Notify parties ?</span>
-                            </label>
 
                             <div class="row-fluid">
                                 <label for="timepicker1">Start Time</label>
@@ -125,6 +121,15 @@
                                         <option value="Low">Low</option>
                                     </select>
                                 </div>
+                                
+                            <label>
+                                <input name="trig" type="checkbox" />
+                                <span class="lbl"> Notify parties ?</span>
+                            </label>
+                             <label>
+                                <input name="court" type="checkbox" />
+                                <span class="lbl"> Due for court(Cause list) ?</span>
+                            </label>
                             </div>
                         </div>
                         <div class="modal-footer">

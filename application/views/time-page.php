@@ -141,12 +141,12 @@
                 dp.onTimeRangeSelecting = function (args) {
                     if (args.start < new DayPilot.Date()) {
                         args.right.enabled = true;
-                        args.right.html = "You can't create a reservation in the past";
-                        args.allowed = false;
+                        args.right.html = "Scheduling in the past ";
+                        args.allowed = true;
                     } else if (args.duration.totalHours() > 8) {
                         args.right.enabled = true;
                         args.right.html = "You can only book up to 8 hours";
-                        args.allowed = false;
+                        args.allowed = true;
                     }
                 };
                 // event creating

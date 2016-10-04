@@ -4,22 +4,23 @@
 <?php echo $this->session->flashdata('msg'); ?>
 
 <div class=" col-md-12 x_panel">
-    <h2>Users </h2>     
+    <h2>Clients</h2>     
     <div class="x_content scroll">
 
         <table id="datatable" class="table table-striped table-bordered scroll ">
             <thead>
                 <tr>
                     <th>#</th>
+                      <th>REGISTERED</th>
                     <th>NAME</th>
-                    <th>EMAIL</th>
-                    <th>DESIGNATION</th>
+                    <th>EMAIL</th>                   
                     <th>STATUS</th>
                     <th>CONTACT</th>
-                    <th>ADDRESS</th>   
-                    <th>CATEGORY</th>
-                    <th>RESET PASSWORD</th>
+                    <th>ADDRESS</th>
                     <th>CREATED:</th>
+                    <th>C/O</th>
+
+                    <th>E-mail</th>
                     <th>ACTION</th>
                 </tr>
             </thead>
@@ -35,16 +36,17 @@
                         $designation = $loop->designation;
                         $status = $loop->status;
                         $category = $loop->category;
-                        $id = $loop->userID;
+                        $id = $loop->clientID;
                         $contact = $loop->contact;
                         $created = $loop->created;
                         ?>  
                         <tr id="<?php echo $id; ?>" class="edit_tr">
                             <td> 
+
                                 <?php
                                 if ($loop->image != "") {
                                     ?>
-                                    <img  height="50px" width="50px"  src="<?= base_url(); ?>uploads/<?php echo $loop->userID.".jpg"; ?>" alt="logo" />
+                                    <img  height="50px" width="50px"  src="<?= base_url(); ?>uploads/<?php echo $loop->clientID . ".jpg"; ?>" alt="logo" />
                                     <?php
                                 } else {
                                     ?>
@@ -53,6 +55,9 @@
                                 }
                                 ?>
                             </td>
+                             <td class="edit_td">
+                                <?php echo $loop->registration; ?>
+                            </td>    
                             <td class="edit_td">
                                 <span id="name_<?php echo $id; ?>" class="text"><?php echo $name; ?></span>
                                 <input type="text" value="<?php echo $name; ?>" class="editbox" id="name_input_<?php echo $id; ?>"
@@ -61,20 +66,7 @@
                                 <span id="email_<?php echo $id; ?>" class="text"><?php echo $email; ?></span>
                                 <input type="text" value="<?php echo $email; ?>" class="editbox" id="email_input_<?php echo $id; ?>"
                             </td>
-                            <td class="edit_td">
-                                <span id="designation_<?php echo $id; ?>" class="text"><?php echo $designation; ?></span>                                                       
-                                <select  name="designation" class="editbox" id="designation_input_<?php echo $id; ?>" >
-                                    <option value="<?php echo $designation; ?>" /><?php echo $designation; ?>
-                                    <option value="Partner" />Partner
-                                    <option value="Associate" />Associate
-                                    <option value="Contract" />Contract
-                                    <option value="Of counsel" />Of counsel
-                                    <option value="Clerk" />Clerk
-                                    <option value="Paralegal" />Paralegal
-                                    <option value="Administrator" />Administrator
-                                    <option value="Client" />Client
-                                </select>
-                            </td> 
+
                             <td class="edit_td">
                                 <span id="status_<?php echo $id; ?>" class="text"><?php echo $status; ?></span>                                                       
                                 <select  name="status" class="editbox" id="status_input_<?php echo $id; ?>" >
@@ -113,29 +105,18 @@
 
                             </td>
                             <td class="edit_td">
-                                <span id="category_<?php echo $id; ?>" class="text"><?php echo $category; ?></span>                                                       
-                                <select  name="category" class="editbox" id="category_input_<?php echo $id; ?>" >
-                                    <option value="<?php echo $category; ?>" /><?php echo $category; ?>
-                                    <option value="Staff" />Staff
-                                    <option value="Client" />Client
-
-                                </select>
-                            </td>    
-                            <td>
-                                <a href="#"  value="<?php echo $loop->id; ?>"  id="myLink" onclick="NavigateToSite(this)" class="tooltip-error text-danger" data-rel="tooltip" title="reset">
-                                    <span class="red">
-                                        <i class="icon-lock bigger-120 text-danger"></i>
-                                        Reset
-                                    </span>
-                                </a>
-                            </td>
-
-                            <td class="edit_td">
                                 <?php echo $created; ?>
-                            </td>   
+                            </td>                            
+                            <td class="edit_td">
+                                <a class="btn btn-default btn-xs" href="<?php echo base_url() . "index.php/client/profile/" . $loop->name; ?>"><li class="fa fa-folder">View</li></a>
 
+                            </td>  
+                            <td class="edit_td">
+                                <a class="btn btn-primary btn-xs" data-toggle="modal" data-target=".bs-example-modal-sm" ><li class="fa fa-mail-reply">E-mail</li></a>
+
+                            </td>  
                             <td class="center">
-                                <a class="btn-danger btn-small icon-remove" href="<?php echo base_url() . "index.php/user/delete/" . $id; ?>">delete</a>
+                                <a class="btn-danger btn-small icon-remove" href="<?php echo base_url() . "index.php/client/delete/" . $id; ?>">delete</a>
                             </td>
 
                         </tr>
@@ -147,12 +128,90 @@
             </tbody>
         </table>
     </div>
+     <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <form  enctype="multipart/form-data" class="form-horizontal form-label-left"  action='<?= base_url(); ?>index.php/client/mail'  method="post">
+
+                    <span class="section">Email Client</span>
+                    <div class="col-md-12 col-sm-12 col-xs-12">                       
+
+                       
+                        <div class="item form-group col-md-12">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">TO: <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input id="email" class="form-control col-md-7 col-xs-12" data-validate-length-range="6" data-validate-words="2" name="email" placeholder="email" required="required" type="text">
+                            </div>
+                        </div>
+
+                    </div>
+                     <div class="col-md-12 col-sm-12 col-xs-12">                       
+
+                       
+                        <div class="item form-group col-md-12">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">SUBJECT: <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input id="subject" class="form-control col-md-7 col-xs-12"  name="subject" placeholder="subject" required="required" type="text">
+                            </div>
+                        </div>
+
+                    </div>
+          
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12 align-left">Message/body</label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <textarea class="span12" id="form-field-9" name="message" ></textarea>
+                            </div>
+                        </div>                       
+                    
+                        <div class="item form-group">                    
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">Attachment</label>  
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="file" name="userfile" id="userfile" class="btn-default btn-small"/>
+
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-6 col-md-offset-3 align-right">
+                                <button id="send" type="submit" class="btn btn-success align-right">Send</button>
+                                <button class="btn btn-primary align-right">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 
 
 
 <?php require_once(APPPATH . 'views/footer-page.php'); ?>
+<script type="text/javascript">
+    $(function () {
+        $("#userfile").on("change", function ()
+        {
+            var files = !!this.files ? this.files : [];
+            if (!files.length || !window.FileReader)
+                return; // no file selected, or no FileReader support
 
+            if (/^image/.test(files[0].type)) { // only image file
+                var reader = new FileReader(); // instance of the FileReader
+                reader.readAsDataURL(files[0]); // read the local file
+
+                reader.onloadend = function () { // set image data as background of div
+                    $("#imagePreview").css("background-image", "url(" + this.result + ")");
+                }
+            }
+        });
+    });
+</script>
 <script type="text/javascript">
     $(document).ready(function ()
     {

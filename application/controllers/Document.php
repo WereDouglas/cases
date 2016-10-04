@@ -7,7 +7,7 @@ class Document extends CI_Controller {
     function __construct() {
 
         parent::__construct();
-        error_reporting(E_PARSE);
+        //error_reporting(E_PARSE);
         $this->load->model('Md');
         $this->load->library('session');
         $this->load->library('encrypt');
@@ -73,7 +73,8 @@ class Document extends CI_Controller {
             $query = $this->Md->cascade($this->input->post('fileID'), 'file', 'fileID');
         }
     }
-      public function updater() {
+
+    public function updater() {
         $this->load->helper(array('form', 'url'));
 
         if (!empty($_POST)) {
@@ -81,7 +82,7 @@ class Document extends CI_Controller {
             foreach ($_POST as $field_name => $val) {
                 //clean post values
                 $field_id = strip_tags(trim($field_name));
-                $val = strip_tags(trim(mysql_real_escape_string($val)));
+                $val = strip_tags(trim($val));
                 //from the fieldname:user_id we need to get user_id
                 $split_data = explode(':', $field_id);
                 $user_id = $split_data[1];
@@ -113,8 +114,6 @@ class Document extends CI_Controller {
 
         $this->load->view('add-file', $data);
     }
-
-  
 
     public function clients() {
         $query = $this->Md->query("SELECT * FROM users  where orgID = '" . $this->session->userdata('orgID') . "' ORDER BY name DESC");
@@ -222,10 +221,16 @@ class Document extends CI_Controller {
     }
 
     public function delete() {
+
         $this->load->helper(array('form', 'url'));
-        $fileID = $this->uri->segment(3);
-        $query = $this->Md->cascade($fileID, 'file', 'fileID');
-        redirect('/file/view', 'refresh');
+        $documentID = $this->uri->segment(3);
+
+        $fileUrl = $this->Md->query_cell("SELECT fileUrl FROM document WHERE documentID ='" . $documentID . "'", 'fileUrl');
+
+        $this->Md->file_remove($fileUrl, 'documents');
+        $query = $this->Md->cascade($documentID, 'document', 'documentID');
+        //file_remove($file, $folder)
+        redirect('/document/', 'refresh');
     }
 
     public function create() {
@@ -234,19 +239,19 @@ class Document extends CI_Controller {
 
         //user information
         $documentID = $this->GUID();
-      
+
         $orgID = $this->session->userdata('orgID');
 
         if ($this->input->post('name') != "") {
 
-         
+
             ///organisation image uploads
             $file_element_name = 'userfile';
             $new_name = $this->input->post('name');
             $config['file_name'] = $new_name;
             $config['upload_path'] = 'documents/';
             $config['allowed_types'] = '*';
-            $config['encrypt_name'] = FALSE;          
+            $config['encrypt_name'] = FALSE;
 
             $this->load->library('upload', $config);
             if (!$this->upload->do_upload($file_element_name)) {
@@ -257,7 +262,8 @@ class Document extends CI_Controller {
             $data = $this->upload->data();
             $submitted = date('Y-m-d');
             $userfile = $data['file_name'];
-            $doc = array('documentID' => $documentID, 'orgID' => $this->session->userdata('orgID'), 'name' => $this->input->post('name'), 'fileID' => $this->input->post('file'), 'fileUrl' => $userfile, 'created' => date('Y-m-d'), 'action' => 'none', 'lawyer' => $this->input->post('lawyer'), 'client' => $this->input->post('client'), 'sync' => 'true','note' => $this->input->post('note'),'details' => $this->input->post('details'));
+            $size = $data['file_size'];
+            $doc = array('documentID' => $documentID, 'orgID' => $this->session->userdata('orgID'), 'name' => $this->input->post('name'), 'fileID' => $this->input->post('file'), 'fileUrl' => $userfile, 'created' => date('Y-m-d'), 'action' => 'none', 'lawyer' => $this->input->post('lawyer'), 'client' => $this->input->post('client'), 'sync' => 'true', 'note' => $this->input->post('note'), 'sizes' => $size, 'details' => $this->input->post('details'));
             $this->Md->save($doc, 'document');
 
             $this->session->set_flashdata('msg', '<div class="alert alert-success">  <strong>Information saved</strong></div>');
@@ -265,6 +271,5 @@ class Document extends CI_Controller {
             redirect('/document/', 'refresh');
         }
     }
-
 
 }

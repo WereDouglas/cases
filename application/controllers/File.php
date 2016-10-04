@@ -75,12 +75,19 @@ class File extends CI_Controller {
 
     public function add() {
 
-        $query = $this->Md->query("SELECT * FROM users where orgID = '" . $this->session->userdata('orgID') . "' ");
+        $query = $this->Md->query("SELECT * FROM users where orgID = '" . $this->session->userdata('orgID') . "'");
 
         if ($query) {
             $data['users'] = $query;
         } else {
             $data['users'] = array();
+        }
+        $query = $this->Md->query("SELECT * FROM client where orgID = '" . $this->session->userdata('orgID') . "'");
+
+        if ($query) {
+            $data['clients'] = $query;
+        } else {
+            $data['clients'] = array();
         }
 
         $this->load->view('add-file', $data);
@@ -199,19 +206,20 @@ class File extends CI_Controller {
             echo json_encode($result);
         }
     }
-      public function profile() {
-        
+
+    public function profile() {
+
         $this->load->helper(array('form', 'url'));
-        $name =  urldecode( $this->uri->segment(3));
-        
-        $query = $this->Md->query("SELECT * FROM events where orgID = '" . $this->session->userdata('orgID') . "'AND user='" . $name. "' ");
+        $name = urldecode($this->uri->segment(3));
+
+        $query = $this->Md->query("SELECT * FROM events where orgID = '" . $this->session->userdata('orgID') . "'AND user='" . $name . "' ");
 
         if ($query) {
             $data['events'] = $query;
         } else {
             $data['events'] = array();
         }
-        $query = $this->Md->query("SELECT * FROM users where name ='" .$name . "' AND orgID='" . $this->session->userdata('orgID') . "'");
+        $query = $this->Md->query("SELECT * FROM users where name ='" . $name . "' AND orgID='" . $this->session->userdata('orgID') . "'");
 
         if ($query) {
             $data['users'] = $query;
@@ -219,14 +227,14 @@ class File extends CI_Controller {
             $data['users'] = array();
         }
         $this->load->helper(array('form', 'url'));
-        $query = $this->Md->query("SELECT * FROM file where orgID = '" . $this->session->userdata('orgID') . "' AND name='" .$name . "' ");
+        $query = $this->Md->query("SELECT * FROM file where orgID = '" . $this->session->userdata('orgID') . "' AND name='" . $name . "' ");
 
         if ($query) {
             $data['files'] = $query;
         } else {
             $data['files'] = array();
         }
-        $query = $this->Md->query("SELECT * FROM  tasks where orgID = '" . $this->session->userdata('orgID') . "' AND fileID = '" . $name  . "' ");
+        $query = $this->Md->query("SELECT * FROM  tasks where orgID = '" . $this->session->userdata('orgID') . "' AND fileID = '" . $name . "' ");
         if ($query) {
             $data['sch'] = $query;
         } else {
@@ -239,14 +247,14 @@ class File extends CI_Controller {
         } else {
             $data['att'] = array();
         }
-        $query = $this->Md->query("SELECT * FROM document where orgID = '" . $this->session->userdata('orgID') . "' AND fileID = '" . $name  . "'");
+        $query = $this->Md->query("SELECT * FROM document where orgID = '" . $this->session->userdata('orgID') . "' AND fileID = '" . $name . "'");
 
         if ($query) {
             $data['docs'] = $query;
         } else {
             $data['docs'] = array();
         }
-         $query = $this->Md->query("SELECT * FROM transaction where orgID = '" . $this->session->userdata('orgID') . "'  AND fileID = '" . $name  . "' ");
+        $query = $this->Md->query("SELECT * FROM transaction where orgID = '" . $this->session->userdata('orgID') . "'  AND fileID = '" . $name . "' ");
         //  var_dump($query);
         if ($query) {
             $data['trans'] = $query;
@@ -255,8 +263,6 @@ class File extends CI_Controller {
         }
         $this->load->view('file-profile', $data);
     }
-
-   
 
     public function view() {
 
@@ -368,12 +374,20 @@ class File extends CI_Controller {
         $no = $this->session->userdata('code') . "/" . $app . "/" . date('y') . "/" . date('m') . (int) date('d') . (int) date('H') . (int) date('i') . (int) date('ss');
         $orgID = $this->session->userdata('orgID');
         if ($this->input->post('client') != "" || $this->input->post('name') != "") {
-            $files = array('fileID' => $this->GUID(), 'client' => $this->input->post('client'), 'contact' => $contact, 'lawyer' => $this->input->post('lawyer'), 'orgID' => $this->session->userdata('orgID'), 'details' => $this->input->post('details'), 'name' => $this->input->post('name'), 'opened' => $this->input->post('opened'), 'type' => $this->input->post('type'), 'created' => date('Y-m-d'), 'status' => 'Active', 'no' => $no, 'subject' => $this->input->post('subject'), 'case' => $this->input->post('case'), 'note' => $this->input->post('note'), 'progress' => $this->input->post('progress'), 'citation' => $this->input->post('citation'), 'law' => $this->input->post('law'), 'action' => 'none');
+            $files = array('fileID' => $this->GUID(), 'client' => $this->input->post('client'), 'contact' => $contact, 'lawyer' => $this->input->post('lawyer'), 'orgID' => $this->session->userdata('orgID'), 'details' => $this->input->post('details'), 'name' => $this->input->post('name'), 'contact_person' => $this->input->post('contact_person'), 'contact_number' => $this->input->post('contact_number'), 'opened' => date('Y-m-d', strtotime($this->input->post('opened'))), 'type' => $this->input->post('type'), 'created' => date('Y-m-d'), 'status' => 'Active', 'no' => $this->input->post('no'), 'subject' => $this->input->post('subject'), 'case' => $this->input->post('case'), 'note' => $this->input->post('note'), 'progress' => $this->input->post('progress'), 'citation' => $this->input->post('citation'), 'law' => $this->input->post('law'), 'action' => 'none', 'due' =>  date('Y-m-d', strtotime($this->input->post('due'))));
             $this->Md->save($files, 'file');
 
             $this->session->set_flashdata('msg', '<div class="alert alert-success">
                                    <strong>New File Saved</strong>									
 						</div>');
+             $emails = $this->Md->query_cell("SELECT * FROM users where name= '" .$this->input->post('lawyer') . "'", 'email');
+             $phones = $this->Md->query_cell("SELECT * FROM users where name= '" .$this->input->post('lawyer') . "'", 'contact');
+             $names = $this->Md->query_cell("SELECT * FROM users where name= '" .$this->input->post('lawyer'). "'", 'name');           
+             $message='You have been assigned to the file '.$this->input->post('name').' ';
+             $mail = array('messageID' => $this->GUID(), 'body' => $message, 'subject' => 'REMINDER', 'date' => date('Y-m-d'), 'to' => $names, 'created' => date('Y-m-d'), 'from' => $this->session->userdata('orgemail'), 'sent' => 'false', 'type' => 'email', 'orgID' => $this->session->userdata('orgID'), 'action' => 'none', 'taskID' => $taskID, 'contact' => $phones, 'email' => $emails);
+             $this->Md->save($mail, 'message'); 
+            
+            
         } else {
 
             $this->session->set_flashdata('msg', '<div class="alert alert-erro"><strong>Invalid fields</strong></div>');
@@ -405,7 +419,7 @@ class File extends CI_Controller {
             foreach ($_POST as $field_name => $val) {
                 //clean post values
                 $field_id = strip_tags(trim($field_name));
-                $val = strip_tags(trim(mysql_real_escape_string($val)));
+                $val = strip_tags(trim($val));
                 //from the fieldname:user_id we need to get user_id
                 $split_data = explode(':', $field_id);
                 $user_id = $split_data[1];

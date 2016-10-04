@@ -82,6 +82,11 @@ class Md extends CI_Model {
         unlink('./uploads/' . $file->$column);
         return $this->db->affected_rows();
     }
+     public function file_remove($file, $folder) {
+      
+        unlink('./'.$folder ."/".$file);
+       // return $this->db->affected_rows();
+    }
 
     public function file($file_id, $table) {
         return $this->db->select()

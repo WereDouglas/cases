@@ -54,6 +54,36 @@ class Time extends CI_Controller {
         header('Content-Type: application/json');
         echo json_encode($response);
     }
+    
+      public function mobile() {
+        $phpdate = strtotime($this->input->post('end'));
+        $ending = date('Y-m-d', $phpdate);
+
+
+        $phpdates = strtotime($this->input->post('start'));
+        $startTime = date('H:i:s', $phpdates);
+
+        $phpdatese = strtotime($this->input->post('end'));
+        $endTime = date('H:i:s', $phpdatese);
+
+        $hours = abs(($endTime - $startTime));
+
+        $eventID = $this->GUID();
+        $syc = array('id' => $eventID, 'orgID' => $this->input->post('orgID'), 'name' => $this->input->post('details'), 'start' => $this->input->post('start'), 'end' => $this->input->post('end'), 'user' => $this->input->post('resource'), 'hours' => $hours, 'file' => $this->input->post('file'), 'created' => date('Y-m-d H:i:s'), 'date' => $ending, 'action' => "none", 'status' => $this->input->post('status'));
+        $this->Md->save($syc, 'events');
+
+        $message = "You have a task due on " . $ending . " for " . $this->input->post('name');
+        $emails = $this->Md->query_cell("SELECT * FROM users where name= '" . $this->input->post('resource') . "'", 'email');
+        $phones = $this->Md->query_cell("SELECT * FROM users where name= '" . $this->input->post('resource') . "'", 'contact');
+        $names = $this->Md->query_cell("SELECT * FROM users where name= '" . $this->input->post('resource') . "'", 'name');
+
+        $mail = array('messageID' => $this->GUID(), 'body' => $message, 'subject' => 'REMINDER', 'date' => $ending, 'to' => $names, 'created' => date('Y-m-d H:i:s'), 'from' => $this->session->userdata('orgemail'), 'sent' => 'false', 'type' => 'email', 'orgID' => $this->session->userdata('orgID'), 'action' => 'none', 'taskID' => $eventID, 'contact' => $phones, 'email' => $emails);
+        $this->Md->save($mail, 'message');
+
+        $response->id = "task saved";
+        header('Content-Type: application/json');
+        echo json_encode($response);
+    }
 
     public function add() {
 
@@ -87,7 +117,7 @@ class Time extends CI_Controller {
         $g->children = array();
         $g->eventHeight = 25;
         $groups[] = $g;
-        $query2 = $this->Md->query("select * from users WHERE category='staff'");
+        $query2 = $this->Md->query("select * from users WHERE category='staff' AND orgID= '" . $this->session->userdata('orgID')."'");
         $results = $query2;
         foreach ($results as $res) {
 

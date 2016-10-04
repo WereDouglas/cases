@@ -71,7 +71,7 @@ class User extends CI_Controller {
             $data = $this->upload->data();
             $submitted = date('Y-m-d');
             $userfile = $data['file_name'];
-            $users = array('userID' => $userid, 'orgID' => $this->session->userdata('orgID'), 'name' => $this->input->post('name'), 'email' => $this->input->post('email'), 'password' => md5($this->input->post('name')), 'designation' => $this->input->post('designation'), 'image' => $userfile, 'address' => $this->input->post('address'), 'contact' => $this->input->post('contact'), 'supervisor' => $this->input->post('supervisor'), 'category' => $this->input->post('category'), 'created' => date('Y-m-d H:i:s'), 'status' => 'Active', 'action' => 'none');
+            $users = array('userID' => $userid, 'orgID' => $this->session->userdata('orgID'), 'name' => $this->input->post('name'), 'email' => $this->input->post('email'), 'password' => md5($this->input->post('name')), 'designation' => $this->input->post('designation'), 'image' => $userfile, 'address' => $this->input->post('address'), 'contact' => $this->input->post('contact'), 'supervisor' => $this->input->post('supervisor'), 'category' =>'staff', 'created' => date('Y-m-d H:i:s'), 'status' => 'Active', 'action' => 'none');
             $this->Md->save($users, 'users');
 
             $this->session->set_flashdata('msg', '<div class="alert alert-success">  <strong>Information saved</strong></div>');
@@ -104,6 +104,43 @@ class User extends CI_Controller {
             array_push($all, $resv);
         }
         echo json_encode($all);
+    }
+
+    public function update_image() {
+
+        $this->load->helper(array('form', 'url'));
+        //user information
+
+        $userID = $this->input->post('userID');
+        $namer = $this->input->post('namer');
+
+
+        $file_element_name = 'userfile';
+        // $new_name = $userID;
+        $config['file_name'] = $userID;
+        $config['upload_path'] = 'uploads/';
+        $config['allowed_types'] = '*';
+        $config['encrypt_name'] = FALSE;
+        $config['allowed_types'] = 'jpg';
+        $config['overwrite'] = TRUE;
+        
+        $this->load->library('upload', $config);
+        if (!$this->upload->do_upload($file_element_name)) {
+            $status = 'error';
+            $msg = $this->upload->display_errors('', '');
+            $this->session->set_flashdata('msg', '<div class="alert alert-error"> <strong>' . $msg . '</strong></div>');
+            redirect('/user/profile/' . $namer, 'refresh');
+
+            return;
+        }
+         $data = $this->upload->data();         
+        $userfile = $data['file_name'];
+            $user = array('image' => $userfile);
+        $this->Md->update_dynamic($userID, 'userID', 'users', $user);
+
+        $this->session->set_flashdata('msg', '<div class="alert alert-success">  <strong>Image updated saved</strong></div>');
+
+        redirect('/user/profile/' . $namer, 'refresh');
     }
 
     public function client() {
@@ -223,18 +260,18 @@ class User extends CI_Controller {
     }
 
     public function profile() {
-        
+
         $this->load->helper(array('form', 'url'));
-        $name =  urldecode( $this->uri->segment(3));
-        
-        $query = $this->Md->query("SELECT * FROM events where orgID = '" . $this->session->userdata('orgID') . "'AND user='" . $name. "' ");
+        $name = urldecode($this->uri->segment(3));
+
+        $query = $this->Md->query("SELECT * FROM events where orgID = '" . $this->session->userdata('orgID') . "'AND user='" . $name . "' ");
 
         if ($query) {
             $data['events'] = $query;
         } else {
             $data['events'] = array();
         }
-        $query = $this->Md->query("SELECT * FROM users where name ='" .$name . "' AND orgID='" . $this->session->userdata('orgID') . "'");
+        $query = $this->Md->query("SELECT * FROM users where name ='" . $name . "' AND orgID='" . $this->session->userdata('orgID') . "'");
 
         if ($query) {
             $data['users'] = $query;
@@ -242,14 +279,14 @@ class User extends CI_Controller {
             $data['users'] = array();
         }
         $this->load->helper(array('form', 'url'));
-        $query = $this->Md->query("SELECT * FROM file where orgID = '" . $this->session->userdata('orgID') . "' AND lawyer='" .$name . "' ");
+        $query = $this->Md->query("SELECT * FROM file where orgID = '" . $this->session->userdata('orgID') . "' AND lawyer='" . $name . "' ");
 
         if ($query) {
             $data['files'] = $query;
         } else {
             $data['files'] = array();
         }
-        $query = $this->Md->query("SELECT * FROM  tasks where orgID = '" . $this->session->userdata('orgID') . "' AND userID = '" . $name  . "' ");
+        $query = $this->Md->query("SELECT * FROM  tasks where orgID = '" . $this->session->userdata('orgID') . "' AND userID = '" . $name . "' ");
         if ($query) {
             $data['sch'] = $query;
         } else {
@@ -262,7 +299,7 @@ class User extends CI_Controller {
         } else {
             $data['att'] = array();
         }
-        $query = $this->Md->query("SELECT * FROM document where orgID = '" . $this->session->userdata('orgID') . "' AND lawyer = '" . $name  . "' OR client = '" . $name  . "' ");
+        $query = $this->Md->query("SELECT * FROM document where orgID = '" . $this->session->userdata('orgID') . "' AND lawyer = '" . $name . "' OR client = '" . $name . "' ");
 
         if ($query) {
             $data['docs'] = $query;
@@ -466,7 +503,7 @@ class User extends CI_Controller {
             foreach ($_POST as $field_name => $val) {
                 //clean post values
                 $field_id = strip_tags(trim($field_name));
-                $val = strip_tags(trim(mysql_real_escape_string($val)));
+                $val = strip_tags(trim($val));
                 //from the fieldname:user_id we need to get user_id
                 $split_data = explode(':', $field_id);
                 $user_id = $split_data[1];

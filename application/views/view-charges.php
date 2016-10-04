@@ -36,11 +36,11 @@
                                 <?php
                                 if ($loop->image != "") {
                                     ?>
-                                    <img  height="50px" width="50px"  src="<?= base_url(); ?>uploads/<?php echo $loop->userID . ".jpg"; ?>" alt="logo" />
+                                    <img  height="50px" width="50px"  src="<?= base_url(); ?>uploads/<?php echo $loop->image ; ?>"  />
                                     <?php
                                 } else {
                                     ?>
-                                    <img  height="50px" width="50px"  src="<?= base_url(); ?>images/user_place.png" alt="logo" />
+                                    <img  height="50px" width="50px"  src="<?= base_url(); ?>images/user_place.png"  />
                                     <?php
                                 }
                                 ?>
@@ -56,7 +56,7 @@
                             <td id="contact:<?php echo $loop->userID; ?>" contenteditable="true"><?php echo $loop->contact; ?></td>
                             <td id="charge:<?php echo $loop->userID; ?>" contenteditable="true"><span class="blue"><?php echo $loop->charge; ?></span> </td>
                             <td class="edit_td">
-                                <a class="btn btn-primary btn-xs" href="<?php echo base_url() . "index.php/user/profile/" . $name; ?>"><li class="fa fa-folder">View</li></a>
+                                <a class="btn btn-primary btn-xs" href="<?php echo base_url() . "index.php/user/profile/" . $loop->name; ?>"><li class="fa fa-folder">View</li></a>
 
                             </td>  
 

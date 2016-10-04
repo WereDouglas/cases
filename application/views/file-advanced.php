@@ -41,6 +41,9 @@
                     <th>STATUS</th> 
                     <th>NEXT DUE</th>
                     <th>C/O</th>
+                 
+                    <th>CONTACT PERSON</th>
+                    <th>CONTACT NUMBER</th>
                     <th>VIEW</th>
                 </tr>
             </thead>
@@ -70,6 +73,11 @@
                             <td id="progress:<?php echo $loop->fileID; ?>" contenteditable="true"><span class="<?php echo $color; ?>"><?php echo $loop->progress; ?></span> </td>
                             <td id="due:<?php echo $loop->fileID; ?>" contenteditable="true"><span class="<?php echo $color; ?>"><?php echo $loop->due; ?></span> </td>
                             <td id="lawyer:<?php echo $loop->fileID; ?>" contenteditable="true"><span class="<?php echo $color; ?>"><?php echo $loop->lawyer; ?></span> </td>
+                           <td id="contact_person:<?php echo $loop->fileID; ?>" contenteditable="true"><span class="<?php echo $color; ?>"><?php echo $loop->contact_person; ?></span> </td>
+                           <td id="contact_number:<?php echo $loop->fileID; ?>" contenteditable="true"><span class="<?php echo $color; ?>"><?php echo $loop->contact_number; ?></span> </td>
+                          
+                            
+                            
                             <td class="edit_td">
                                 <a class="btn btn-primary btn-xs" href="<?php echo base_url() . "index.php/file/profile/" .$loop->name; ?>"><li class="fa fa-folder">View</li></a>
 

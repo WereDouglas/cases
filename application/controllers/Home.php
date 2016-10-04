@@ -57,6 +57,10 @@ class Home extends CI_Controller {
         if ($query) {
             $data['tasks'] = $query;
         }
+        $query = $this->Md->query("SELECT * FROM client where  orgID='" . $this->session->userdata('orgID') . "'");
+        if ($query) {
+            $data['clients'] = $query;
+        }
 
         $query = $this->Md->query("SELECT * FROM transaction where  orgID='" . $this->session->userdata('orgID') . "'");
         if ($query) {
@@ -78,9 +82,10 @@ class Home extends CI_Controller {
 
         $this->load->view('page');
     }
+
     public function contact() {
 
-       // $query = $this->Md->query("SELECT * FROM users where org='".$this->session->userdata('orgid')."'");
+        // $query = $this->Md->query("SELECT * FROM users where org='".$this->session->userdata('orgid')."'");
         $query = $this->Md->query("SELECT * FROM users");
 
         if ($query) {
@@ -143,6 +148,11 @@ class Home extends CI_Controller {
                     $license = $res->keys;
                     $address = $res->address;
                     $orgemail = $res->email;
+                    $currency = $res->currency;
+                    $country = $res->country;
+                    $top = $res->top;
+                    $vat = $res->vat;
+                    $tin = $res->tin;
                 }
                 $this->session->set_userdata('name', $name);
                 $this->session->set_userdata('orgimage', $orgimage);
@@ -150,6 +160,10 @@ class Home extends CI_Controller {
                 $this->session->set_userdata('starts', $starts);
                 $this->session->set_userdata('ends', $ends);
                 $this->session->set_userdata('code', $code);
+                $this->session->set_userdata('top', $top);
+                $this->session->set_userdata('vat', $vat);
+                $this->session->set_userdata('tin', $tin);
+                $this->session->set_userdata('country', $country);
                 $this->session->set_userdata('orgemail', $orgemail);
                 $this->session->set_userdata('license', $license);
                 $this->session->set_userdata('username', $resv->name);
@@ -360,7 +374,6 @@ class Home extends CI_Controller {
         $this->load->view('profile', $data);
     }
 
-    
     public function project() {
         $this->load->view('project');
     }

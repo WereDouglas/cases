@@ -4,8 +4,8 @@
 <?php echo $this->session->flashdata('msg'); ?>
 
 <div class=" col-md-12 x_panel">
-  <h2>FILES </h2>   
-     <div class="x_content scroll">
+    <h2>FILES </h2>   
+    <div class="x_content scroll">
 
         <table id="datatable" class="table table-striped table-bordered scroll ">
             <thead>
@@ -19,10 +19,12 @@
                     <th>LAW</th>
                     <th>STATUS</th>
                     <th>CLIENT</th>
-                    <th>LAWYER</th>
-                    
-                    <th>CREATED:</th>
-                     <th>VIEW</th>
+                    <th>LAWYER</th> 
+                    <th>DUE DATE</th>
+                    <th>CONTACT PERSON</th>
+                    <th>CONTACT NUMBER</th>
+                    <th>CREATED:</th>                    
+                    <th>VIEW</th>
                     <th>ACTION</th>
                 </tr>
             </thead>
@@ -138,12 +140,21 @@
                             </select>
                         </td>
                         <td class="edit_td">
+                            <?php echo $loop->due; ?>
+                        </td> 
+                        <td class="edit_td">
+                            <?php echo $loop->contact_person; ?>
+                        </td> 
+                         <td class="edit_td">
+                            <?php echo $loop->contact_number; ?>
+                        </td> 
+                        <td class="edit_td">
                             <?php echo $created; ?>
                         </td> 
                         <td class="edit_td">
-                                <a class="btn btn-primary btn-xs" href="<?php echo base_url() . "index.php/file/profile/" . $name; ?>"><li class="fa fa-folder">View</li></a>
+                            <a class="btn btn-primary btn-xs" href="<?php echo base_url() . "index.php/file/profile/" . $name; ?>"><li class="fa fa-folder">View</li></a>
 
-                            </td>   
+                        </td>   
 
                         <td class="center">
                             <a class="btn btn-danger btn-danger btn-xs" href="<?php echo base_url() . "index.php/file/delete/" . $id; ?>"><li class="fa fa-trash">Remove</li></a>
@@ -156,7 +167,7 @@
 
             </tbody>
         </table>
-</div>
+    </div>
 </div>
 
 
@@ -210,7 +221,7 @@
             var no = $("#no_input_" + ID).val();
 
 
-            var dataString = 'id=' + ID + '&name=' + name + '&details=' + details + '&details=' + details + '&type=' + type + '&client=' + client + '&subject=' + subject + '&status=' + status + '&lawyer=' + lawyer+ '&citation=' + citation+ '&law=' + law+ '&no=' + no;
+            var dataString = 'id=' + ID + '&name=' + name + '&details=' + details + '&details=' + details + '&type=' + type + '&client=' + client + '&subject=' + subject + '&status=' + status + '&lawyer=' + lawyer + '&citation=' + citation + '&law=' + law + '&no=' + no;
             $("#name_" + ID).html('<img src="<?= base_url(); ?>images/loading.gif"  />'); // Loading image
             $("#details_" + ID).html('<img src="<?= base_url(); ?>images/loading.gif"  />'); // Loading image
             $("#client_" + ID).html('<img src="<?= base_url(); ?>images/loading.gif"  />');

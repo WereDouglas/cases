@@ -7,7 +7,7 @@ class Task extends CI_Controller {
     function __construct() {
 
         parent::__construct();
-        error_reporting(E_PARSE);
+       error_reporting(E_PARSE);
         $this->load->model('Md');
         $this->load->library('session');
         $this->load->library('encrypt');
@@ -49,11 +49,11 @@ class Task extends CI_Controller {
         echo json_encode($query);
     }
      public function staff() {
-        $query = $this->Md->query("SELECT * FROM users WHERE  orgID='" . $this->session->userdata('orgID') . "' AND category='Staff'");
+        $query = $this->Md->query("SELECT * FROM users WHERE  orgID='" . $this->session->userdata('orgID') . "'");
         echo json_encode($query);
     }
      public function client() {
-        $query = $this->Md->query("SELECT * FROM users WHERE  orgID='" . $this->session->userdata('orgID') . "' AND category='client'");
+        $query = $this->Md->query("SELECT * FROM client WHERE  orgID='" . $this->session->userdata('orgID') . "'");
         echo json_encode($query);
     }
 
@@ -401,9 +401,12 @@ class Task extends CI_Controller {
         if ($notify != "") {
             $notify = 'True';
         }
+         if ($this->input->post('court') != "") {
+            $court = 'True';
+        }
         $taskID = $this->GUID();
 
-        $sch = array('taskID' => $taskID, 'date' => $this->input->post('date'), 'priority' => $this->input->post('priority'), 'period' => $this->input->post('period'), 'details' => $this->input->post('details'), 'orgID' => $this->session->userdata('orgID'), 'startTime' => $this->input->post('startTime'), 'endTime' => $this->input->post('endTime'), 'trigger' => $notify, 'userID' => $this->session->userdata('username'), 'created' => date('Y-m-d'), 'fileID' => $this->input->post('file'), 'action' => 'none');
+        $sch = array('taskID' => $taskID, 'date' => $this->input->post('date'), 'priority' => $this->input->post('priority'), 'court' => $court, 'period' => $this->input->post('period'), 'details' => $this->input->post('details'), 'orgID' => $this->session->userdata('orgID'), 'startTime' => $this->input->post('startTime'), 'endTime' => $this->input->post('endTime'), 'trigger' => $notify, 'userID' => $this->session->userdata('username'), 'created' => date('Y-m-d'), 'fileID' => $this->input->post('file'), 'action' => 'none');
         $id = $this->Md->save($sch, 'tasks');
 
         $message = "Reminder " . 'You have a meeting on ' . $this->input->post('date') . ' at ' . $this->input->post('startTime') . ' to ' . $this->input->post('endTime') . ' Details: ' . $this->input->post('details');
@@ -414,24 +417,30 @@ class Task extends CI_Controller {
                 $schedule = $day;                // echo $email;
 
          
-              $emails = $this->Md->query_cell("SELECT * FROM users where userID= '" .$t . "'", 'email');
+                $emails = $this->Md->query_cell("SELECT * FROM users where userID= '" .$t . "'", 'email');
                 $phones = $this->Md->query_cell("SELECT * FROM users where userID= '" . $t . "'", 'contact');
                 $names = $this->Md->query_cell("SELECT * FROM users where userID= '" . $t . "'", 'name');
            
-                $schs = array('attendID' => $this->GUID(), 'orgID' => $this->session->userdata('orgID'), 'userID' => $t, 'taskID' => $taskID, 'action' => 'none', 'name' => $names, 'contact' => $phones);
+                $schs = array('attendID' => $this->GUID(), 'orgID' => $this->session->userdata('orgID'), 'userID' => $t, 'taskID' => $taskID, 'action' => 'none', 'name' => $names, 'contact' => $phones, 'sync' => 'false');
                 $id = $this->Md->save($schs, 'attend');
 
                 $mail = array('messageID' => $this->GUID(), 'body' => $message, 'subject' => 'REMINDER', 'date' => $this->input->post('date'), 'to' => $names, 'created' => date('Y-m-d H:i:s'), 'from' => $this->session->userdata('orgemail'), 'sent' => 'false', 'type' => 'email', 'orgID' => $this->session->userdata('orgID'), 'action' => 'none', 'taskID' => $taskID, 'contact' => $phones, 'email' => $emails);
-                $this->Md->save($mail, 'message');               
+                $this->Md->save($mail, 'message');           
 
-                echo $information = 'Saved and mail will be sent on' . $schedule;
+               
+                 $this->session->set_flashdata('msg', '<div class="alert">                                                   
+                                                <strong>
+                                                 Saved and mail will be sent on ' . $schedule. '</strong>									
+						</div>');
+                
+                redirect('task/add', 'refresh');
             }
         }
         $this->session->set_flashdata('msg', '<div class="alert">                                                   
                                                 <strong>
                                                  Schedule added dated ' . $day . '</strong>									
 						</div>');
-        redirect('task/add', 'refresh');
+          redirect('task/add', 'refresh');
     }
 
     public function generate_post() {

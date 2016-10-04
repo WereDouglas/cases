@@ -7,7 +7,7 @@
     <h2>DOCUMENTS</h2>  
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-sm">ADD</button>
     <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-sm">
+        <div class="modal-dialog modal-md">
             <div class="modal-content">
                 <form  enctype="multipart/form-data" class="form-horizontal form-label-left"  action='<?= base_url(); ?>index.php/document/create'  method="post">
 
@@ -50,7 +50,7 @@
                             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Name <span class="required">*</span>
                             </label>
                             <div class="col-md-6 col-sm-6 col-xs-12">
-                                <input id="name" class="form-control col-md-7 col-xs-12" data-validate-length-range="6" data-validate-words="2" name="name" placeholder="Name" required="required" type="text">
+                                <input id="name" class="form-control col-md-7 col-xs-12"   name="name" placeholder="Name" required="required" type="text">
                             </div>
                         </div>
 
@@ -95,7 +95,7 @@
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-3 align-right">
                                 <button id="send" type="submit" class="btn btn-success align-right">Submit</button>
-                                <button type="submit" class="btn btn-primary align-right">Cancel</button>
+                                <button data-dismiss="modal" class="btn btn-primary align-right">Cancel</button>
                             </div>
                         </div>
                     </div>
@@ -120,6 +120,7 @@
                     <th>NOTE</th>
                     <th>ACTION</th> 
                     <th>DOWNLOAD</th>
+                    <th>SIZE(kilobytes/Kbs)</th>
 
 
                 </tr>
@@ -145,6 +146,9 @@
                         </td>
                         <td class="center">
                             <a class="btn btn-successr btn-xs" href="<?php echo base_url() . "documents/" . $loop->fileUrl; ?>"><li class="fa fa-download">Download</li></a>
+                        </td>
+                        <td class="center">
+                            <?php echo  $loop->sizes; ?>
                         </td>
 
                     </tr>

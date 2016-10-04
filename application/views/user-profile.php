@@ -14,6 +14,7 @@
 <link rel="stylesheet" href="<?= base_url(); ?>css/mine.css" />
 <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>css/easyui.css?date=<?php echo date('Y-m-d') ?>">
 <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>css/icon.css?date=<?php echo date('Y-m-d') ?>">
+
 <div class="row container">
     <?php echo $this->session->flashdata('msg'); ?>
     <div class="row">
@@ -29,7 +30,8 @@
                         <th>DESIGNATION</th>                   
                         <th>STATUS</th>
                         <th>CONTACT</th>
-                        <th>CHARGE/HR</th>
+                        <th>CHARGE/(HR)</th>
+                        <th></th>
 
                     </tr>
                 </thead>
@@ -57,10 +59,19 @@
                                                 <?php
                                             }
                                             ?>
+                                            <form  enctype="multipart/form-data" class="form-horizontal form-label-left"  action='<?= base_url(); ?>index.php/user/update_image'  method="post">                                       
+
+                                                <input type="file" name="userfile" id="userfile" />
+                                                <div id="imagePreview" ></div>
+                                                <input type="hidden" name="userID" id="userID" value="<?php echo $loop->userID; ?>" />                                                   
+                                                <input type="hidden" name="namer" id="namer" value="<?php echo $loop->name; ?>" />
+                                                <button id="send" type="submit" >Update picture</button>
+
+
+                                            </form>
 
                                         </div>
                                     </div>
-
                                 </td>
 
                                 <td id="name:<?php echo $loop->userID; ?>" contenteditable="true">
@@ -98,7 +109,7 @@
 
                         <div id="mainb" style="height:300px;" class= "col-md-12 col-sm-12 col-xs-12"></div>
                         <div  class="col-md-12" >
-                           <table id="datatable" class="table table-striped table-bordered scroll ">
+                            <table id="datatable" class="table table-striped table-bordered scroll ">
                                 <thead>
                                     <tr>
                                         <th>DATE</th>
@@ -106,7 +117,6 @@
                                         <th>NAME</th> 
                                         <th>START</th>                   
                                         <th>END</th>
-
                                         <th>FILE</th>
                                         <th>STATUS</th> 
                                         <th>HOURS</th>
@@ -226,55 +236,55 @@
 
 
                     </div>
-                     <div role="tabpanel" class="tab-pane fade" id="document" aria-labelledby="profile-tab">
-                            <table id="datatable" class="table table-striped table-bordered scroll ">
-            <thead>
-                <tr>
-                    <th>CREATED</th>
-                    <th>NAME</th>
-                    <th>FILE</th>
-                    <th>CLIENT</th>
-                    <th>DETAILS</th>
-                    <th>C/O</th>   
-                    <th>ACTION</th> 
-                    <th>DOWNLOAD</th>   
+                    <div role="tabpanel" class="tab-pane fade" id="document" aria-labelledby="profile-tab">
+                        <table id="datatable" class="table table-striped table-bordered scroll ">
+                            <thead>
+                                <tr>
+                                    <th>CREATED</th>
+                                    <th>NAME</th>
+                                    <th>FILE</th>
+                                    <th>CLIENT</th>
+                                    <th>DETAILS</th>
+                                    <th>C/O</th>   
+                                    <th>ACTION</th> 
+                                    <th>DOWNLOAD</th>   
 
 
-                </tr>
-            </thead>
+                                </tr>
+                            </thead>
 
-            <tbody>
-                <?php
-                foreach ($docs as $loop) {
-                    ?>  
-                    <tr class="odd">
+                            <tbody>
+                                <?php
+                                foreach ($docs as $loop) {
+                                    ?>  
+                                    <tr class="odd">
 
-                        <td id="created:<?php echo $loop->documentID; ?>" contenteditable="true">
-                            <span class="green"><?php echo $loop->created; ?></span> 
-                        </td>
-                        <td id="name:<?php echo $loop->documentID; ?>" contenteditable="true"><?php echo $loop->name; ?></td>
-                        <td id="fileID:<?php echo $loop->documentID; ?>" contenteditable="true"><?php echo $loop->fileID; ?></td>
-                        <td id="client:<?php echo $loop->documentID; ?>" contenteditable="true"><?php echo $loop->client; ?></td>
+                                        <td id="created:<?php echo $loop->documentID; ?>" contenteditable="true">
+                                            <span class="green"><?php echo $loop->created; ?></span> 
+                                        </td>
+                                        <td id="name:<?php echo $loop->documentID; ?>" contenteditable="true"><?php echo $loop->name; ?></td>
+                                        <td id="fileID:<?php echo $loop->documentID; ?>" contenteditable="true"><?php echo $loop->fileID; ?></td>
+                                        <td id="client:<?php echo $loop->documentID; ?>" contenteditable="true"><?php echo $loop->client; ?></td>
 
-                        <td id="details:<?php echo $loop->documentID; ?>" contenteditable="true"><?php echo $loop->details; ?></td>
-                        <td id="lawyer:<?php echo $loop->documentID; ?>" contenteditable="true"><?php echo $loop->lawyer; ?></td>
+                                        <td id="details:<?php echo $loop->documentID; ?>" contenteditable="true"><?php echo $loop->details; ?></td>
+                                        <td id="lawyer:<?php echo $loop->documentID; ?>" contenteditable="true"><?php echo $loop->lawyer; ?></td>
 
-                        <td class="center">
-                            <a class="btn btn-danger btn-xs" href="<?php echo base_url() . "index.php/document/delete/" . $loop->documentID; ?>"><li class="fa fa-trash">Delete</li></a>
-                        </td>
-                        <td class="center">
-                            <a class="btn btn-successr btn-xs" href="<?php echo base_url() . "documents/" . $loop->fileUrl; ?>"><li class="fa fa-download">Download</li></a>
-                        </td>
+                                        <td class="center">
+                                            <a class="btn btn-danger btn-xs" href="<?php echo base_url() . "index.php/document/delete/" . $loop->documentID; ?>"><li class="fa fa-trash">Delete</li></a>
+                                        </td>
+                                        <td class="center">
+                                            <a class="btn btn-successr btn-xs" href="<?php echo base_url() . "documents/" . $loop->fileUrl; ?>"><li class="fa fa-download">Download</li></a>
+                                        </td>
 
-                    </tr>
+                                    </tr>
 
-                    <?php
-                }
-                ?>
+                                    <?php
+                                }
+                                ?>
 
-            </tbody>
-        </table>
-   
+                            </tbody>
+                        </table>
+
                     </div>
                 </div>
             </div>
@@ -299,6 +309,26 @@
 <script type="text/javascript" src="<?= base_url(); ?>js/jquery.easyui.min.js"></script>
 
 <script src="<?= base_url(); ?>vendors/echarts/dist/echarts.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $("#userfile").on("change", function ()
+        {
+            var files = !!this.files ? this.files : [];
+            if (!files.length || !window.FileReader)
+                return; // no file selected, or no FileReader support
+
+            if (/^image/.test(files[0].type)) { // only image file
+                var reader = new FileReader(); // instance of the FileReader
+                reader.readAsDataURL(files[0]); // read the local file
+
+                reader.onloadend = function () { // set image data as background of div
+                    $("#imagePreview").css("background-image", "url(" + this.result + ")");
+                }
+            }
+        });
+    });
+</script>
+
 <script>
     var theme = {
         color: [
@@ -822,9 +852,10 @@
 
         TableManageButtons.init();
 
-       
+
     });
 </script>
+
 
 
 

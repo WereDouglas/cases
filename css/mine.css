@@ -13,6 +13,19 @@ iframe {
     height: 100%;
     
 }
+horizontal .control-label {
+    padding-top: 7px;
+    margin-bottom: 0;
+    text-align: left;
+}
+label {
+    padding-top: 8px;
+     text-align: left;
+}
+.form-horizontal .control-label {
+    padding-top: 8px;
+    text-align: left;
+}
 img {
     vertical-align: middle;
   
@@ -25,10 +38,10 @@ img {
 }
 
 #imagePreview {
-    width: 80px;
-    height: 80px;
+    width: 50px;
+    height: 50px;
     background-size: cover;
-    background-size: 80px 80px;
+    background-size: 50px 50px;
     display: inline-block;
 }
 
@@ -46,7 +59,7 @@ img {
 	width:100%;
 	box-shadow: 10px 10px 5px #888888;
 	border:1px solid #ffffff;
-	
+	height: 100%;
 	-moz-border-radius-bottomleft:0px;
 	-webkit-border-bottom-left-radius:0px;
 	border-bottom-left-radius:0px;
@@ -216,6 +229,9 @@ cursor:pointer;
     margin-left: auto;
     width: 100% !important;
 }
+#printableArea{
+    height: 100%;
+}
 .scroll {
   overflow:auto;
   padding-right: 1%;
@@ -234,5 +250,6 @@ select {
 .modal {
     background-color:#fff !important;
 }
+
 
 
