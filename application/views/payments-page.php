@@ -2,6 +2,35 @@
 <?php require_once(APPPATH . 'views/header-page.php'); ?>       
 
 <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>css/pure-min.css">
+<style>
+    horizontal .control-label {
+    padding-top: 7px;
+    margin-bottom: 0;
+    text-align: left;
+}
+label {
+    padding-top: 8px;
+     text-align: left;
+}
+.form-horizontal .control-label {
+    padding-top: 8px;
+    text-align: left;
+}
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #printableArea, #printableArea * {
+    visibility: visible;
+  }
+  #printableArea{
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+}
+    
+</style>
 <?php echo $this->session->flashdata('msg'); ?>
 
 
@@ -46,7 +75,7 @@
 
                 <form  enctype="multipart/form-data" class="form-horizontal padding-2"  action='<?= base_url(); ?>index.php/payment/save'  method="post">
 
-                    <div class="span12" class="printableArea">
+                    <div class="span12" class="printableArea" id="printableArea">
                         <div class=" col-md-12">                       
                             <?php
                             echo $this->session->userdata('top');
