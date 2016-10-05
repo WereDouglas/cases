@@ -388,8 +388,8 @@ class Payment extends CI_Controller {
 
 
         $emails = $this->Md->query_cell("SELECT * FROM users where name= '" . $this->input->post('laywer') . "'", 'email');
-        $phones = $this->Md->query_cell("SELECT * FROM users where userID= '" . $this->input->post('laywer') . "'", 'contact');
-        $names = $this->Md->query_cell("SELECT * FROM users where userID= '" . $this->input->post('laywer') . "'", 'name');
+        $phones = $this->Md->query_cell("SELECT * FROM users where name= '" . $this->input->post('laywer') . "'", 'contact');
+        $names = $this->Md->query_cell("SELECT * FROM users where name= '" . $this->input->post('laywer') . "'", 'name');
         $message = "PAYMENT TRANSACTION ON CLIENT " . $this->input->post('client') . " FILE " . $this->input->post('file');
 
         $mail = array('messageID' => $this->GUID(), 'body' => $message, 'subject' => 'INVOICE', 'date' => $this->input->post('date'), 'to' => $names, 'created' => date('Y-m-d H:i:s'), 'from' => $this->session->userdata('orgemail'), 'sent' => 'false', 'type' => 'email', 'orgID' => $this->session->userdata('orgID'), 'action' => 'none', 'taskID' => $taskID, 'contact' => $phones, 'email' => $emails);

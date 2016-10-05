@@ -251,24 +251,18 @@ class Expense extends CI_Controller {
         $this->load->view('income-page', $data);
     }
 
-    public function expense() {
+    public function  expenses() {
 
         $this->load->helper(array('form', 'url'));
 
-        $query = $this->Md->query("SELECT *  FROM transaction  WHERE orgID ='" . $this->session->userdata('orgID') . "' AND type='Expense'  ");
-        //  var_dump($query);
+        $query = $this->Md->query("SELECT *, file.name AS file,client.name AS client,expenses.details AS details FROM expenses  JOIN  client ON expenses.clientID = client.clientID  JOIN file ON expenses.fileID= file.fileID WHERE expenses.orgID = '" . $this->session->userdata('orgID') . "' AND expenses.paid='true'");
+       
         if ($query) {
-            $data['payments'] = $query;
+            $data['expenses'] = $query;
         } else {
-            $data['payments'] = array();
+            $data['expenses'] = array();
         }
-        $query = $this->Md->query("SELECT * FROM item where orgID = '" . $this->session->userdata('orgID') . "'");
-        //  var_dump($query);
-        if ($query) {
-            $data['items'] = $query;
-        } else {
-            $data['items'] = array();
-        }
+       
 
         $this->load->view('expense-page', $data);
     }
@@ -381,8 +375,8 @@ class Expense extends CI_Controller {
         }
        
         $emails = $this->Md->query_cell("SELECT * FROM users where name= '" . $this->input->post('signed') . "'", 'email');
-        $phones = $this->Md->query_cell("SELECT * FROM users where userID= '" . $this->input->post('signed') . "'", 'contact');
-        $names = $this->Md->query_cell("SELECT * FROM users where userID= '" . $this->input->post('signed') . "'", 'name');
+        $phones = $this->Md->query_cell("SELECT * FROM users where name= '" . $this->input->post('signed') . "'", 'contact');
+        $names = $this->Md->query_cell("SELECT * FROM users where name= '" . $this->input->post('signed') . "'", 'name');
         $message = "PAYMENT TRANSACTION ON CLIENT " . $this->input->post('client') . " FILE " . $this->input->post('file');
 
         $mail = array('messageID' => $this->GUID(), 'body' => $message, 'subject' => 'REQUISTION PENDING APPROVAL', 'date' => $this->input->post('date'), 'to' => $names, 'created' => date('Y-m-d H:i:s'), 'from' => $this->session->userdata('orgemail'), 'sent' => 'false', 'type' => 'email', 'orgID' => $this->session->userdata('orgID'), 'action' => 'none', 'taskID' => $taskID, 'contact' => $phones, 'email' => $emails);
