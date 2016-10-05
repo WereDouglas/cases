@@ -11,7 +11,7 @@
             <div class="modal-content">
                 <form  enctype="multipart/form-data" class="form-horizontal form-label-left"  action='<?= base_url(); ?>index.php/document/create'  method="post">
 
-                    <span class="section">DOCUMENT INFORMATION</span>
+                    <h1> <span class="section">DOCUMENT INFORMATION</span></h1>
                     <div class="col-md-6 col-sm-6 col-xs-6">                       
 
                         <div class=" item form-group">

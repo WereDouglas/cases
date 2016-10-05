@@ -39,7 +39,7 @@
 
                         <div class="clearfix"></div>
                         <!-- sidebar menu -->
-                        <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+                        <div id="sidebar-menu" class="main_menu_side hidden-print main_menu toggled">
                             <div class="menu_section">
                                 <h3>Home</h3>
                                 <ul class="nav side-menu">
@@ -51,8 +51,8 @@
                                         
                                                                                 </ul>-->
                                     </li>
-                                     <li><a href="<?php echo base_url() . "index.php/task/add"; ?>" target="frame"><i class="fa fa-bank"></i>Cause list <span class="fa fa-chevron-down"></span></a> </li>
-                                    
+                                    <li><a href="<?php echo base_url() . "index.php/task/add"; ?>" target="frame"><i class="fa fa-bank"></i>Cause list <span class="fa fa-chevron-down"></span></a> </li>
+
 
                                     <li><a><i class="fa fa-balance-scale"></i>Time sheet<span class="fa fa-chevron-down"></span></a>
                                         <ul class="nav child_menu">
@@ -66,7 +66,7 @@
                                         <ul class="nav child_menu">
                                             <li><a href="<?php echo base_url() . "index.php/client/add"; ?>" target="frame">Add Client</a></li>
                                             <li><a href="<?php echo base_url() . "index.php/client/view"; ?>" target="frame">View Clients</a></li>
-                                             <li><a href="<?php echo base_url() . "index.php/client/advanced"; ?>" target="frame">Advanced</a></li>
+                                            <li><a href="<?php echo base_url() . "index.php/client/advanced"; ?>" target="frame">Advanced</a></li>
                                         </ul>
                                     </li>
 
@@ -78,28 +78,26 @@
 
                                         </ul>
                                     </li>
-                                    
-                                   
+
+
                                     <li><a><i class="fa fa-table"></i>Tasks <span class="fa fa-chevron-down"></span></a>
                                         <ul class="nav child_menu">
-
                                             <li><a href="<?php echo base_url() . "index.php/task/view"; ?>" target="frame">All</a></li>
 
                                         </ul>
                                     </li>
                                     <li><a><i class="fa fa-paypal"></i>Payments<span class="fa fa-chevron-down"></span></a>
                                         <ul class="nav child_menu">
-                                            <li><a href="<?php echo base_url() . "index.php/payment/payments"; ?>" target="frame">View</a></li>                                           
+                                            <li><a href="<?php echo base_url() . "index.php/payment/payments"; ?>" target="frame">Payments</a></li>
+                                            <li><a href="<?php echo base_url() . "index.php/payment/invoices"; ?>" target="frame">Invoices</a></li>            
                                             <li><a href="<?php echo base_url() . "index.php/transaction/advanced"; ?>" target="frame">Advanced</a></li>
 
                                         </ul>
                                     </li>
-                                     <li><a><i class="fa fa-cc-mastercard"></i>Expenses <span class="fa fa-chevron-down"></span></a>
+                                    <li><a><i class="fa fa-cc-mastercard"></i>Expenses <span class="fa fa-chevron-down"></span></a>
                                         <ul class="nav child_menu">
-                                            <li><a href="<?php echo base_url() . "index.php/transaction"; ?>" target="frame">Add</a></li>
-                                            <li><a href="<?php echo base_url() . "index.php/transaction/all"; ?>" target="frame">Transactions</a></li>
-                                            <li><a href="<?php echo base_url() . "index.php/transaction/income"; ?>" target="frame">Income</a></li>
-                                            <li><a href="<?php echo base_url() . "index.php/transaction/expense"; ?>" target="frame">Expense</a></li>
+                                            <li><a href="<?php echo base_url() . "index.php/expense/expenses"; ?>" target="frame">Expenses</a></li>
+                                            <li><a href="<?php echo base_url() . "index.php/expense/requisitions"; ?>" target="frame">Requisitions</a></li>
                                             <li><a href="<?php echo base_url() . "index.php/transaction/advanced"; ?>" target="frame">Advanced</a></li>
 
                                         </ul>
@@ -115,16 +113,16 @@
                                     <li><a href="<?php echo base_url() . "index.php/message/"; ?>" target="frame"><i class="fa fa-envelope-o"></i> Messages </a></li>                                  
 
                                     <li><a href="<?php echo base_url() . "files/Cp.msi"; ?>"><i class="fa fa-laptop"></i> Desktop application<span class="label label-success pull-right">Coming Soon</span></a></li>
-                               
-                                 <li><a><i class="fa fa-user"></i>Users<span class="fa fa-chevron-down"></span></a>
+
+                                    <li><a><i class="fa fa-user"></i>Users<span class="fa fa-chevron-down"></span></a>
                                         <ul class="nav child_menu">
                                             <li><a href="<?php echo base_url() . "index.php/user/add"; ?>" target="frame">Add user</a></li>
-                                             <li><a href="<?php echo base_url() . "index.php/user/staff"; ?>" target="frame">Staff</a></li>
+                                            <li><a href="<?php echo base_url() . "index.php/user/staff"; ?>" target="frame">Staff</a></li>
                                             <li><a href="<?php echo base_url() . "index.php/user/charges"; ?>" target="frame">Charges</a></li>
                                         </ul>
                                     </li>
                                 </ul>
-                                
+
                             </div>
 
                         </div>
@@ -166,7 +164,7 @@
                                         <span class=" fa fa-angle-down"></span>
                                     </a>
                                     <ul class="dropdown-menu dropdown-usermenu pull-right">
-                                        <li><a href="<?php echo base_url() . "index.php/user/profile/".$this->session->userdata('username'); ?>" target="frame"> Profile</a></li>
+                                        <li><a href="<?php echo base_url() . "index.php/user/profile/" . $this->session->userdata('username'); ?>" target="frame"> Profile</a></li>
 
                                         <li><a href="<?php echo base_url() . "index.php/home/logout"; ?>"><i class="fa fa-sign-out pull-right"></i> Log Out</a></li>
                                     </ul>
@@ -251,12 +249,12 @@
                 <div class="right_col" role="main">
                     <!-- top tiles -->
                     <div class="row tile_count">
-                         <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+                        <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
                             <span class="count_top"><i class="fa fa-user"></i> Clients</span>
                             <div class="count"><?php echo count($clients) ?></div>
 
                         </div>
-                       
+
                         <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
                             <span class="count_top"><i class="fa fa-envelope-square"></i> Messages</span>
                             <div class="count"><?php echo count($messages) ?></div>
@@ -273,7 +271,7 @@
                             <span class="count_top"><i class="fa fa-user"></i> Transactions</span>
                             <div class="count"><?php echo count($transactions) ?></div>
                         </div>
-                         <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+                        <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
                             <span class="count_top"><i class="fa fa-user"></i> Total Users</span>
                             <div class="count"><?php echo count($users) ?></div>
 
@@ -304,8 +302,8 @@
                 <footer>
                     <div class="pull-right">
                         Case professional <small><a href="novariss.com">  <img height="20px" width="150px"  class="nav" src="<?= base_url(); ?>images/novariss.png" alt="Logo" />
-                  </a></small>
-                        </div>
+                            </a></small>
+                    </div>
                     <div class="clearfix"></div>
                 </footer>
                 <!-- /footer content -->

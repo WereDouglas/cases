@@ -35,7 +35,7 @@
 
 
 <div class=" col-md-12  col-sm-12 x_panel">
-    <h2>PAYMENTS/RECEIPT</h2>  
+    <h2>INVOICES</h2>  
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-sm">ADD</button>
     <div class="modal bs-example-modal-sm" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-md col-md-12 col-sm-12">
@@ -44,7 +44,7 @@
 
 
                 <div class="col-md-12 col-sm-12"> 
-                    <form  enctype="multipart/form-data" class="form-horizontal col-md-12 col-sm-12"  action='<?= base_url(); ?>index.php/payment/save'  method="post">
+                    <form  enctype="multipart/form-data" class="form-horizontal col-md-12 col-sm-12"  action='<?= base_url(); ?>index.php/payment/invoice'  method="post">
                         <br>
                         <div class="col-md-6 col-sm-6 item form-group">
                             <label class="control-label col-md-3 col-sm-3">Select client</label>

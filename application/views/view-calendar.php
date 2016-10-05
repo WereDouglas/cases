@@ -17,7 +17,7 @@
 <div class="row container">
     <?php echo $this->session->flashdata('msg'); ?>
     <div id="mainb" style="height:300px;" class= "col-md-12 col-sm-12 col-xs-12"></div>
-   
+
     <div class="col-md-12 col-sm-12 col-xs-12">
         <!-- page content -->
 
@@ -52,13 +52,12 @@
                 <div id="testmodal" style="padding: 5px 20px;">
                     <form  enctype="multipart/form-data"  action='<?= base_url(); ?>index.php/task/create'  method="post">
                         <div class="span12">
-                            <div class="row-fluid">
-                                <label for="timepicker1">Date</label>
-                            </div>
-                            <div class="control-group">
-                                <input name="date" id="date" type="text" />
-<!--                                <input class="easyui-datebox form" name="date" id="starts" width="100px" data-options="formatter:myformatter,parser:myparser" ></input>-->
-
+                           
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12 align-left">Date</label>
+                                <div class="col-md-6 col-sm-6 col-xs-12 align-left">
+                                    <input class="easyui-datebox" name="date" id="date"/>
+                                </div>
                             </div>
                             <div class="row-fluid">
                                 <label for="form-field-select-4">Choose Attendees</label>
@@ -121,15 +120,15 @@
                                         <option value="Low">Low</option>
                                     </select>
                                 </div>
-                                
-                            <label>
-                                <input name="trig" type="checkbox" />
-                                <span class="lbl"> Notify parties ?</span>
-                            </label>
-                             <label>
-                                <input name="court" type="checkbox" />
-                                <span class="lbl"> Due for court(Cause list) ?</span>
-                            </label>
+
+                                <label>
+                                    <input name="trig" type="checkbox" />
+                                    <span class="lbl"> Notify parties ?</span>
+                                </label>
+                                <label>
+                                    <input name="court" type="checkbox" />
+                                    <span class="lbl"> Due for court(Cause list) ?</span>
+                                </label>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -484,7 +483,7 @@
                 data: [2.0, 2.2, 3.3, 4.5, 6.3, 10.2, 20.3, 23.4, 23.0, 16.5, 12.0, 6.2]
             }]
     });
-    
+
 </script>
 
 
@@ -653,8 +652,8 @@
 
 </script>
 
- 
-  
+
+
 
 
 

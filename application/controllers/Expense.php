@@ -2,7 +2,7 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Payment extends CI_Controller {
+class Expense extends CI_Controller {
 
     function __construct() {
 
@@ -313,22 +313,20 @@ class Payment extends CI_Controller {
 
         $this->load->view('payments-page', $data);
     }
-    public function invoices() {
+    public function  requisitions() {
 
         $this->load->helper(array('form', 'url'));
 
+        $query = $this->Md->query("SELECT *, file.name AS file,client.name AS client,expenses.details AS details FROM expenses  JOIN  client ON expenses.clientID = client.clientID  JOIN file ON expenses.fileID= file.fileID WHERE expenses.orgID = '" . $this->session->userdata('orgID') . "' AND expenses.paid='false'");
        
-        //  echo 'we are coming from the controller';
-        $query = $this->Md->query("SELECT *,disbursements.amount AS disbursement,fees.amount AS fees,file.Name AS file,client.name AS client,fees.details AS details FROM fees  JOIN disbursements ON fees.invoice = disbursements.invoice JOIN client ON fees.clientID = client.clientID  LEFT JOIN file ON fees.fileID= file.fileID WHERE fees.orgID = '" . $this->session->userdata('orgID') . "' AND fees.paid='false' OR disbursements.paid='false' ");
-       // var_dump($query);
         if ($query) {
-            $data['pay'] = $query;
+            $data['expenses'] = $query;
         } else {
-            $data['pay'] = array();
+            $data['expenses'] = array();
         }
        
 
-        $this->load->view('invoice-page', $data);
+        $this->load->view('requisition-page', $data);
     }
 
  
@@ -368,38 +366,33 @@ class Payment extends CI_Controller {
 						</div>');
         redirect('payment/payments', 'refresh');
     }
-       public function invoice() {
+       public function request() {
 
         $this->load->helper(array('form', 'url'));
-        $feeID = $this->GUID();
-        $disbursementID = $this->GUID();
+        $expenseID = $this->GUID();
+        
 
         $clientID = $this->Md->query_cell("SELECT * FROM client where name= '" . $this->input->post('client') . "' AND orgID='" . $this->session->userdata('orgID') . "'", 'clientID');
         $fileID = $this->Md->query_cell("SELECT * FROM file where name= '" . $this->input->post('file') . "' AND orgID='" . $this->session->userdata('orgID') . "'", 'fileID');
       
-        if ($this->input->post('fee') != "") {
-            $payment = array('feeID' => $feeID, 'orgID' => $this->session->userdata('orgID'), 'clientID' => $clientID, 'fileID' => $fileID, 'details' => $this->input->post('note'), 'lawyer' => $this->input->post('laywer'), 'paid' => 'false', 'invoice' => $this->input->post('no'), 'vat' => $this->input->post('vatamount'), 'method' => $this->input->post('method'), 'amount' => $this->input->post('fee'), 'received' => $this->input->post('reciever'), 'balance' => $this->input->post('balance'), 'approved' => 'true', 'signed' => 'false', 'date' => date('Y-m-d', strtotime($this->input->post('date'))));
-            $this->Md->save($payment, 'fees');
+        if ($this->input->post('amount') != "") {
+            $payment = array('expenseID' =>$expenseID, 'orgID' => $this->session->userdata('orgID'), 'clientID' => $clientID, 'fileID' => $fileID, 'details' => $this->input->post('reason'), 'lawyer' => $this->input->post('laywer'), 'paid' => 'false', 'no' => $this->input->post('no'), 'method' => $this->input->post('method'), 'amount' => $this->input->post('amount'), 'balance' => $this->input->post('balance'), 'reason' => $this->input->post('reason'), 'outcome' => $this->input->post('outcome'), 'approved' => 'false', 'signed' => $this->input->post('signed'), 'date' => date('Y-m-d', strtotime($this->input->post('date'))), 'deadline' => date('Y-m-d', strtotime($this->input->post('deadline'))));
+            $this->Md->save($payment, 'expenses');
         }
-        if ($this->input->post('disbursement') != "") {
-            $payments = array('disbursementID' => $disbursementID, 'orgID' => $this->session->userdata('orgID'), 'clientID' => $clientID, 'fileID' => $fileID, 'details' => $this->input->post('note'), 'lawyer' => $this->input->post('laywer'), 'paid' => 'false', 'invoice' => $this->input->post('no'), 'method' => $this->input->post('method'), 'amount' => $this->input->post('disbursement'), 'received' => $this->input->post('reciever'), 'balance' => $this->input->post('balance'), 'approved' => 'true', 'signed' => 'false', 'date' => date('Y-m-d', strtotime($this->input->post('date'))));
-            $this->Md->save($payments, 'disbursements');
-        }
-
-
-        $emails = $this->Md->query_cell("SELECT * FROM users where name= '" . $this->input->post('laywer') . "'", 'email');
-        $phones = $this->Md->query_cell("SELECT * FROM users where userID= '" . $this->input->post('laywer') . "'", 'contact');
-        $names = $this->Md->query_cell("SELECT * FROM users where userID= '" . $this->input->post('laywer') . "'", 'name');
+       
+        $emails = $this->Md->query_cell("SELECT * FROM users where name= '" . $this->input->post('signed') . "'", 'email');
+        $phones = $this->Md->query_cell("SELECT * FROM users where userID= '" . $this->input->post('signed') . "'", 'contact');
+        $names = $this->Md->query_cell("SELECT * FROM users where userID= '" . $this->input->post('signed') . "'", 'name');
         $message = "PAYMENT TRANSACTION ON CLIENT " . $this->input->post('client') . " FILE " . $this->input->post('file');
 
-        $mail = array('messageID' => $this->GUID(), 'body' => $message, 'subject' => 'INVOICE', 'date' => $this->input->post('date'), 'to' => $names, 'created' => date('Y-m-d H:i:s'), 'from' => $this->session->userdata('orgemail'), 'sent' => 'false', 'type' => 'email', 'orgID' => $this->session->userdata('orgID'), 'action' => 'none', 'taskID' => $taskID, 'contact' => $phones, 'email' => $emails);
+        $mail = array('messageID' => $this->GUID(), 'body' => $message, 'subject' => 'REQUISTION PENDING APPROVAL', 'date' => $this->input->post('date'), 'to' => $names, 'created' => date('Y-m-d H:i:s'), 'from' => $this->session->userdata('orgemail'), 'sent' => 'false', 'type' => 'email', 'orgID' => $this->session->userdata('orgID'), 'action' => 'none', 'taskID' => $taskID, 'contact' => $phones, 'email' => $emails);
         $this->Md->save($mail, 'message');
 
         $this->session->set_flashdata('msg', '<div class="alert alert-info">                                                   
                                                 <strong>
                                           Information saved	</strong>									
 						</div>');
-        redirect('payment/invoices', 'refresh');
+        redirect('expense/requisitions', 'refresh');
     }
 
     public function bal() {
