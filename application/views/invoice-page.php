@@ -31,24 +31,100 @@
     }
 
 </style>
-<?php echo $this->session->flashdata('msg'); ?>
+<style>
+    /* The Modal (background) */
+    .modal {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        padding-top: 5px; /* Location of the box */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgb(0,0,0); /* Fallback color */
+        background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    }
+
+    /* Modal Content */
+    .modal-content {
+        position: relative;
+        background-color: #fefefe;
+        margin: auto;
+        padding: 0;
+        border: 0px solid #888;
+        width: 98%;
+        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+        -webkit-animation-name: animatetop;
+        -webkit-animation-duration: 0.4s;
+        animation-name: animatetop;
+        animation-duration: 0.4s
+    }
+
+    /* Add Animation */
+    @-webkit-keyframes animatetop {
+        from {top:-300px; opacity:0}
+        to {top:0; opacity:1}
+    }
+
+    @keyframes animatetop {
+        from {top:-300px; opacity:0}
+        to {top:0; opacity:1}
+    }
+
+    /* The Close Button */
+    .close {
+        color: white;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+        color: #000;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    .modal-header {
+        padding: 2px 16px;
+        background-color: #1DAB93;
+        color: white;
+    }
+
+    .modal-body {padding: 2px 16px;}
+
+    .modal-footer {
+        padding: 2px 16px;
+        background-color: #FFFF;
+        color: white;
+    }
+</style>
+<body>
+
 
 
 <div class=" col-md-12  col-sm-12 x_panel">
+    <?php echo $this->session->flashdata('msg'); ?>
     <h2>INVOICES</h2>  
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-sm">ADD</button>
-    <div class="modal bs-example-modal-sm" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-md col-md-12 col-sm-12">
-            <div class="modal-content col-md-12 col-sm-12" style=" height: 1200px;">             
+    
+      <button id="myBtn" class="btn btn-primary">ADD </button>
+    <div id="myModal" class="modal">
+            <!-- Modal content -->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="close">&times</span>
+                    <h2>NEW INVOICE</h2>
+                </div>
+                <div class="modal-body">            
 
+                    <form  enctype="multipart/form-data" class="form-horizontal"  action='<?= base_url(); ?>index.php/payment/invoice'  method="post">
 
-
-                <div class="col-md-12 col-sm-12"> 
-                    <form  enctype="multipart/form-data" class="form-horizontal col-md-12 col-sm-12"  action='<?= base_url(); ?>index.php/payment/invoice'  method="post">
-                        <br>
                         <div class="col-md-6 col-sm-6 item form-group">
-                            <label class="control-label col-md-3 col-sm-3">Select client</label>
-                            <div class="col-md-8 col-sm-8">
+                            <label class="control-label col-md-2 col-sm-2">Select client</label>
+                            <div class="col-md-4 col-sm-4">
                                 <input class="easyui-combobox form-control" name="client" id="client" style="width:70%;height:26px" data-options="
                                        url:'<?php echo base_url() ?>index.php/task/client',
                                        method:'get',
@@ -58,10 +134,8 @@
                                        panelHeight:'auto'
                                        ">
                             </div>
-                        </div>
-                        <div class=" item form-group col-md-6 col-sm-6">
                             <label class="control-label col-md-3 col-sm-3 ">File/Case</label>
-                            <div class="col-md-8 col-sm-8 ">
+                            <div class="col-md-3 col-sm-3 ">
 
                                 <input class="easyui-combobox form-control" name="file" id="file" style="width:70%;height:26px" data-options="
                                        url:'<?php echo base_url() ?>index.php/task/files',
@@ -73,10 +147,10 @@
                                        ">
                             </div>
 
-                        </div> 
+                        </div>
                         <div class=" item form-group col-md-6 col-sm-6">
                             <label class="control-label col-md-3 col-sm-3 ">C/O</label>
-                            <div class="col-md-8 col-sm-8 ">
+                            <div class="col-md-3 col-sm-3 ">
 
                                 <input class="easyui-combobox form-control" name="laywer" id="lawyer" style="width:70%;height:26px" data-options="
                                        url:'<?php echo base_url() ?>index.php/task/users',
@@ -87,17 +161,34 @@
                                        panelHeight:'auto'
                                        ">
                             </div>
-
-                        </div>
-                        <div class=" item form-group col-md-6 col-sm-6">
-                            <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3">Date</label>
-                                <div class="col-md-8 col-sm-8 ">                                   
-                                    <input class="easyui-datebox" name="date" id="date"/>                                    
-                                </div>
+                            <label class="control-label col-md-3 col-sm-3">Date</label>
+                            <div class="col-md-3 col-sm-3 ">                                   
+                                <input class="easyui-datebox" name="date" id="date"/>                                    
                             </div>
-                        </div>
-                        <div class="col-md-12 col-sm-12 border-green" class="printableArea" id="printableArea">
+
+                        </div> 
+                         <div class=" item form-group col-md-6 col-sm-6">
+                            <label class="control-label col-md-3 col-sm-3 ">Authorising party</label>
+                            <div class="col-md-3 col-sm-3 ">
+
+                                <input class="easyui-combobox form-control" name="signed" id="signed" style="width:70%;height:26px" data-options="
+                                       url:'<?php echo base_url() ?>index.php/task/users',
+                                       method:'get',
+                                       valueField:'name',
+                                       textField:'name',
+                                       multiple:false,
+                                       panelHeight:'auto'
+                                       ">
+                            </div>
+                            <label class="control-label col-md-3 col-sm-3">Date</label>
+                            <div class="col-md-3 col-sm-3 ">                                   
+                                <input class="easyui-datebox" name="date" id="date"/>                                    
+                            </div>
+
+                        </div> 
+
+
+                        <div class="printableArea" id="printableArea">
                             <div class=" col-md-12 col-sm-12">                       
                                 <?php
                                 echo $this->session->userdata('top');
@@ -126,113 +217,129 @@
                                     <p style="word-wrap:break-word; overflow-wrap: break-word;word-break: break-word;"><?php echo $this->session->userdata('address'); ?></p>
                                 </div>
                             </div>
-                            <div class="col-md-12 col-sm-12">                       
-                                <div class="item form-group">
-                                    <label class="control-label col-md-3 col-sm-3" for="name">Client</label> 
-                                    <div class="col-md-9 col-sm-9">
-                                        <input id="clientname" style="border:0;outline:0; height:32px;  border-bottom: 1px solid grey; width: 100%;"   name="clientname" placeholder="Client" required="required" type="text">
-                                    </div> 
-                                </div> 
 
-                                <div class="item form-group">
-                                    <label class="control-label col-md-3 col-sm-3">For services rendered</label>
-                                    <div class="col-md-9 col-sm-9">
-                                        <textarea class="col-md-9 col-sm-9" id="form-field-9" name="note" data-maxlength="10"></textarea>
-                                    </div>
-                                </div>
-                            </div>                    
-                            <div class="col-md-12 col-sm-12"> 
-                                <h4>Payment Details</h4>
-                                <div class="item form-group">
-                                    <label class="control-label col-md-3 col-sm-3" for="name">Fee/Debit Note No.</label> 
-                                    <div class="col-md-3 col-sm-3">
-                                        <input id="no" style="border:0;outline:0; height:32px;width: 100%;  border-bottom: 1px solid grey;"   name="no" value="<?php
-                                        echo $this->session->userdata('code') . "/" . date('m') . (int) date('d') . (int) date('H') . (int) date('i') . (int) date('s');
-                                        ?>"   type="text">
-                                    </div> 
-
-                                </div> 
+                            <div class="col-md-12 col-sm-12">                               
                                 <table class="pure-table" style="width:100%;">
-                                    <thead>
-                                        <tr>
-                                            <th>DETAILS</th>
-                                            <th>AMOUNT</th>
 
-                                        </tr>
-                                    </thead>
 
                                     <tbody>
                                         <tr>
+                                            <td >Client</td> 
+                                            <td colspan="2"><input id="clientname" style="border:0;outline:0; height:32px;  border-bottom: 1px solid grey; width: 100%;"   name="clientname" placeholder="Client" required="required" type="text">
+                                            </td> 
 
+
+
+                                        </tr>
+                                        <tr>
+                                            <td >For services rendered</td> 
+                                            <td colspan="2" > <textarea   style="border:0;outline:0; height:32px;width: 100%;  border-bottom: 1px solid grey;"  class="col-md-9 col-sm-9" id="form-field-9" name="note" data-maxlength="10"></textarea>
+                                            </td> 
+
+
+
+                                        </tr>
+                                        <tr class="pure-table-odd">
+                                            <td colspan="3" > <h4>Payment Details</h4></td> 
+
+
+
+                                        </tr>
+                                        <tr>
+                                            <td >Fee/Debit Note No</td> 
+                                            <td ><input id="no" style="border:0;outline:0; height:32px;width: 100%;  border-bottom: 1px solid grey;"   name="no" value="<?php
+                                                echo $this->session->userdata('code') . "/" . date('m') . (int) date('d') . (int) date('H') . (int) date('i') . (int) date('s');
+                                                ?>"   type="text"></td> 
+                                            <td ></td> 
+
+
+                                        </tr>
+                                        <tr>
+                                            <td ></td> 
+                                            <td ></td> 
+                                            <td ></td> 
+
+
+                                        </tr>
+
+                                        <tr class="pure-table-odd">
+                                            <td></td>
+                                            <td>DETAILS</td>
+                                            <td>AMOUNT</td>
+
+                                        </tr>
+
+                                        <tr>
+                                            <td ></td>  
                                             <td>Professional fees(<sub>vat applicable</sub>)</td>
-                                            <td><input id="fee" style="border:none;background-color: transparent;"    name="fee" value=""   type="text">
+                                            <td><input id="fee" style="border:0;outline:0; height:32px;  border-bottom: 1px solid grey;width: 100%;"    name="fee" value=""   type="text">
 
 
                                         </tr>
 
                                         <tr>
-
+                                            <td ></td>  
                                             <td>Disbursement</td>                                            
-                                            <td> <input id="disbursement" style="border:none;background-color: transparent;"    name="disbursement" value=""   type="text">
+                                            <td> <input id="disbursement" style="border:0;outline:0; height:32px;  border-bottom: 1px solid grey;width: 100%;"    name="disbursement" value=""   type="text">
                                             </td>
                                         </tr>                                  
                                         <tr class="pure-table-odd" >                                      
-
-                                            <td><strong>TOTAL</strong></td>
-                                            <td><input id="total" style="border:none;background-color: transparent;"   name="total" value="" type="text">
+                                            <td ></td>  
+                                            <td><strong>SUB TOTAL</strong></td>
+                                            <td><input id="total" style="border:0;outline:0; height:32px;  border-bottom: 1px solid grey;width: 100%;"  name="total" value="" type="text">
                                             </td>
                                         </tr>    
                                         <tr >                                      
-
+                                            <td ></td>  
                                             <td colspan="1"></td>  
                                             <td colspan="1"></td>
 
                                         </tr> 
-                                        <tr class="pure-table-odd">                                      
-
+                                        <tr >                                      
+                                            <td ></td>  
                                             <td>V.A.T(%)</td>                               
-                                            <td> <input id="vat" style="border:none;background-color: transparent;"  name="vat" value=""   type="text"> </td>
+                                            <td> <input id="vat" style="border:0;outline:0; height:32px;  border-bottom: 1px solid grey;width: 100%;"  name="vat" value=""   type="text"> </td>
 
 
                                         </tr>
 
-                                        <tr class="pure-table-odd">                                      
-
+                                        <tr >                                      
+                                            <td ></td>  
                                             <td>V.A.T</td>                               
-                                            <td><input id="vatamount" style="border:none;background-color: transparent;"   name="vatamount" value=""   type="text">
+                                            <td><input id="vatamount" style="border:0;outline:0; height:32px;  border-bottom: 1px solid grey;width: 100%;"   name="vatamount" value=""   type="text">
                                             </td>
 
 
                                         </tr>
-                                        <tr class="pure-table-odd">                                      
-
-                                            <td><span class=" blue"><strong>SUM</strong></span></td>                               
-                                            <td><input id="sum" style="border:none;background-color: transparent;"   name="sum" value=""   type="text">
+                                        <tr >                                      
+                                            <td ></td>  
+                                            <td><span class=" blue"><strong>TOTAL</strong></span></td>                               
+                                            <td><input id="sum" style="border:0;outline:0; height:32px;  border-bottom: 1px solid grey;width: 100%;"   name="sum" value=""   type="text">
                                             </td>
 
                                         </tr>
-                                        <tr class="pure-table-odd">
-
+                                        <tr >
+                                            <td ></td>  
                                             <td>Received on behalf of client</td>
 
-                                            <td><input id="payment" style="border:none;background-color: transparent;" name="payment" value=""   type="text">
+                                            <td><input id="payment" style="border:0;outline:0; height:32px;  border-bottom: 1px solid grey;width: 100%;" name="payment" value=""   type="text">
                                             </td>
 
                                         </tr>
 
-                                        <tr class="pure-table-odd">
-
+                                        <tr >
+                                            <td ></td>  
                                             <td>Balance</td>
-                                            <td><input id="balance" style="border:none;background-color: transparent;" name="balance" value=""   type="text">
+                                            <td><input id="balance" style="border:0;outline:0; height:32px;  border-bottom: 1px solid grey;width: 100%;" name="balance" value=""   type="text">
                                             </td>
 
                                         </tr> 
                                         <tr class="pure-table-odd">
-
+                                            <td ></td>  
                                             <td>Method</td>
                                             <td>
                                                 <div class="control-group">                                                 
-                                                    <select class="form-control" id="method" name="method" >                                                         
+                                                    <select class="form-control" id="method" style="border:0;outline:0; height:32px;width: 100%;  border-bottom: 1px solid grey;" name="method" >                                                         
                                                         <option value="Cash" >Cash</option>
                                                         <option value="Cheque" >Cheque</option>
 
@@ -241,29 +348,34 @@
                                             </td>
 
                                         </tr> 
+                                        <tr>
+                                            <td >Amount Recieved</td> 
+                                            <td colspan="2" > <input id="amount" style="border:0;outline:0; height:32px;  border-bottom: 1px solid grey;width: 100%;"  name="amount" placeholder="" required="required" type="text">
+                                            </td> 
+
+
+
+                                        </tr>
+                                        <tr>
+                                            <td >The sum of(in words)</td> 
+                                            <td colspan="2"  ><input id="words" style="border:0;outline:0; height:32px;  border-bottom: 1px solid grey;width: 100%;"   name="words" placeholder=""  type="text">
+                                            </td> 
+
+
+
+                                        </tr>
+                                        <tr>
+                                            <td >Received with thanks</td> 
+                                            <td colspan="2"  > <input id="reciever" style="border:0;outline:0; height:32px;width: 100%; border-bottom: 1px solid grey;"  name="reciever" value="<?php echo $this->session->userdata('username'); ?>"   type="text">
+                                            </td> 
+
+
+
+                                        </tr>
 
                                     </tbody>
                                 </table>
 
-                            </div>                                              
-
-                            <div class="item form-group col-md-12 col-sm-12">
-                                <div class="item form-group">
-                                    <label class="control-label col-md-3 col-sm-3" for="name">Amount</label> 
-                                    <div class="col-md-9 col-sm-9 ">
-                                        <input id="amount" style="border:0;outline:0; height:32px;  border-bottom: 1px solid grey;width: 100%;"  name="amount" placeholder="" required="required" type="text">
-                                    </div> 
-                                </div> 
-                                <div class="item form-group">
-                                    <label class="control-label col-md-3 col-sm-3" for="name">The sum of(in words)</label> 
-                                    <div class="col-md-9 col-sm-9 ">
-                                        <input id="words" style="border:0;outline:0; height:32px;  border-bottom: 1px solid grey;width: 100%;"   name="words" placeholder=""  type="text">
-                                    </div> 
-                                </div> 
-                                <label class="control-label col-md-12 col-sm-12" for="name">Received with thanks</label> 
-                                <div class="col-md-12 col-sm-12">
-                                    <input id="reciever" style="border:0;outline:0; height:32px;width: 100%; border-bottom: 1px solid grey;"  name="reciever" value="<?php echo $this->session->userdata('username'); ?>"   type="text">
-                                </div> 
                             </div>
                         </div> 
                         <div class="col-md-12 col-sm-12">
@@ -275,11 +387,16 @@
 
                     </form>
 
-                </div> 
-            </div>
-        </div>
-    </div>
 
+
+
+                </div>
+                <div class="modal-footer">
+                    <h3>Modal Footer</h3>
+                </div>
+            </div>
+
+        </div>
     <div class="x_content scroll">
 
         <table id="datatable" class="table table-striped table-bordered scroll ">
@@ -287,7 +404,6 @@
                 <tr>
                     <th>DATE</th>
                     <th>INVOICE</th>
-                   
                     <th>CLIENT</th>
                     <th>FILE</th>
                     <th>DETAILS</th> 
@@ -296,19 +412,21 @@
                     <th>FEES</th>
                     <th>DISBURSEMENT</th>
                     <th>TOTAL AMOUNT</th>
-
                     <th>BALANCE</th>
                     <th>RECEIVED BY</th>
                     <th>APPROVED</th>
+                    <th>APPROVE</th>
+                    <th>CLIENT HAS PAID</th>
                     <th>ACTION</th>
-                    <th>VIEW</th>
+                    
                 </tr>
             </thead>
 
             <tbody>
                 <?php
-              // var_dump($pay);
+                // var_dump($pay);
                 foreach ($pay as $loop) {
+                     $approved = $loop->approved;
                     ?>  
                     <tr class="odd">
                         <td id="invoice:<?php echo $loop->date; ?>" contenteditable="true">
@@ -318,24 +436,41 @@
                         <td id="invoice:<?php echo $loop->invoice; ?>" contenteditable="true">
                             <span class="green"><?php echo $loop->invoice; ?></span>                      
                         </td>
-                         
+
                         <td><?php echo $loop->client; ?></td>
                         <td><?php echo $loop->file; ?></td>
                         <td id="details:<?php echo $loop->invoice; ?>" contenteditable="true"><?php echo $loop->details; ?></td>
-                        <td><?php echo number_format(($loop->disbursement + $loop->fees + $loop->vat) - $loop->balance,2); ?></td>
-                        <td><?php echo number_format(($loop->vat),2); ?></td>
-                        <td><?php echo number_format($loop->fees,2); ?></td>
-                        <td><?php echo number_format($loop->disbursement,2); ?></td>
-                        <td><?php echo number_format(($loop->disbursement + $loop->fees + $loop->vat),2); ?></td>
-                        <td><?php echo number_format($loop->balance,2); ?></td>
+                        <td><?php echo number_format(($loop->disbursement + $loop->fees + $loop->vat) - $loop->balance, 2); ?></td>
+                        <td><?php echo number_format(($loop->vat), 2); ?></td>
+                        <td><?php echo number_format($loop->fees, 2); ?></td>
+                        <td><?php echo number_format($loop->disbursement, 2); ?></td>
+                        <td><?php echo number_format(($loop->disbursement + $loop->fees + $loop->vat), 2); ?></td>
+                        <td><?php echo number_format($loop->balance, 2); ?></td>
                         <td id="received:<?php echo $loop->invoice; ?>" contenteditable="true"><?php echo $loop->received; ?></td>
-                        <td id="approved:<?php echo $loop->invoice; ?>" contenteditable="true"><?php echo $loop->approved; ?></td>
+                       
+                         <td class="center">
+                            <?php if ($approved == "false") { ?>
+                                <strong> <p  class="text-danger"><?= $approved ?></p></strong>
+                            <?php } else { ?>
+                                <strong> <p  class="green"><?= $approved ?></p></strong>
+                            <?php } ?>
 
-                        <td class="center">
-                            <a class="btn btn-danger btn-xs" href="<?php echo base_url() . "index.php/document/delete/" . $loop->documentID; ?>"><li class="fa fa-trash">Delete</li></a>
+                        </td> 
+                        <td class="td-actions">
+
+                            <a href="<?php echo base_url() . "index.php/payment/approve/" . $loop->disbursementID . "/" . $loop->approved; ?>" class="tooltip-info qualification" data-rel="tooltip" title="verify">
+                                <img  height="30px" width="30px" class="nav-user-photo" src="<?= base_url(); ?>images/Bill-32.png" alt="account" />
+                            </a>
+                        </td>
+                        <td class="td-actions">
+                            <?php if ($approved == "true") { ?>
+                                <a href="<?php echo base_url() . "index.php/payment/pay/" . $loop->disbursementID . "/" . $loop->paid; ?>" class="tooltip-info qualification" data-rel="tooltip" title="verify">
+                                    <img  height="30px" width="30px" class="nav-user-photo" src="<?= base_url(); ?>images/cash.png" alt="account" />
+                                </a>
+                            <?php } ?>
                         </td>
                         <td class="center">
-                            <a class="btn btn-successr btn-xs" href="<?php echo base_url() . "documents/" . $loop->fileUrl; ?>"><li class="fa fa-download">Download</li></a>
+                            <a class="btn btn-danger btn-xs" href="<?php echo base_url() . "index.php/payment/delete/" . $loop->disbursementID; ?>"><li class="fa fa-trash">Delete</li></a>
                         </td>
 
 
@@ -525,3 +660,51 @@
         return str.replace(/\s+/g, ' ');
     }
 </script>
+<script>
+    $('.qualification').click(function (e) {
+        updateURL = $(this).attr("href");
+        e.preventDefault();//in this way you have no redirect
+        $.ajax({
+            type: "GET",
+            dataType: 'json',
+            url: updateURL,
+            async: false,
+            success: function (data) {
+                alert('Information updated!')
+                location.reload();
+            }
+
+        });
+        alert('Information updated!')
+        location.reload();
+        return false;
+    });
+
+</script>
+ <script>
+        // Get the modal
+        var modal = document.getElementById('myModal');
+
+        // Get the button that opens the modal
+        var btn = document.getElementById("myBtn");
+
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+
+        // When the user clicks the button, open the modal
+        btn.onclick = function () {
+            modal.style.display = "block";
+        }
+
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function () {
+            modal.style.display = "none";
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>

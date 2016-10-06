@@ -49,7 +49,7 @@
                                     <?php
                                 } else {
                                     ?>
-                                    <img  height="50px" width="50px"  src="<?= base_url(); ?>images/user_place.png" alt="logo" />
+                                    <img  height="50px" width="50px"  src="<?= base_url(); ?>images/temp.png" alt="logo" />
                                     <?php
                                 }
                                 ?>

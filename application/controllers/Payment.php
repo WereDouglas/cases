@@ -72,14 +72,54 @@ class Payment extends CI_Controller {
         }
     }
 
-    public function pay() {
+    public function approve() {
+        $this->load->helper(array('form', 'url'));
+        $id = $this->uri->segment(3);
 
-        $orgid = urldecode($this->uri->segment(3));
-        $result = $this->Md->query("SELECT * FROM payments WHERE org ='" . $orgid . "'");
+        $actives = $this->uri->segment(4);
+        $active = "false";
 
-        if ($result) {
-            echo json_encode($result);
+        if ($actives == "true") {
+            $active = "false";
         }
+        if ($actives == "false") {
+            $active = "true";
+        }
+        $info = array('approved' => $active, 'signed' => $this->session->userdata('username'));
+        $this->Md->update_dynamic($id, 'feeID', 'fees', $info);
+         $this->Md->update_dynamic($id, 'disbursementID', 'disbursements', $info);
+
+        echo 'INFORMATION UPDATED';
+    }
+
+    public function pay() {
+        $this->load->helper(array('form', 'url'));
+        $id = $this->uri->segment(3);
+
+        $actives = $this->uri->segment(4);
+        $active = "false";
+
+        if ($actives == "true") {
+            $active = "false";
+        }
+        if ($actives == "false") {
+            $active = "true";
+        }
+        $info = array('paid' => $active);
+        $this->Md->update_dynamic($id, 'feeID', 'fees', $info);
+         $this->Md->update_dynamic($id, 'disbursementID', 'disbursements', $info);
+
+        echo 'INFORMATION UPDATED';
+    }
+     public function offset() {
+        $this->load->helper(array('form', 'url'));
+        $id = $this->uri->segment(3);
+       
+        $info = array('balance' =>'0');
+        $this->Md->update_dynamic($id, 'feeID', 'fees', $info);
+        $this->Md->update_dynamic($id, 'disbursementID', 'disbursements', $info);
+
+        echo 'INFORMATION UPDATED';
     }
 
     public function item() {
@@ -299,41 +339,73 @@ class Payment extends CI_Controller {
 
         $this->load->helper(array('form', 'url'));
 
-       
+
         //  echo 'we are coming from the controller';
-        $query = $this->Md->query("SELECT *,disbursements.amount AS disbursement,fees.amount AS fees,file.Name AS file,client.name AS client,fees.details AS details FROM fees  JOIN disbursements ON fees.invoice = disbursements.invoice JOIN client ON fees.clientID = client.clientID  LEFT JOIN file ON fees.fileID= file.fileID where fees.orgID = '" . $this->session->userdata('orgID') . "' AND fees.paid='true' OR disbursements.paid='true'");
-       // var_dump($query);
+        $query = $this->Md->query("SELECT *,disbursements.amount AS disbursement,fees.amount AS fees,file.Name AS file,client.name AS client,fees.details AS details FROM fees  JOIN disbursements ON fees.invoice = disbursements.invoice JOIN client ON fees.clientID = client.clientID  LEFT JOIN file ON fees.fileID= file.fileID WHERE fees.orgID = '" . $this->session->userdata('orgID') . "' AND disbursements.orgID = '" . $this->session->userdata('orgID') . "' AND fees.paid='true' OR disbursements.paid='true'");
+        // var_dump($query);
         if ($query) {
             $data['pay'] = $query;
         } else {
             $data['pay'] = array();
         }
 
-       
+
 
         $this->load->view('payments-page', $data);
     }
+
     public function invoices() {
 
         $this->load->helper(array('form', 'url'));
 
-       
+
         //  echo 'we are coming from the controller';
-        $query = $this->Md->query("SELECT *,disbursements.amount AS disbursement,fees.amount AS fees,file.Name AS file,client.name AS client,fees.details AS details FROM fees  JOIN disbursements ON fees.invoice = disbursements.invoice JOIN client ON fees.clientID = client.clientID  LEFT JOIN file ON fees.fileID= file.fileID WHERE fees.orgID = '" . $this->session->userdata('orgID') . "' AND fees.paid='false' OR disbursements.paid='false' ");
-       // var_dump($query);
+        $query = $this->Md->query("SELECT *,disbursements.amount AS disbursement,fees.amount AS fees,file.Name AS file,client.name AS client,fees.details AS details FROM fees  JOIN disbursements ON fees.invoice = disbursements.invoice JOIN client ON fees.clientID = client.clientID  LEFT JOIN file ON fees.fileID= file.fileID WHERE fees.orgID = '" . $this->session->userdata('orgID') . "' AND disbursements.orgID = '" . $this->session->userdata('orgID') . "' AND fees.paid='false' OR disbursements.paid='false' ");
+        // var_dump($query);
         if ($query) {
             $data['pay'] = $query;
         } else {
             $data['pay'] = array();
         }
-       
 
         $this->load->view('invoice-page', $data);
     }
 
- 
+    public function fees() {
 
-  
+        $this->load->helper(array('form', 'url'));
+
+
+        //  echo 'we are coming from the controller';
+        $query = $this->Md->query("SELECT *,fees.amount AS fees,file.Name AS file,client.name AS client,fees.details AS details FROM fees  JOIN client ON fees.clientID = client.clientID  LEFT JOIN file ON fees.fileID= file.fileID WHERE fees.orgID = '" . $this->session->userdata('orgID') . "'  ");
+        // var_dump($query);
+        if ($query) {
+            $data['pay'] = $query;
+        } else {
+            $data['pay'] = array();
+        }
+
+
+        $this->load->view('fees-page', $data);
+    }
+
+    public function disbursements() {
+
+        $this->load->helper(array('form', 'url'));
+
+
+        //  echo 'we are coming from the controller';
+        $query = $this->Md->query("SELECT *,disbursements.amount AS disbursement,file.Name AS file,client.name AS client,disbursements.details AS details FROM  disbursements JOIN client ON disbursements.clientID = client.clientID  LEFT JOIN file ON disbursements.fileID= file.fileID WHERE disbursements.orgID = '" . $this->session->userdata('orgID') . "'");
+        // var_dump($query);
+        if ($query) {
+            $data['pay'] = $query;
+        } else {
+            $data['pay'] = array();
+        }
+
+
+        $this->load->view('disbursement-page', $data);
+    }
 
     public function save() {
 
@@ -343,7 +415,7 @@ class Payment extends CI_Controller {
 
         $clientID = $this->Md->query_cell("SELECT * FROM client where name= '" . $this->input->post('client') . "' AND orgID='" . $this->session->userdata('orgID') . "'", 'clientID');
         $fileID = $this->Md->query_cell("SELECT * FROM file where name= '" . $this->input->post('file') . "' AND orgID='" . $this->session->userdata('orgID') . "'", 'fileID');
-      
+
         if ($this->input->post('fee') != "") {
             $payment = array('feeID' => $feeID, 'orgID' => $this->session->userdata('orgID'), 'clientID' => $clientID, 'fileID' => $fileID, 'details' => $this->input->post('note'), 'lawyer' => $this->input->post('laywer'), 'paid' => 'true', 'invoice' => $this->input->post('no'), 'vat' => $this->input->post('vatamount'), 'method' => $this->input->post('method'), 'amount' => $this->input->post('fee'), 'received' => $this->input->post('reciever'), 'balance' => $this->input->post('balance'), 'approved' => 'true', 'signed' => 'false', 'date' => date('Y-m-d', strtotime($this->input->post('date'))));
             $this->Md->save($payment, 'fees');
@@ -368,21 +440,22 @@ class Payment extends CI_Controller {
 						</div>');
         redirect('payment/payments', 'refresh');
     }
-       public function invoice() {
+
+    public function invoice() {
 
         $this->load->helper(array('form', 'url'));
-        $feeID = $this->GUID();
-        $disbursementID = $this->GUID();
+        $ID = $this->GUID();
+
 
         $clientID = $this->Md->query_cell("SELECT * FROM client where name= '" . $this->input->post('client') . "' AND orgID='" . $this->session->userdata('orgID') . "'", 'clientID');
         $fileID = $this->Md->query_cell("SELECT * FROM file where name= '" . $this->input->post('file') . "' AND orgID='" . $this->session->userdata('orgID') . "'", 'fileID');
-      
+
         if ($this->input->post('fee') != "") {
-            $payment = array('feeID' => $feeID, 'orgID' => $this->session->userdata('orgID'), 'clientID' => $clientID, 'fileID' => $fileID, 'details' => $this->input->post('note'), 'lawyer' => $this->input->post('laywer'), 'paid' => 'false', 'invoice' => $this->input->post('no'), 'vat' => $this->input->post('vatamount'), 'method' => $this->input->post('method'), 'amount' => $this->input->post('fee'), 'received' => $this->input->post('reciever'), 'balance' => $this->input->post('balance'), 'approved' => 'true', 'signed' => 'false', 'date' => date('Y-m-d', strtotime($this->input->post('date'))));
+            $payment = array('feeID' => $ID, 'orgID' => $this->session->userdata('orgID'), 'clientID' => $clientID, 'fileID' => $fileID, 'details' => $this->input->post('note'), 'lawyer' => $this->input->post('laywer'), 'paid' => 'false', 'invoice' => $this->input->post('no'), 'vat' => $this->input->post('vatamount'), 'method' => $this->input->post('method'), 'amount' => $this->input->post('fee'), 'received' => $this->input->post('reciever'), 'balance' => $this->input->post('balance'), 'approved' => 'false', 'signed' => 'false', 'date' => date('Y-m-d', strtotime($this->input->post('date'))));
             $this->Md->save($payment, 'fees');
         }
         if ($this->input->post('disbursement') != "") {
-            $payments = array('disbursementID' => $disbursementID, 'orgID' => $this->session->userdata('orgID'), 'clientID' => $clientID, 'fileID' => $fileID, 'details' => $this->input->post('note'), 'lawyer' => $this->input->post('laywer'), 'paid' => 'false', 'invoice' => $this->input->post('no'), 'method' => $this->input->post('method'), 'amount' => $this->input->post('disbursement'), 'received' => $this->input->post('reciever'), 'balance' => $this->input->post('balance'), 'approved' => 'true', 'signed' => 'false', 'date' => date('Y-m-d', strtotime($this->input->post('date'))));
+            $payments = array('disbursementID' => $ID, 'orgID' => $this->session->userdata('orgID'), 'clientID' => $clientID, 'fileID' => $fileID, 'details' => $this->input->post('note'), 'lawyer' => $this->input->post('laywer'), 'paid' => 'false', 'invoice' => $this->input->post('no'), 'method' => $this->input->post('method'), 'amount' => $this->input->post('disbursement'), 'received' => $this->input->post('reciever'), 'balance' => $this->input->post('balance'), 'approved' => 'false', 'signed' => 'false', 'date' => date('Y-m-d', strtotime($this->input->post('date'))));
             $this->Md->save($payments, 'disbursements');
         }
 
@@ -501,10 +574,11 @@ class Payment extends CI_Controller {
 
     public function delete() {
         $this->load->helper(array('form', 'url'));
-        $transID = $this->uri->segment(3);
-        $query = $this->Md->cascade($transID, 'transaction', 'transID');
-        $query = $this->Md->cascade($transID, 'item', 'transID');
-        redirect('/transaction/all', 'refresh');
+        $expID = $this->uri->segment(3);
+        $query = $this->Md->cascade($expID, 'disbursements', 'disbursementID');
+        $query = $this->Md->cascade($expID, 'fees', 'feeID');
+
+        redirect('/payment/invoices', 'refresh');
     }
 
     public function add() {

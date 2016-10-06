@@ -38,6 +38,40 @@ class Task extends CI_Controller {
 
         $this->load->view('file-page', $data);
     }
+       public function cause() {
+
+        if ($this->session->userdata('username') == "") {
+            $this->session->sess_destroy();
+            redirect('welcome', 'refresh');
+        }
+
+        $query = $this->Md->query("SELECT * FROM users where orgID = '" . $this->session->userdata('orgID') . "' ");
+        //  var_dump($query);
+        if ($query) {
+            $data['users'] = $query;
+        } else {
+            $data['users'] = array();
+        }
+
+        //$query = $this->Md->query("SELECT * FROM schedule where org = '" . $this->session->userdata('orgid') . "' ");
+        // var_dump($query);
+        $query = $this->Md->query("SELECT * FROM attend INNER JOIN users ON attend.userID=users.userID INNER JOIN tasks ON attend.taskID=tasks.taskID where attend.orgID = '" . $this->session->userdata('orgID') . "' ");
+      //var_dump($query);
+        if ($query) {
+            $data['sch'] = $query;
+        } else {
+            $data['sch'] = array();
+        }
+        $query = $this->Md->query("SELECT * FROM attend where orgID = '" . $this->session->userdata('orgID') . "'");
+        //  var_dump($query);
+        if ($query) {
+            $data['att'] = $query;
+        } else {
+            $data['att'] = array();
+        }
+
+        $this->load->view('calendar-page', $data);
+    }
 
     public function users() {
         $query = $this->Md->query("SELECT * FROM users WHERE email<>'' AND orgID='" . $this->session->userdata('orgID') . "'");

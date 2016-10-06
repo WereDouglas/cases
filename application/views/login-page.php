@@ -238,7 +238,7 @@
                                             <div class="pricing">
                                                 <div class="title">
                                                     <h2>Below 50</h2>
-                                                    <h4>3000 UGX</h4>
+                                                    <h4>1 USD</h4>
                                                     <span>Monthly</span>
 
                                                 </div>
@@ -253,7 +253,7 @@
 
                                                 <div class="title">
                                                     <h2>Below 250</h2>
-                                                    <h4>2000 UGX</h4>
+                                                    <h4>0.6 USD</h4>
                                                     <span>Monthly</span>
                                                 </div>
 
@@ -264,7 +264,7 @@
                                             <div class="pricing">
                                                 <div class="title">
                                                     <h2>Above 250</h2>
-                                                    <h4>1000 UGX</h4>
+                                                    <h4>0.3 USD</h4>
                                                     <span>Monthly</span>
                                                 </div>
 

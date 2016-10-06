@@ -101,8 +101,6 @@
 
                         </div>
 
-
-
                         <div class="col-md-12 col-sm-12">                       
 
                             <div class="item form-group">
@@ -180,6 +178,7 @@
             </div>
         </div>
     </div>
+    <div class="col-md-12 col-sm-12 col-xs-12"> <span class="info-box status col-md-12 col-sm-12 col-xs-12" id="status"></span></div>
 
     <div class="x_content scroll">
 
@@ -198,12 +197,13 @@
                     <th>CLIENT</th>
                     <th>FILE</th>
                     <th>REQUESTED BY</th>
-
                     <th>BALANCE</th>
                     <th>APPROVED</th>
-                    <th>DEADLINE</th>
+                    <th>TO BE APPROVED BY</th>
+                    <th>DEADLINE</th>                   
+                    <th>APPROVE</th>
+                    <th>PAY</th>
                     <th>ACTION</th>
-                    <th>VIEW</th>
                 </tr>
             </thead>
 
@@ -212,6 +212,7 @@
                 //var_dump($expenses);
                 $count = 1;
                 foreach ($expenses as $loop) {
+                    $approved = $loop->approved;
                     ?>  
                     <tr class="odd">
                         <td><?php echo $count++; ?></td>
@@ -222,8 +223,8 @@
                         <td id="details:<?php echo $loop->expenseID; ?>" contenteditable="true">
                             <span class="green"><?php echo $loop->details; ?></span>                      
                         </td>
-                        <td id="amount:<?php echo $loop->expenseID; ?>" contenteditable="true">
-                            <span class="green"><?php echo number_format($loop->amount, 2); ?></span>                      
+                        <td >
+                            <span class="blue"><?php echo number_format($loop->amount, 2); ?></span>                      
                         </td>
                         <td id="signed:<?php echo $loop->expenseID; ?>" contenteditable="true">
                             <span class="green"><?php echo $loop->signed; ?></span>                      
@@ -243,16 +244,35 @@
                             <span class="green"><?php echo $loop->lawyer; ?></span>                      
                         </td>                        
                         <td><?php echo number_format($loop->balance, 2); ?></td>
-                        <td id="approved:<?php echo $loop->expenseID; ?>" contenteditable="true"><?php echo $loop->approved; ?></td>
+                        <td class="center">
+                            <?php if ($approved == "false") { ?>
+                                <strong> <p  class="text-danger"><?= $approved ?></p></strong>
+                            <?php } else { ?>
+                                <strong> <p  class=" text-green"><?= $approved ?></p></strong>
+                            <?php } ?>
+
+                        </td> 
+                        <td id="signed:<?php echo $loop->expenseID; ?>" contenteditable="true"><?php echo $loop->signed; ?></td>
+
                         <td id="deadline:<?php echo $loop->expenseID; ?>" contenteditable="true"><?php echo $loop->deadline; ?></td>
 
-                        <td class="center">
-                            <a class="btn btn-danger btn-xs" href="<?php echo base_url() . "index.php/document/delete/" . $loop->documentID; ?>"><li class="fa fa-trash">Delete</li></a>
-                        </td>
-                        <td class="center">
-                            <a class="btn btn-successr btn-xs" href="<?php echo base_url() . "documents/" . $loop->fileUrl; ?>"><li class="fa fa-download">Download</li></a>
-                        </td>
 
+                        <td class="td-actions">
+
+                            <a href="<?php echo base_url() . "index.php/expense/approve/" . $loop->expenseID . "/" . $loop->approved; ?>" class="tooltip-info qualification" data-rel="tooltip" title="verify">
+                                <img  height="30px" width="30px" class="nav-user-photo" src="<?= base_url(); ?>images/Bill-32.png" alt="account" />
+                            </a>
+                        </td>
+                        <td class="td-actions">
+                            <?php if ($approved == "true") { ?>
+                                <a href="<?php echo base_url() . "index.php/expense/pay/" . $loop->expenseID . "/" . $loop->paid; ?>" class="tooltip-info qualification" data-rel="tooltip" title="verify">
+                                    <img  height="30px" width="30px" class="nav-user-photo" src="<?= base_url(); ?>images/cash.png" alt="account" />
+                                </a>
+                            <?php } ?>
+                        </td>
+                        <td class="center">
+                            <a class="btn btn-danger btn-xs" href="<?php echo base_url() . "index.php/expense/delete/" . $loop->expenseID; ?>"><li class="fa fa-trash">Delete</li></a>
+                        </td>
 
                     </tr>
 
@@ -287,7 +307,7 @@
             $("td[contenteditable=true]").blur(function () {
                 var field_id = $(this).attr("id");
                 var value = $(this).text();
-                $.post('<?php echo base_url() . "index.php/document/updater/"; ?>', field_id + "=" + value, function (data) {
+                $.post('<?php echo base_url() . "index.php/expense/updater/"; ?>', field_id + "=" + value, function (data) {
                     if (data != '')
                     {
                         message_status.show();
@@ -439,4 +459,25 @@
         }
         return str.replace(/\s+/g, ' ');
     }
+</script>
+<script>
+    $('.qualification').click(function (e) {
+        updateURL = $(this).attr("href");
+        e.preventDefault();//in this way you have no redirect
+        $.ajax({
+            type: "GET",
+            dataType: 'json',
+            url: updateURL,
+            async: false,
+            success: function (data) {
+                alert('Information updated!')
+                location.reload();
+            }
+
+        });
+        alert('Information updated!')
+        location.reload();
+        return false;
+    });
+
 </script>

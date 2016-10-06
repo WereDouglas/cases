@@ -43,44 +43,44 @@ class Expense extends CI_Controller {
         }
     }
 
-    public function activate() {
+    public function approve() {
         $this->load->helper(array('form', 'url'));
-        $id = trim($this->input->post('id'));
-        $actives = trim($this->input->post('actives'));
+        $id = $this->uri->segment(3);
+       
+         $actives = $this->uri->segment(4);
+        $active = "false";
+
         if ($actives == "true") {
             $active = "false";
         }
         if ($actives == "false") {
             $active = "true";
         }
-        if ($this->session->userdata('level') == 1) {
+        $info = array('approved' => $active,'signed'=>$this->session->userdata('username'));
+        $this->Md->update_dynamic($id, 'expenseID', 'expenses', $info);
 
-            $approve = array('approved' => $active);
-            $this->Md->update($id, $approve, 'transactions');
-            $query = $this->Md->query("SELECT * FROM client where org = '" . $this->session->userdata('orgid') . "'");
-            if ($query) {
-                foreach ($query as $res) {
-                    $syc = array('org' => $this->session->userdata('orgid'), 'object' => 'transactions', 'contents' => $id, 'action' => 'approve', 'oid' => $active, 'created' => date('Y-m-d H:i:s'), 'checksum' => $this->GUID(), 'client' => $res->name);
-                    $this->Md->save($syc, 'sync_data');
-                }
-            }
-        } else {
-            $this->session->set_flashdata('msg', '<div class="alert alert-error">                                                   
-                                                <strong>
-                                                 You cannot carry out this action ' . '	</strong>									
-						</div>');
+        echo 'INFORMATION UPDATED';
+    }
+      public function pay() {
+        $this->load->helper(array('form', 'url'));
+        $id = $this->uri->segment(3);
+       
+         $actives = $this->uri->segment(4);
+        $active = "false";
+
+        if ($actives == "true") {
+            $active = "false";
         }
+        if ($actives == "false") {
+            $active = "true";
+        }
+        $info = array('paid' => $active);
+        $this->Md->update_dynamic($id, 'expenseID', 'expenses', $info);
+
+        echo 'INFORMATION UPDATED';
     }
 
-    public function pay() {
-
-        $orgid = urldecode($this->uri->segment(3));
-        $result = $this->Md->query("SELECT * FROM payments WHERE org ='" . $orgid . "'");
-
-        if ($result) {
-            echo json_encode($result);
-        }
-    }
+    
 
     public function item() {
 
@@ -251,18 +251,18 @@ class Expense extends CI_Controller {
         $this->load->view('income-page', $data);
     }
 
-    public function  expenses() {
+    public function expenses() {
 
         $this->load->helper(array('form', 'url'));
 
         $query = $this->Md->query("SELECT *, file.name AS file,client.name AS client,expenses.details AS details FROM expenses  JOIN  client ON expenses.clientID = client.clientID  JOIN file ON expenses.fileID= file.fileID WHERE expenses.orgID = '" . $this->session->userdata('orgID') . "' AND expenses.paid='true'");
-       
+
         if ($query) {
             $data['expenses'] = $query;
         } else {
             $data['expenses'] = array();
         }
-       
+
 
         $this->load->view('expense-page', $data);
     }
@@ -293,39 +293,37 @@ class Expense extends CI_Controller {
 
         $this->load->helper(array('form', 'url'));
 
-       
+
         //  echo 'we are coming from the controller';
         $query = $this->Md->query("SELECT *,disbursements.amount AS disbursement,fees.amount AS fees,file.Name AS file,client.name AS client,fees.details AS details FROM fees  JOIN disbursements ON fees.invoice = disbursements.invoice JOIN client ON fees.clientID = client.clientID  LEFT JOIN file ON fees.fileID= file.fileID where fees.orgID = '" . $this->session->userdata('orgID') . "' AND fees.paid='true' OR disbursements.paid='true'");
-       // var_dump($query);
+        // var_dump($query);
         if ($query) {
             $data['pay'] = $query;
         } else {
             $data['pay'] = array();
         }
 
-       
+
 
         $this->load->view('payments-page', $data);
     }
-    public function  requisitions() {
+
+    public function requisitions() {
 
         $this->load->helper(array('form', 'url'));
 
-        $query = $this->Md->query("SELECT *, file.name AS file,client.name AS client,expenses.details AS details FROM expenses  JOIN  client ON expenses.clientID = client.clientID  JOIN file ON expenses.fileID= file.fileID WHERE expenses.orgID = '" . $this->session->userdata('orgID') . "' AND expenses.paid='false'");
-       
+        $query = $this->Md->query("SELECT *, file.name AS file,client.name AS client,expenses.details AS details,expenses.approved AS approved FROM expenses  JOIN  client ON expenses.clientID = client.clientID  JOIN file ON expenses.fileID= file.fileID WHERE expenses.orgID = '" . $this->session->userdata('orgID') . "' AND expenses.paid='false'");
+
         if ($query) {
             $data['expenses'] = $query;
         } else {
             $data['expenses'] = array();
         }
-       
+
 
         $this->load->view('requisition-page', $data);
     }
-
- 
-
-  
+    
 
     public function save() {
 
@@ -335,7 +333,7 @@ class Expense extends CI_Controller {
 
         $clientID = $this->Md->query_cell("SELECT * FROM client where name= '" . $this->input->post('client') . "' AND orgID='" . $this->session->userdata('orgID') . "'", 'clientID');
         $fileID = $this->Md->query_cell("SELECT * FROM file where name= '" . $this->input->post('file') . "' AND orgID='" . $this->session->userdata('orgID') . "'", 'fileID');
-      
+
         if ($this->input->post('fee') != "") {
             $payment = array('feeID' => $feeID, 'orgID' => $this->session->userdata('orgID'), 'clientID' => $clientID, 'fileID' => $fileID, 'details' => $this->input->post('note'), 'lawyer' => $this->input->post('laywer'), 'paid' => 'true', 'invoice' => $this->input->post('no'), 'vat' => $this->input->post('vatamount'), 'method' => $this->input->post('method'), 'amount' => $this->input->post('fee'), 'received' => $this->input->post('reciever'), 'balance' => $this->input->post('balance'), 'approved' => 'true', 'signed' => 'false', 'date' => date('Y-m-d', strtotime($this->input->post('date'))));
             $this->Md->save($payment, 'fees');
@@ -360,20 +358,21 @@ class Expense extends CI_Controller {
 						</div>');
         redirect('payment/payments', 'refresh');
     }
-       public function request() {
+
+    public function request() {
 
         $this->load->helper(array('form', 'url'));
         $expenseID = $this->GUID();
-        
+
 
         $clientID = $this->Md->query_cell("SELECT * FROM client where name= '" . $this->input->post('client') . "' AND orgID='" . $this->session->userdata('orgID') . "'", 'clientID');
         $fileID = $this->Md->query_cell("SELECT * FROM file where name= '" . $this->input->post('file') . "' AND orgID='" . $this->session->userdata('orgID') . "'", 'fileID');
-      
+
         if ($this->input->post('amount') != "") {
-            $payment = array('expenseID' =>$expenseID, 'orgID' => $this->session->userdata('orgID'), 'clientID' => $clientID, 'fileID' => $fileID, 'details' => $this->input->post('reason'), 'lawyer' => $this->input->post('laywer'), 'paid' => 'false', 'no' => $this->input->post('no'), 'method' => $this->input->post('method'), 'amount' => $this->input->post('amount'), 'balance' => $this->input->post('balance'), 'reason' => $this->input->post('reason'), 'outcome' => $this->input->post('outcome'), 'approved' => 'false', 'signed' => $this->input->post('signed'), 'date' => date('Y-m-d', strtotime($this->input->post('date'))), 'deadline' => date('Y-m-d', strtotime($this->input->post('deadline'))));
+            $payment = array('expenseID' => $expenseID, 'orgID' => $this->session->userdata('orgID'), 'clientID' => $clientID, 'fileID' => $fileID, 'details' => $this->input->post('reason'), 'lawyer' => $this->input->post('laywer'), 'paid' => 'false', 'no' => $this->input->post('no'), 'method' => $this->input->post('method'), 'amount' => $this->input->post('amount'), 'balance' => $this->input->post('balance'), 'reason' => $this->input->post('reason'), 'outcome' => $this->input->post('outcome'), 'approved' => 'false', 'signed' => $this->input->post('signed'), 'date' => date('Y-m-d', strtotime($this->input->post('date'))), 'deadline' => date('Y-m-d', strtotime($this->input->post('deadline'))));
             $this->Md->save($payment, 'expenses');
         }
-       
+
         $emails = $this->Md->query_cell("SELECT * FROM users where name= '" . $this->input->post('signed') . "'", 'email');
         $phones = $this->Md->query_cell("SELECT * FROM users where name= '" . $this->input->post('signed') . "'", 'contact');
         $names = $this->Md->query_cell("SELECT * FROM users where name= '" . $this->input->post('signed') . "'", 'name');
@@ -488,10 +487,10 @@ class Expense extends CI_Controller {
 
     public function delete() {
         $this->load->helper(array('form', 'url'));
-        $transID = $this->uri->segment(3);
-        $query = $this->Md->cascade($transID, 'transaction', 'transID');
-        $query = $this->Md->cascade($transID, 'item', 'transID');
-        redirect('/transaction/all', 'refresh');
+        $expID = $this->uri->segment(3);
+        $query = $this->Md->cascade($expID, 'expenses', 'expenseID');
+       
+        redirect('/expense/requisitions', 'refresh');
     }
 
     public function add() {
@@ -569,7 +568,7 @@ class Expense extends CI_Controller {
                     //update the values
                     $task = array($field_name => $val);
                     // $this->Md->update($user_id, $task, 'tasks');
-                    $this->Md->update_dynamic($user_id, 'transID', 'transaction', $task);
+                    $this->Md->update_dynamic($user_id, 'expenseID', 'expenses', $task);
                     echo "Updated";
                 } else {
                     echo "Invalid Requests";

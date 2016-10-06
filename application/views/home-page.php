@@ -51,7 +51,7 @@
                                         
                                                                                 </ul>-->
                                     </li>
-                                    <li><a href="<?php echo base_url() . "index.php/task/add"; ?>" target="frame"><i class="fa fa-bank"></i>Cause list <span class="fa fa-chevron-down"></span></a> </li>
+                                    <li><a href="<?php echo base_url() . "index.php/task/cause"; ?>" target="frame"><i class="fa fa-bank"></i>Cause list <span class="fa fa-chevron-down"></span></a> </li>
 
 
                                     <li><a><i class="fa fa-balance-scale"></i>Time sheet<span class="fa fa-chevron-down"></span></a>
@@ -89,7 +89,9 @@
                                     <li><a><i class="fa fa-paypal"></i>Payments<span class="fa fa-chevron-down"></span></a>
                                         <ul class="nav child_menu">
                                             <li><a href="<?php echo base_url() . "index.php/payment/payments"; ?>" target="frame">Payments</a></li>
-                                            <li><a href="<?php echo base_url() . "index.php/payment/invoices"; ?>" target="frame">Invoices</a></li>            
+                                            <li><a href="<?php echo base_url() . "index.php/payment/invoices"; ?>" target="frame">Invoices</a></li>
+                                            <li><a href="<?php echo base_url() . "index.php/payment/fees"; ?>" target="frame">Fees</a></li>   
+                                            <li><a href="<?php echo base_url() . "index.php/payment/disbursements"; ?>" target="frame">Disbursements</a></li>   
                                             <li><a href="<?php echo base_url() . "index.php/transaction/advanced"; ?>" target="frame">Advanced</a></li>
 
                                         </ul>
