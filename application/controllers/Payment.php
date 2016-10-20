@@ -341,7 +341,7 @@ class Payment extends CI_Controller {
 
 
         //  echo 'we are coming from the controller';
-        $query = $this->Md->query("SELECT *,disbursements.amount AS disbursement,fees.amount AS fees,file.Name AS file,client.name AS client,fees.details AS details FROM fees  JOIN disbursements ON fees.invoice = disbursements.invoice JOIN client ON fees.clientID = client.clientID  LEFT JOIN file ON fees.fileID= file.fileID WHERE fees.orgID = '" . $this->session->userdata('orgID') . "' AND disbursements.orgID = '" . $this->session->userdata('orgID') . "' AND fees.paid='true' OR disbursements.paid='true'");
+        $query = $this->Md->query("SELECT *,disbursements.amount AS disbursement,fees.amount AS fees,file.Name AS file,client.name AS client,fees.details AS details FROM fees  JOIN disbursements ON fees.invoice = disbursements.invoice JOIN client ON fees.clientID = client.clientID  LEFT JOIN file ON fees.fileID= file.fileID WHERE fees.orgID = '" . $this->session->userdata('orgID') . "' AND disbursements.orgID = '" . $this->session->userdata('orgID') . "' AND (fees.paid='true' OR disbursements.paid='true')");
         // var_dump($query);
         if ($query) {
             $data['pay'] = $query;
@@ -360,7 +360,7 @@ class Payment extends CI_Controller {
 
 
         //  echo 'we are coming from the controller';
-        $query = $this->Md->query("SELECT *,disbursements.amount AS disbursement,fees.amount AS fees,file.Name AS file,client.name AS client,fees.details AS details FROM fees  JOIN disbursements ON fees.invoice = disbursements.invoice JOIN client ON fees.clientID = client.clientID  LEFT JOIN file ON fees.fileID= file.fileID WHERE fees.orgID = '" . $this->session->userdata('orgID') . "' AND disbursements.orgID = '" . $this->session->userdata('orgID') . "' AND fees.paid='false' OR disbursements.paid='false' ");
+        $query = $this->Md->query("SELECT *,disbursements.amount AS disbursement,fees.amount AS fees,file.Name AS file,client.name AS client,fees.details AS details FROM fees  JOIN disbursements ON fees.invoice = disbursements.invoice JOIN client ON fees.clientID = client.clientID  LEFT JOIN file ON fees.fileID= file.fileID WHERE fees.orgID = '" . $this->session->userdata('orgID') . "' AND disbursements.orgID = '" . $this->session->userdata('orgID') . "' AND (fees.paid='false' OR disbursements.paid='false') ");
         // var_dump($query);
         if ($query) {
             $data['pay'] = $query;

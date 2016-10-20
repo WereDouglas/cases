@@ -227,18 +227,30 @@
                             <div class="x_title">
                                 <h2>Pricing</h2>                                   
                                 <div class="clearfix"></div>
+                                <strong>  IMPORTANT<p class="text-danger"> *Not less than 30 USD can be paid per month for usage</p></strong>
                             </div>
 
                             <div class="x_content">
                                 <div class="row">
                                     <div class="col-md-12">
+                                         <div class="col-md-3 col-sm-6 col-xs-12">
+                                            <div class="pricing">
+                                                <div class="title">
+                                                    <h2>Minimum usage fee</h2>
+                                                    <h4>30 USD</h4>
+                                                    <span>Monthly</span>
+
+                                                </div>
+
+                                            </div>
+                                        </div>
 
                                         <!-- price element -->
-                                        <div class="col-md-4 col-sm-6 col-xs-12">
+                                        <div class="col-md-3 col-sm-6 col-xs-12">
                                             <div class="pricing">
                                                 <div class="title">
                                                     <h2>Below 50</h2>
-                                                    <h4>1 USD</h4>
+                                                    <h4>1 USD per active file/case</h4>
                                                     <span>Monthly</span>
 
                                                 </div>
@@ -248,23 +260,23 @@
                                         <!-- price element -->
 
                                         <!-- price element -->
-                                        <div class="col-md-4 col-sm-6 col-xs-12">
+                                        <div class="col-md-3 col-sm-6 col-xs-12">
                                             <div class="pricing ui-ribbon-container">
 
                                                 <div class="title">
                                                     <h2>Below 250</h2>
-                                                    <h4>0.6 USD</h4>
+                                                    <h4>0.6 USD per active file/case</h4>
                                                     <span>Monthly</span>
                                                 </div>
 
                                             </div>
                                         </div>
 
-                                        <div class="col-md-4 col-sm-6 col-xs-12">
+                                        <div class="col-md-3 col-sm-6 col-xs-12">
                                             <div class="pricing">
                                                 <div class="title">
                                                     <h2>Above 250</h2>
-                                                    <h4>0.3 USD</h4>
+                                                    <h4>0.3 USD per active file/case</h4>
                                                     <span>Monthly</span>
                                                 </div>
 

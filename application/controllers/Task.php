@@ -455,7 +455,7 @@ class Task extends CI_Controller {
                 $phones = $this->Md->query_cell("SELECT * FROM users where userID= '" . $t . "'", 'contact');
                 $names = $this->Md->query_cell("SELECT * FROM users where userID= '" . $t . "'", 'name');
            
-                $schs = array('attendID' => $this->GUID(), 'orgID' => $this->session->userdata('orgID'), 'userID' => $t, 'taskID' => $taskID, 'action' => 'none', 'name' => $names, 'contact' => $phones, 'sync' => 'false');
+                $schs = array('attendID' => $this->GUID(), 'orgID' => $this->session->userdata('orgID'), 'userID' => $t, 'taskID' => $taskID, 'action' => 'none', 'name' => $names, 'contact' => $phones);
                 $id = $this->Md->save($schs, 'attend');
 
                 $mail = array('messageID' => $this->GUID(), 'body' => $message, 'subject' => 'REMINDER', 'date' => $this->input->post('date'), 'to' => $names, 'created' => date('Y-m-d H:i:s'), 'from' => $this->session->userdata('orgemail'), 'sent' => 'false', 'type' => 'email', 'orgID' => $this->session->userdata('orgID'), 'action' => 'none', 'taskID' => $taskID, 'contact' => $phones, 'email' => $emails);

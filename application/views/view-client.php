@@ -11,16 +11,15 @@
             <thead>
                 <tr>
                     <th>#</th>
-                      <th>REGISTERED</th>
+                    <th>REGISTERED</th>
                     <th>NAME</th>
                     <th>EMAIL</th>                   
                     <th>STATUS</th>
                     <th>CONTACT</th>
                     <th>ADDRESS</th>
                     <th>CREATED:</th>
-                    <th>C/O</th>
-
-                    <th>E-mail</th>
+                    <th>VIEW</th>
+                    <th>SEND E-MAIL</th>
                     <th>ACTION</th>
                 </tr>
             </thead>
@@ -44,18 +43,18 @@
                             <td> 
 
                                 <?php
-                                if ($loop->image != "") {
+                                if ($loop->image != "" && @getimagesize('' . base_url() . 'uploads/' . $loop->image)) {
                                     ?>
-                                    <img  height="50px" width="50px"  src="<?= base_url(); ?>uploads/<?php echo $loop->clientID . ".jpg"; ?>" alt="logo" />
+                                    <img  height="50px" width="50px"  src="<?= base_url(); ?>uploads/<?php echo $loop->image; ?>" alt="logo" />
                                     <?php
                                 } else {
                                     ?>
-                                    <img  height="50px" width="50px"  src="<?= base_url(); ?>images/user_place.png" alt="logo" />
+                                    <img  height="50px" width="50px"  src="<?= base_url(); ?>images/temp.png" alt="logo" />
                                     <?php
                                 }
                                 ?>
                             </td>
-                             <td class="edit_td">
+                            <td class="edit_td">
                                 <?php echo $loop->registration; ?>
                             </td>    
                             <td class="edit_td">
@@ -112,7 +111,7 @@
 
                             </td>  
                             <td class="edit_td">
-                                <a class="btn btn-primary btn-xs" data-toggle="modal" data-target=".bs-example-modal-sm" ><li class="fa fa-mail-reply">E-mail</li></a>
+                                <a class="btn btn-primary btn-xs" data-toggle="modal" data-target=".bs-example-modal-sm" data-id="<?php echo $email; ?>" ><li class="fa fa-mail-reply">E-mail</li></a>
 
                             </td>  
                             <td class="center">
@@ -128,7 +127,7 @@
             </tbody>
         </table>
     </div>
-     <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-hidden="true">
+    <div id="myModal" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-md">
             <div class="modal-content">
                 <form  enctype="multipart/form-data" class="form-horizontal form-label-left"  action='<?= base_url(); ?>index.php/client/mail'  method="post">
@@ -136,19 +135,19 @@
                     <span class="section">Email Client</span>
                     <div class="col-md-12 col-sm-12 col-xs-12">                       
 
-                       
+
                         <div class="item form-group col-md-12">
                             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">TO: <span class="required">*</span>
                             </label>
                             <div class="col-md-6 col-sm-6 col-xs-12">
-                                <input id="email" class="form-control col-md-7 col-xs-12" data-validate-length-range="6" data-validate-words="2" name="email" placeholder="email" required="required" type="text">
+                                <input id="email" class="form-control col-md-7 col-xs-12"   name="email" placeholder="email"  type="text">
                             </div>
                         </div>
 
                     </div>
-                     <div class="col-md-12 col-sm-12 col-xs-12">                       
+                    <div class="col-md-12 col-sm-12 col-xs-12">                       
 
-                       
+
                         <div class="item form-group col-md-12">
                             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">SUBJECT: <span class="required">*</span>
                             </label>
@@ -158,7 +157,7 @@
                         </div>
 
                     </div>
-          
+
                     <div class="col-md-12 col-sm-12 col-xs-12">
                         <div class="item form-group">
                             <label class="control-label col-md-3 col-sm-3 col-xs-12 align-left">Message/body</label>
@@ -166,19 +165,27 @@
                                 <textarea class="span12" id="form-field-9" name="message" ></textarea>
                             </div>
                         </div>                       
-                    
-                        <div class="item form-group">                    
-                            <label class="control-label col-md-3 col-sm-3 col-xs-12">Attachment</label>  
-                            <div class="col-md-6 col-sm-6 col-xs-12">
-                                <input type="file" name="userfile" id="userfile" class="btn-default btn-small"/>
 
-                            </div>
+                       
+                    <div class=" item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Attachment</label>
+                        <div class="col-md-6 col-sm-5 col-xs-12">
+
+                            <input class="easyui-combobox form-control" name="attachment" id="attachment" style="width:100%;height:26px" data-options="
+                                   url:'<?php echo base_url() ?>index.php/document/docs',
+                                   method:'get',
+                                   valueField:'fileUrl',
+                                   textField:'name',
+                                   multiple:false,
+                                   panelHeight:'auto'
+                                   ">
                         </div>
+                    </div>
 
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-3 align-right">
-                                <button id="send" type="submit" class="btn btn-success align-right">Send</button>
-                                <button class="btn btn-primary align-right">Cancel</button>
+                                <button  type="submit" class="btn btn-success align-right">Send</button>
+                                <button class="btn btn-default align-right" data-dismiss="modal">Cancel</button>
                             </div>
                         </div>
                     </div>
@@ -215,6 +222,20 @@
 <script type="text/javascript">
     $(document).ready(function ()
     {
+        $('a[data-toggle=modal], button[data-toggle=modal]').click(function () {
+
+            var data_id = '';
+
+            if (typeof $(this).data('id') !== 'undefined') {
+
+                data_id = $(this).data('id');
+            }
+
+            $('#email').val(data_id);
+        })
+
+
+
         $(".editbox").hide();
 
         $(".edit_tr").click(function ()

@@ -219,6 +219,11 @@ class Document extends CI_Controller {
         $this->Md->update_dynamic($id, 'fileID', 'file', $file);
         echo 'FILE INFORMATION UPDATED';
     }
+     public function docs() {
+         
+        $query = $this->Md->query("SELECT * FROM document WHERE  orgID='" . $this->session->userdata('orgID') . "'");
+        echo json_encode($query);
+    }
 
     public function delete() {
 

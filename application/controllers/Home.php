@@ -70,6 +70,51 @@ class Home extends CI_Controller {
         if ($query) {
             $data['payments'] = $query;
         }
+        $query = $this->Md->query("SELECT * FROM expenses where  orgID='" . $this->session->userdata('orgID') . "' AND approved<>'true'");
+        if ($query) {
+            $data['expenses_not_approved'] = $query;
+        }
+        $query = $this->Md->query("SELECT * FROM expenses where  orgID='" . $this->session->userdata('orgID') . "' AND paid<>'true'");
+        if ($query) {
+            $data['expenses_not_paid'] = $query;
+        }
+        
+        $query = $this->Md->query("SELECT * FROM fees where  orgID='" . $this->session->userdata('orgID') . "' AND paid<>'true'");
+        if ($query) {
+            $data['fees_not_paid'] = $query;
+        }
+        $query = $this->Md->query("SELECT * FROM disbursements where  orgID='" . $this->session->userdata('orgID') . "' AND paid<>'true'");
+        if ($query) {
+            $data['dis_not_paid'] = $query;
+        }
+         $query = $this->Md->query("SELECT SUM(sizes) AS size FROM document where  orgID='" . $this->session->userdata('orgID') . "'");
+        // var_dump($query);
+         if ($query) {
+            $data['sizes'] = $query;
+        }
+        
+         $query = $this->Md->query("SELECT  DISTINCT(fileID) FROM tasks WHERE  orgID='" . $this->session->userdata('orgID') . "' AND MONTH(date) = MONTH(CURDATE()) ORDER BY date DESC" );//AND date ='".date('m')."'
+         //var_dump($query);
+         if ($query) {
+            $data['usage_tasks'] = $query;
+        }
+        
+         $query = $this->Md->query("SELECT  DISTINCT(fileID) FROM disbursements WHERE  orgID='" . $this->session->userdata('orgID') . "' AND MONTH(date) = MONTH(CURDATE()) ORDER BY date DESC" );//AND date ='".date('m')."'
+         //var_dump($query);
+         if ($query) {
+            $data['usage_dis'] = $query;
+        }
+         $query = $this->Md->query("SELECT  DISTINCT(fileID) FROM fees WHERE  orgID='" . $this->session->userdata('orgID') . "' AND MONTH(date) = MONTH(CURDATE()) ORDER BY date DESC" );//AND date ='".date('m')."'
+         //var_dump($query);
+         if ($query) {
+            $data['usage_fees'] = $query;
+        }
+        $query = $this->Md->query("SELECT  DISTINCT(fileID) FROM expenses WHERE  orgID='" . $this->session->userdata('orgID') . "' AND MONTH(date) = MONTH(CURDATE()) ORDER BY date DESC" );//AND date ='".date('m')."'
+         //var_dump($query);
+         if ($query) {
+            $data['usage_exp'] = $query;
+        }
+        //SELECT DISTINCT(Date) AS Date FROM buy ORDER BY Date DESC;
         $this->load->view('home-page', $data);
     }
 

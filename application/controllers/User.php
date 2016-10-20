@@ -71,7 +71,7 @@ class User extends CI_Controller {
             $data = $this->upload->data();
             $submitted = date('Y-m-d');
             $userfile = $data['file_name'];
-            $users = array('userID' => $userid, 'orgID' => $this->session->userdata('orgID'), 'name' => $this->input->post('name'), 'email' => $this->input->post('email'), 'password' => md5($this->input->post('name')), 'designation' => $this->input->post('designation'), 'image' => $userfile, 'address' => $this->input->post('address'), 'contact' => $this->input->post('contact'), 'supervisor' => $this->input->post('supervisor'), 'category' =>'staff', 'created' => date('Y-m-d H:i:s'), 'status' => 'Active', 'action' => 'none');
+            $users = array('userID' => $userid, 'orgID' => $this->session->userdata('orgID'), 'name' => $this->input->post('name'), 'email' => $this->input->post('email'), 'password' => md5($this->input->post('name')), 'designation' => $this->input->post('designation'), 'image' => $userfile, 'address' => $this->input->post('address'), 'contact' => $this->input->post('contact'), 'supervisor' => $this->input->post('supervisor'), 'category' => 'staff', 'created' => date('Y-m-d H:i:s'), 'status' => 'Active', 'action' => 'none');
             $this->Md->save($users, 'users');
 
             $this->session->set_flashdata('msg', '<div class="alert alert-success">  <strong>Information saved</strong></div>');
@@ -114,16 +114,19 @@ class User extends CI_Controller {
         $userID = $this->input->post('userID');
         $namer = $this->input->post('namer');
 
+        $fileUrl = $this->Md->query_cell("SELECT image FROM users WHERE userID ='" . $userID . "'", 'image');
+
+        $this->Md->file_remove($fileUrl, 'uploads');
+
 
         $file_element_name = 'userfile';
         // $new_name = $userID;
         $config['file_name'] = $userID;
         $config['upload_path'] = 'uploads/';
-        $config['allowed_types'] = '*';
         $config['encrypt_name'] = FALSE;
         $config['allowed_types'] = 'jpg';
         $config['overwrite'] = TRUE;
-        
+
         $this->load->library('upload', $config);
         if (!$this->upload->do_upload($file_element_name)) {
             $status = 'error';
@@ -133,9 +136,9 @@ class User extends CI_Controller {
 
             return;
         }
-         $data = $this->upload->data();         
+        $data = $this->upload->data();
         $userfile = $data['file_name'];
-            $user = array('image' => $userfile);
+        $user = array('image' => $userfile);
         $this->Md->update_dynamic($userID, 'userID', 'users', $user);
 
         $this->session->set_flashdata('msg', '<div class="alert alert-success">  <strong>Image updated saved</strong></div>');
@@ -159,6 +162,48 @@ class User extends CI_Controller {
 
 
         $this->load->view('client-page', $data);
+    }
+
+    public function update_password() {
+
+        $this->load->helper(array('form', 'url'));
+        //user information
+        $this->load->library('email');
+
+
+   
+        $password = $this->input->post('password');
+        //$password = '123456';
+        $this->load->helper(array('form', 'url'));
+        $id = $this->input->post('userID');
+        $email = $this->Md->query_cell("SELECT email FROM users WHERE userID ='" . $id . "'", 'email');
+        $name = $this->Md->query_cell("SELECT name FROM users WHERE userID='" . $id . "'", 'name');
+
+        $new_password = md5($password);
+
+        $info = array('password' => $new_password);
+        $this->Md->update_dynamic($id, 'userID', 'users', $info);
+
+        $body = $name . '  ' . ' Your password has been reset to ' . $password . " Please click the link below to access your Case Professional account: caseprofessional.org";
+
+        $from = "noreply@caseprofessional.org";
+        $subject = "Password reset ";
+        if ($email != "") {
+
+            $this->email->from($from, 'Case Professional');
+            $this->email->to($email);
+            $this->email->subject($subject);
+            $this->email->message($body);
+            $this->email->send();
+            echo $this->email->print_debugger();
+            echo "email has been sent";
+            //return;
+        }
+
+        echo 'INFORMATION UPDATED';
+        $this->session->set_flashdata('msg', '<div class="alert alert-success">  <strong>USER PASSWORD CHANGED</strong></div>');
+
+         redirect('/user/profile/' . $name, 'refresh');
     }
 
     public function exists() {
@@ -305,6 +350,10 @@ class User extends CI_Controller {
             $data['docs'] = $query;
         } else {
             $data['docs'] = array();
+        }
+        $query = $this->Md->query("SELECT * FROM client where  orgID='" . $this->session->userdata('orgID') . "' AND lawyer = '" . $name . "'");
+        if ($query) {
+            $data['clients'] = $query;
         }
         $this->load->view('user-profile', $data);
     }

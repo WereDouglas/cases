@@ -163,14 +163,14 @@ class Organisation extends CI_Controller {
     public function register() {
 //organisation information
         $this->load->helper(array('form', 'url'));
-        
-        $license = $this->generate_key_string();       
+
+        $license = $this->generate_key_string();
         $active = 'Active';
         $starts = date('Y-m-d');
         $yourDate = date('Y-m-d');
         $mydate = date('Y-m-d', strtotime('+6 month', strtotime($yourDate)));
         $ends = $mydate;
-      
+
         $orgID = $this->GUID();
         $userID = $this->GUID();
 
@@ -216,26 +216,25 @@ class Organisation extends CI_Controller {
             $this->session->set_flashdata('msg', '<div class="alert alert-error">                                                  
                                                 <strong>' . $msg . '</strong></div>');
         }
-        $data = $this->upload->data();       
+        $data = $this->upload->data();
         $orgfile = $data['file_name'];
         $userfile = $data['file_name'];
 
-        $users = array('userID' => $userID, 'image' => 'default.png', 'email' => $this->input->post('userEmail'), 'name' => $this->input->post('username'), 'orgID' => $orgID, 'address' => $this->input->post('address'), 'contact' => $this->input->post('contact'), 'password' => md5($this->input->post('password')), 'category' => 'Staff', 'designation' =>'Administrator', 'created' => date('Y-m-d H:i:s'), 'status' => 'Active','action'=>'none');
+        $users = array('userID' => $userID, 'image' => 'default.png', 'email' => $this->input->post('userEmail'), 'name' => $this->input->post('username'), 'orgID' => $orgID, 'address' => $this->input->post('address'), 'contact' => $this->input->post('contact'), 'password' => md5($this->input->post('password')), 'category' => 'Staff', 'designation' => 'Administrator', 'created' => date('Y-m-d H:i:s'), 'status' => 'Active', 'action' => 'none');
         $this->Md->save($users, 'users');
 
 
-        $org = array('orgID' => $orgID, 'image' => $orgfile, 'name' => $this->input->post('name'), 'ends' => $ends, 'starts' => $starts, 'currency' =>$this->input->post('currency') , 'status' => 'Active', 'region' => $this->input->post('region'), 'address' => $this->input->post('address'), 'license' => $license, 'country' => $this->input->post('country'), 'code' => $this->input->post('code'), 'city' => $this->input->post('city'), 'email' =>$this->input->post('companyEmail'),'action'=>'none');
+        $org = array('orgID' => $orgID, 'image' => $orgfile, 'name' => $this->input->post('name'), 'ends' => $ends, 'starts' => $starts, 'currency' => $this->input->post('currency'), 'status' => 'Active', 'region' => $this->input->post('region'), 'address' => $this->input->post('address'), 'license' => $license, 'country' => $this->input->post('country'), 'code' => $this->input->post('code'), 'city' => $this->input->post('city'), 'email' => $this->input->post('companyEmail'), 'action' => 'none');
         $this->Md->save($org, 'org');
 
         $this->session->set_flashdata('msg', '<div class="alert alert-success">
                                    <strong>Information submitted</strong>									
 						</div>');
         $newdata = array(
-            
             'username' => $this->input->post('name'),
             'name' => $this->input->post('name'),
             'useremail' => $this->input->post('userEmail'),
-             'orgemail' => $this->input->post('companyEmail'),
+            'orgemail' => $this->input->post('companyEmail'),
             'orgimage' => $orgfile,
             'orgid' => $orgID,
             'address' => $this->input->post('address'),
@@ -243,7 +242,7 @@ class Organisation extends CI_Controller {
             'starts' => $starts,
             'ends' => $ends,
             'code' => $code,
-            'license' => $license,           
+            'license' => $license,
             'status' => $status,
             'logged_in' => TRUE
         );
@@ -547,13 +546,83 @@ class Organisation extends CI_Controller {
 
     public function profile() {
 
-        $query = $this->Md->show('profile');
+        $this->load->helper(array('form', 'url'));
+        $name = urldecode($this->uri->segment(3));
+
+
+        $query = $this->Md->query("SELECT * FROM org where orgID='" . $this->session->userdata('orgID') . "'");
+
         if ($query) {
-            $data['profiles'] = $query;
+            $data['org'] = $query;
         } else {
-            $data['profiles'] = array();
+            $data['org'] = array();
         }
-        $this->load->view('profile', $data);
+
+        $this->load->view('organisation-profile', $data);
+    }
+
+    public function updater() {
+        $this->load->helper(array('form', 'url'));
+
+        if (!empty($_POST)) {
+
+            foreach ($_POST as $field_name => $val) {
+                //clean post values
+                $field_id = strip_tags(trim($field_name));
+                $val = strip_tags(trim($val));
+                //from the fieldname:user_id we need to get user_id
+                $split_data = explode(':', $field_id);
+                $user_id = $split_data[1];
+                $field_name = $split_data[0];
+                if (!empty($user_id) && !empty($field_name) && !empty($val)) {
+                    //update the values
+                    $task = array($field_name => $val);
+                    // $this->Md->update($user_id, $task, 'tasks');
+                    $this->Md->update_dynamic($user_id, 'orgID', 'org', $task);
+                    echo "Updated";
+                } else {
+                    echo "Invalid Requests";
+                }
+            }
+        } else {
+            echo "Invalid Requests";
+        }
+    }
+       public function update_image() {
+
+        $this->load->helper(array('form', 'url'));
+        //user information
+
+        $userID = $this->input->post('orgID');
+        $namer = $this->input->post('namer');
+
+
+        $file_element_name = 'userfile';
+        // $new_name = $userID;
+        $config['file_name'] = $userID;
+        $config['upload_path'] = 'uploads/';
+        $config['allowed_types'] = '*';
+        $config['encrypt_name'] = FALSE;
+        $config['allowed_types'] = 'jpg';
+        $config['overwrite'] = TRUE;
+        
+        $this->load->library('upload', $config);
+        if (!$this->upload->do_upload($file_element_name)) {
+            $status = 'error';
+            $msg = $this->upload->display_errors('', '');
+            $this->session->set_flashdata('msg', '<div class="alert alert-error"> <strong>' . $msg . '</strong></div>');
+            redirect('/organisation/profile/' . $namer, 'refresh');
+
+            return;
+        }
+         $data = $this->upload->data();         
+        $userfile = $data['file_name'];
+            $user = array('image' => $userfile);
+        $this->Md->update_dynamic($userID, 'orgID', 'org', $user);
+
+        $this->session->set_flashdata('msg', '<div class="alert alert-success">  <strong>Image updated saved</strong></div>');
+
+        redirect('/organisation/profile/' . $namer, 'refresh');
     }
 
     public function contact() {

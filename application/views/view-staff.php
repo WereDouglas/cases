@@ -43,9 +43,9 @@
                         <tr id="<?php echo $id; ?>" class="edit_tr">
                             <td> 
                                 <?php
-                                if ($loop->image != "") {
+                                if ($loop->image != "" && @getimagesize(''.base_url().'uploads/' . $loop->image)) {
                                     ?>
-                                    <img  height="50px" width="50px"  src="<?= base_url(); ?>uploads/<?php echo $loop->userID . ".jpg"; ?>" alt="logo" />
+                                    <img  height="50px" width="50px"  src="<?= base_url(); ?>uploads/<?php echo $loop->image; ?>" alt="logo" />
                                     <?php
                                 } else {
                                     ?>
@@ -71,7 +71,7 @@
                                     <option value="Contract" />Contract
                                     <option value="Of counsel" />Of counsel
                                     <option value="Clerk" />Clerk
-                                    <option value="Paralegal" />Paralegal
+                                    <option value="Paralegal" />Para legal
                                     <option value="Administrator" />Administrator
                                     <option value="Client" />Client
                                 </select>

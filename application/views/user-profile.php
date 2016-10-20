@@ -14,88 +14,37 @@
 <link rel="stylesheet" href="<?= base_url(); ?>css/mine.css" />
 <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>css/easyui.css?date=<?php echo date('Y-m-d') ?>">
 <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>css/icon.css?date=<?php echo date('Y-m-d') ?>">
+<style type="text/css" media="screen">
 
+    table{
+        border-collapse:collapse;
+        border:0px solid #FF0000;
+    }
+
+    table td{
+        border:0px solid #FF0000;
+    }
+
+    table tr{
+        border:0px solid #FF0000;
+    }
+</style>
 <div class="row container">
     <?php echo $this->session->flashdata('msg'); ?>
     <div class="row">
         <div class="col-md-12 col-sm-12 col-xs-12">
 
-            <span class="info-box status col-lg-12" id="status"></span>
-            <table id="datatables" class="table table-striped table-bordered scroll ">
-                <thead>
-                    <tr>
-                        <th></th>
-                        <th>NAME</th>
-                        <th>EMAIL</th> 
-                        <th>DESIGNATION</th>                   
-                        <th>STATUS</th>
-                        <th>CONTACT</th>
-                        <th>CHARGE/(HR)</th>
-                        <th></th>
+            <div class="col-md-12 col-sm-12 col-xs-12"> <span class="info-box status col-md-12 col-sm-12 col-xs-12" id="status"></span></div>
 
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                    if (is_array($users) && count($users)) {
-                        foreach ($users as $loop) {
-                            ?>
-                            <tr class="odd">
-                                <td> 
-                                    <div class="profile_img">
-                                        <div id="crop-avatar">
-                                            <!-- Current avatar -->
-
-                                            <?php
-                                            if ($loop->image != "") {
-                                                ?>
-                                                <img height="20px" width="50px" class="img-responsive avatar-view" src="<?= base_url(); ?>uploads/<?php echo $loop->userID . ".jpg"; ?>" alt="Avatar" title="Change the avatar">
-
-                                                <?php
-                                            } else {
-                                                ?>
-
-                                                <img height="20px" width="50px" class="img-responsive avatar-view" src="<?= base_url(); ?>images/user_place.png" alt="Avatar" title="Change the avatar">
-                                                <?php
-                                            }
-                                            ?>
-                                            <form  enctype="multipart/form-data" class="form-horizontal form-label-left"  action='<?= base_url(); ?>index.php/user/update_image'  method="post">                                       
-
-                                                <input type="file" name="userfile" id="userfile" />
-                                                <div id="imagePreview" ></div>
-                                                <input type="hidden" name="userID" id="userID" value="<?php echo $loop->userID; ?>" />                                                   
-                                                <input type="hidden" name="namer" id="namer" value="<?php echo $loop->name; ?>" />
-                                                <button id="send" type="submit" >Update picture</button>
-
-
-                                            </form>
-
-                                        </div>
-                                    </div>
-                                </td>
-
-                                <td id="name:<?php echo $loop->userID; ?>" contenteditable="true">
-                                    <span class="green"><?php echo $loop->name; ?></span> 
-                                </td>
-                                <td id="email:<?php echo $loop->userID; ?>" contenteditable="true"><span class="green"><?php echo $loop->email; ?></span></td>
-                                <td id="designation:<?php echo $loop->userID; ?>" contenteditable="true"><span class="red"><?php echo $loop->designation; ?></span></td>
-                                <td id="status:<?php echo $loop->userID; ?>" contenteditable="true"><span class="red"><?php echo $loop->status; ?></span></td>
-
-                                <td id="contact:<?php echo $loop->userID; ?>" contenteditable="true"><?php echo $loop->contact; ?></td>
-                                <td id="charge:<?php echo $loop->userID; ?>" contenteditable="true"><span class="blue"><?php echo $loop->charge; ?></span> </td>
-                            </tr>
-                            <?php
-                        }
-                    }
-                    ?>
-
-                </tbody>
-            </table>
         </div>
         <div class="col-md-12 col-sm-12 col-xs-12">           
             <div class="" role="tabpanel" data-example-id="togglable-tabs">
                 <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
-                    <li role="presentation" class="active"><a href="#tab_content1" id="home-tab" role="tab" data-toggle="tab" aria-expanded="true">Time sheet</a>
+                    <li role="presentation" class="active"><a href="#profile" id="profile-tab" role="tab" data-toggle="tab" aria-expanded="true">Profile</a>
+                    </li>
+                    <li role="presentation" class=""><a href="#client" id="client-tab" role="tab" data-toggle="tab" aria-expanded="true">Clients</a>
+                    </li>
+                    <li role="presentation" class=""><a href="#tab_content1" id="home-tab" role="tab" data-toggle="tab" aria-expanded="true">Time sheet</a>
                     </li>
                     <li role="presentation" class=""><a href="#tab_content2" role="tab" id="profile-tab" data-toggle="tab" aria-expanded="false">Schedules</a>
                     </li>
@@ -105,9 +54,261 @@
                     </li>
                 </ul>
                 <div id="myTabContent" class="tab-content">
-                    <div role="tabpanel" class="tab-pane fade active in" id="tab_content1" aria-labelledby="home-tab">
+                    <div role="tabpanel" class="tab-pane fade active in" id="profile" aria-labelledby="home-tab">
 
-                        <div id="mainb" style="height:300px;" class= "col-md-12 col-sm-12 col-xs-12"></div>
+                        <div  class="col-md-12" >
+
+                            <table >
+                                <h2>USER PROFILE</h2>
+                                <tbody>
+                                    <?php
+                                    if (is_array($users) && count($users)) {
+                                        foreach ($users as $loop) {
+                                            ?>
+                                            <tr class="odd">
+                                                <td> 
+                                                    <div class="profile_img">
+                                                        <div id="crop-avatar">
+                                                            <!-- Current avatar -->
+
+                                                            <?php
+                                                            if ($loop->image != "" && @getimagesize('' . base_url() . 'uploads/' . $loop->image)) {
+                                                                ?>
+                                                                <img height="20px" width="50px" class="img-responsive avatar-view" src="<?= base_url(); ?>uploads/<?php echo $loop->image; ?>" alt="Avatar" title="Change the avatar">
+
+                                                                <?php
+                                                            } else {
+                                                                ?>
+
+                                                                <img height="20px" width="50px" class="img-responsive avatar-view" src="<?= base_url(); ?>images/temp.png" alt="Avatar" title="Change the avatar">
+                                                                <?php
+                                                            }
+                                                            ?>
+
+
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                </td>
+                                                <td></td>
+                                                <td></td>
+
+
+                                            </tr>
+                                            <tr>
+                                                <td>NAME:</td>
+                                                <td id="name:<?php echo $loop->userID; ?>" contenteditable="true">
+                                                    <span class="green"><?php echo $loop->name; ?></span> 
+                                                </td>
+                                                <td>EMAIL:</td>
+                                                <td id="email:<?php echo $loop->userID; ?>" contenteditable="true"><span class="green"><?php echo $loop->email; ?></span></td>
+
+                                            </tr>
+                                            <tr>
+                                                <td>DESIGNATION:</td>
+                                                <td id="designation:<?php echo $loop->userID; ?>" contenteditable="true"><span class="red"><?php echo $loop->designation; ?></span></td>
+
+                                                <td>STATUS:</td>
+                                                <td id="status:<?php echo $loop->userID; ?>" contenteditable="false"><span class="red"><?php echo $loop->status; ?></span></td>
+
+
+                                            </tr>
+                                            <tr>
+                                                <td>CONTACT:</td>
+                                                <td id="contact:<?php echo $loop->userID; ?>" contenteditable="true"><?php echo $loop->contact; ?></td>
+
+                                                <td>CHARGE/HR:</td>
+                                                <td id="charge:<?php echo $loop->userID; ?>" contenteditable="true"><span class="blue"><?php echo $loop->charge; ?></span> </td>
+
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                   
+                                                    <form  enctype="multipart/form-data" class="form-horizontal form-label-left"  action='<?= base_url(); ?>index.php/user/update_image'  method="post">                                       
+
+                                                        <input type="file" name="userfile" id="userfile" />
+                                                        <div id="imagePreview" ></div>
+                                                        <input type="hidden" name="userID" id="userID" value="<?php echo $loop->userID; ?>" />                                                   
+                                                        <input type="hidden" name="namer" id="namer" value="<?php echo $loop->name; ?>" />
+                                                        <button id="send" type="submit" >Update picture</button>
+
+
+                                                    </form>
+                                    
+                                                </td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                     <?php
+                                                    //echo $this->session->userdata('email');
+                                                    if( $loop->email == $this->session->userdata('email')){ ?>
+                                                    <form id="identicalForm"  enctype="multipart/form-data" class="form-horizontal form-label-left"  action='<?= base_url(); ?>index.php/user/update_password'  method="post">                                       
+
+
+                                                        <h4>Change password</h4>
+                                                        <div class="form-group">
+                                                            <label for="email">Password:</label>
+                                                            <input type="password" class="form-control" name="password" id="password" placeholder="Password" value="" />                                                   
+
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="pwd">Confirm password:</label>
+                                                            <input type="password" class="form-control" name="confirmPassword" id="confirmPassword" placeholder="Confirm password" value="" />
+
+                                                        </div>  
+
+                                                        <input type="hidden" name="userID" id="userID" value="<?php echo $loop->userID; ?>" />     
+                                                        <button id="send" class="btn btn-default" type="submit" >Change password</button>
+
+
+                                                    </form>
+                                                        <?php } ?>
+                                                </td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <?php
+                                        }
+                                    }
+                                    ?>
+
+                                </tbody>
+                            </table>
+                        </div> 
+                    </div>
+                    <div role="tabpanel" class="tab-pane fade in" id="client" aria-labelledby="home-tab">
+
+                        <div  class="col-md-12" >
+                            <table id="datatable" class="table table-striped table-bordered scroll ">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>REGISTERED</th>
+                                        <th>NAME</th>
+                                        <th>EMAIL</th>                   
+                                        <th>STATUS</th>
+                                        <th>CONTACT</th>
+                                        <th>ADDRESS</th>
+                                        <th>CREATED:</th>
+                                        <th>VIEW</th>
+
+                                        <th>SEND E-MAIL</th>
+                                        <th>ACTION</th>
+                                    </tr>
+                                </thead>
+
+
+                                <tbody>
+                                    <?php
+                                    if (is_array($clients) && count($clients)) {
+                                        foreach ($clients as $loop) {
+                                            $name = $loop->name;
+                                            $address = $loop->address;
+                                            $email = $loop->email;
+                                            $designation = $loop->designation;
+                                            $status = $loop->status;
+                                            $category = $loop->category;
+                                            $id = $loop->clientID;
+                                            $contact = $loop->contact;
+                                            $created = $loop->created;
+                                            ?>  
+                                            <tr id="<?php echo $id; ?>" class="edit_tr">
+                                                <td> 
+
+                                                    <?php
+                                                    if ($loop->image != "" && @getimagesize('' . base_url() . 'uploads/' . $loop->image)) {
+                                                        ?>
+                                                        <img  height="50px" width="50px"  src="<?= base_url(); ?>uploads/<?php echo $loop->image; ?>" alt="logo" />
+                                                        <?php
+                                                    } else {
+                                                        ?>
+                                                        <img  height="50px" width="50px"  src="<?= base_url(); ?>images/temp.png" alt="logo" />
+                                                        <?php
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td class="edit_td">
+                                                    <?php echo $loop->registration; ?>
+                                                </td>    
+                                                <td class="edit_td">
+                                                    <span id="name_<?php echo $id; ?>" class="text"><?php echo $name; ?></span>
+                                                    <input type="text" value="<?php echo $name; ?>" class="editbox" id="name_input_<?php echo $id; ?>"
+                                                </td>
+                                                <td class="edit_td">
+                                                    <span id="email_<?php echo $id; ?>" class="text"><?php echo $email; ?></span>
+                                                    <input type="text" value="<?php echo $email; ?>" class="editbox" id="email_input_<?php echo $id; ?>"
+                                                </td>
+
+                                                <td class="edit_td">
+                                                    <span id="status_<?php echo $id; ?>" class="text"><?php echo $status; ?></span>                                                       
+                                                    <select  name="status" class="editbox" id="status_input_<?php echo $id; ?>" >
+                                                        <option value="<?php echo $status; ?>" /><?php echo $status; ?>
+                                                        <option value="Partner" />Active
+                                                        <option value="Associate" />Dull
+
+                                                    </select>
+                                                </td>  
+
+                                                <td class="edit_td">
+                                                    <span id="contact_<?php echo $id; ?>" class="text"><?php echo $contact; ?></span>
+                                                    <input type="text" value="<?php echo $contact; ?>" class="editbox" id="contact_input_<?php echo $id; ?>"
+
+                                                </td>
+                                                <td class="edit_td">
+
+                                                    <span id="address_<?php echo $id; ?>" class="text">
+                                                        <?php
+                                                        //echo $abstract;
+                                                        // strip tags to avoid breaking any html
+                                                        $string = strip_tags($address);
+
+                                                        if (strlen($string) > 10) {
+
+                                                            // truncate string
+                                                            $stringCut = substr($string, 0, 10);
+
+                                                            // make sure it ends in a word so assassinate doesn't become ass...
+                                                            $string = substr($stringCut, 0, strrpos($stringCut, ' ')) . '... <a href="' . base_url() . "index.php/user/finding/" . $loop->id . '">Read More</a>';
+                                                        }
+                                                        echo $string;
+                                                        ?>
+                                                    </span>
+                                                    <textarea type="text" value="<?php echo $address; ?>" class="editbox" id="address_input_<?php echo $id; ?>"><?php echo $address; ?></textarea>
+
+                                                </td>
+                                                <td class="edit_td">
+                                                    <?php echo $created; ?>
+                                                </td>                            
+                                                <td class="edit_td">
+                                                    <a class="btn btn-default btn-xs" href="<?php echo base_url() . "index.php/client/profile/" . $loop->name; ?>"><li class="fa fa-folder">View</li></a>
+
+                                                </td>  
+                                                <td class="edit_td">
+                                                    <a class="btn btn-primary btn-xs" data-toggle="modal" data-target=".bs-example-modal-sm" ><li class="fa fa-mail-reply">E-mail</li></a>
+
+                                                </td>  
+                                                <td class="center">
+                                                    <a class="btn-danger btn-small icon-remove" href="<?php echo base_url() . "index.php/client/delete/" . $id; ?>">delete</a>
+                                                </td>
+
+                                            </tr>
+                                            <?php
+                                        }
+                                    }
+                                    ?>
+
+                                </tbody>
+                            </table>
+                        </div> 
+                    </div>
+
+                    <div role="tabpanel" class="tab-pane fade in" id="tab_content1" aria-labelledby="home-tab">
+
                         <div  class="col-md-12" >
                             <table id="datatable" class="table table-striped table-bordered scroll ">
                                 <thead>
@@ -245,9 +446,11 @@
                                     <th>FILE</th>
                                     <th>CLIENT</th>
                                     <th>DETAILS</th>
-                                    <th>C/O</th>   
+                                    <th>C/O</th> 
+                                    <th>NOTE</th>
                                     <th>ACTION</th> 
-                                    <th>DOWNLOAD</th>   
+                                    <th>DOWNLOAD</th>
+                                    <th>SIZE(kilobytes/Kbs)</th>
 
 
                                 </tr>
@@ -260,20 +463,22 @@
                                     <tr class="odd">
 
                                         <td id="created:<?php echo $loop->documentID; ?>" contenteditable="true">
-                                            <span class="green"><?php echo $loop->created; ?></span> 
-                                        </td>
+                                            <span class="green"><?php echo $loop->created; ?></span>                        </td>
                                         <td id="name:<?php echo $loop->documentID; ?>" contenteditable="true"><?php echo $loop->name; ?></td>
                                         <td id="fileID:<?php echo $loop->documentID; ?>" contenteditable="true"><?php echo $loop->fileID; ?></td>
                                         <td id="client:<?php echo $loop->documentID; ?>" contenteditable="true"><?php echo $loop->client; ?></td>
-
                                         <td id="details:<?php echo $loop->documentID; ?>" contenteditable="true"><?php echo $loop->details; ?></td>
                                         <td id="lawyer:<?php echo $loop->documentID; ?>" contenteditable="true"><?php echo $loop->lawyer; ?></td>
+                                        <td id="note:<?php echo $loop->documentID; ?>" contenteditable="true"><?php echo $loop->note; ?></td>
 
                                         <td class="center">
                                             <a class="btn btn-danger btn-xs" href="<?php echo base_url() . "index.php/document/delete/" . $loop->documentID; ?>"><li class="fa fa-trash">Delete</li></a>
                                         </td>
                                         <td class="center">
                                             <a class="btn btn-successr btn-xs" href="<?php echo base_url() . "documents/" . $loop->fileUrl; ?>"><li class="fa fa-download">Download</li></a>
+                                        </td>
+                                        <td class="center">
+                                            <?php echo $loop->sizes; ?>
                                         </td>
 
                                     </tr>
@@ -292,6 +497,7 @@
     </div>
 </div>
 <script src="<?php echo base_url(); ?>vendors/jquery/dist/jquery.min.js"></script>
+<script src="<?= base_url(); ?>js/validator.js"></script>
 <!-- Bootstrap -->
 <script src="<?php echo base_url(); ?>vendors/bootstrap/dist/js/bootstrap.min.js"></script>
 <!-- FastClick -->
@@ -308,7 +514,7 @@
 <!--<script type="text/javascript" src="<?php echo base_url(); ?>js/jquery.js"></script>-->
 <script type="text/javascript" src="<?= base_url(); ?>js/jquery.easyui.min.js"></script>
 
-<script src="<?= base_url(); ?>vendors/echarts/dist/echarts.min.js"></script>
+
 <script type="text/javascript">
     $(function () {
         $("#userfile").on("change", function ()
@@ -533,87 +739,14 @@
         }
     };
 
-    var echartBarLine = echarts.init(document.getElementById('mainb'), theme);
-
-    echartBarLine.setOption({
-        title: {
-            x: 'center',
-            y: 'top',
-            padding: [0, 0, 20, 0],
-            text: 'Service usage statistics',
-            textStyle: {
-                fontSize: 15,
-                fontWeight: 'normal'
-            }
-        },
-        tooltip: {
-            trigger: 'axis'
-        },
-        toolbox: {
-            show: true,
-            feature: {
-                dataView: {
-                    show: true,
-                    readOnly: false,
-                    title: "Text View",
-                    lang: [
-                        "Text View",
-                        "Close",
-                        "Refresh",
-                    ],
-                },
-                restore: {
-                    show: true,
-                    title: 'Restore'
-                },
-                saveAsImage: {
-                    show: true,
-                    title: 'Save'
-                }
-            }
-        },
-        calculable: true,
-        legend: {
-            data: ['Messaging', 'Scheduling', 'Time Sheets'],
-            y: 'bottom'
-        },
-        xAxis: [{
-                type: 'category',
-                data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-            }],
-        yAxis: [{
-                type: 'value',
-                name: 'Count',
-                axisLabel: {
-                    formatter: '{value} count'
-                }
-            }, {
-                type: 'value',
-                name: 'Number',
-                axisLabel: {
-                    formatter: '{value} No'
-                }
-            }],
-        series: [{
-                name: 'Messaging',
-                type: 'bar',
-                data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3]
-            }, {
-                name: 'Scheduling',
-                type: 'bar',
-                data: [2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2, 48.7, 18.8, 6.0, 2.3]
-            }, {
-                name: 'Time Sheets',
-                type: 'line',
-                yAxisIndex: 1,
-                data: [2.0, 2.2, 3.3, 4.5, 6.3, 10.2, 20.3, 23.4, 23.0, 16.5, 12.0, 6.2]
-            }]
-    });
+   
 
 </script>
 <!-- FullCalendar -->
 <script>
     $(window).load(function () {
+
+
         var date = new Date(),
                 d = date.getDate(),
                 m = date.getMonth(),
@@ -732,21 +865,28 @@
 </script>
 <script>
     $(document).ready(function () {
+        $(function () {
+            //acknowledgement message
+            var message_status = $("#status");
+            $("td[contenteditable=true]").blur(function () {
+                var field_id = $(this).attr("id");
+                var value = $(this).text();
+                $.post('<?php echo base_url() . "index.php/user/updater/"; ?>', field_id + "=" + value, function (data) {
+                    if (data != '')
+                    {
+                        message_status.show();
+                        message_status.text(data);
+                        //hide the message
+                        setTimeout(function () {
+                            message_status.hide()
+                        }, 4000);
+                    }
+                });
+            });
 
-        $('.date-picker').datepicker().next().on(ace.click_event, function () {
-            $(this).prev().focus();
-        });
-        $('#id-date-range-picker-1').daterangepicker().prev().on(ace.click_event, function () {
-            $(this).next().focus();
         });
 
-        $('#timepicker1').timepicker({
-            minuteStep: 1,
-            showSeconds: true,
-            showMeridian: false
-        })
-        $('#colorpicker1').colorpicker();
-        $('#simple-colorpicker-1').ace_colorpicker();
+
 
     });
 </script>
@@ -788,6 +928,7 @@
 <script src="<?= base_url(); ?>vendors/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
 <script src="<?= base_url(); ?>vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
 <script src="<?= base_url(); ?>vendors/datatables.net-scroller/js/datatables.scroller.min.js"></script>
+
 <script>
     $(document).ready(function () {
         var handleDataTableButtons = function () {
@@ -853,6 +994,28 @@
 
 
     });
+</script>
+<script>
+$(document).ready(function() {
+    $('#identicalForm').formValidation({
+        framework: 'bootstrap',
+        icon: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            confirmPassword: {
+                validators: {
+                    identical: {
+                        field: 'password',
+                        message: 'The password and its confirm are not the same'
+                    }
+                }
+            }
+        }
+    });
+});
 </script>
 
 

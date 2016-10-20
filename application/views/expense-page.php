@@ -203,10 +203,9 @@
                     <th>APPROVED</th>
                     <th>DEADLINE</th>
                     <th>ACTION</th>
-                    <th>VIEW</th>
+                   
                 </tr>
             </thead>
-
             <tbody>
                 <?php
                 //var_dump($expenses);
@@ -247,12 +246,9 @@
                         <td id="deadline:<?php echo $loop->expenseID; ?>" contenteditable="true"><?php echo $loop->deadline; ?></td>
 
                         <td class="center">
-                            <a class="btn btn-danger btn-xs" href="<?php echo base_url() . "index.php/document/delete/" . $loop->documentID; ?>"><li class="fa fa-trash">Delete</li></a>
+                            <a class="btn btn-danger btn-xs" href="<?php echo base_url() . "index.php/expense/delete/" . $loop->expenseID; ?>"><li class="fa fa-trash">Delete</li></a>
                         </td>
-                        <td class="center">
-                            <a class="btn btn-successr btn-xs" href="<?php echo base_url() . "documents/" . $loop->fileUrl; ?>"><li class="fa fa-download">Download</li></a>
-                        </td>
-
+                      
 
                     </tr>
 
