@@ -33,7 +33,7 @@
     $using[] = count($usage_dis);
     $using[] = count($usage_fees);
     $using[] = count($usage_exp);
-   // $using[] = 250;
+    // $using[] = 250;
     $highest = max($using);
     $fee = 0;
     if (($highest * 1) < 30) {
@@ -41,11 +41,9 @@
     } if ($highest <= 50 && (($highest * 1) > 30)) {
 
         $fee = $highest * 1;
-        
     } if ($highest > 50 && $highest <= 250 && (($highest * 1) > 30)) {
 
         $fee = $highest * 0.6;
-        
     } if ($highest >= 250 && (($highest * 1) > 30)) {
 
         $fee = $highest * 0.3;
