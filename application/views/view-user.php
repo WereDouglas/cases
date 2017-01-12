@@ -70,7 +70,7 @@
                                     <option value="Contract" />Contract
                                     <option value="Of counsel" />Of counsel
                                     <option value="Clerk" />Clerk
-                                    <option value="Paralegal" />Paralegal
+                                    <option value="Para legal" />Para legal
                                     <option value="Administrator" />Administrator
                                     <option value="Client" />Client
                                 </select>
