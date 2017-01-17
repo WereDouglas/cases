@@ -5,7 +5,7 @@
         <meta charset="utf-8" />
         <link rel="icon" type="image/png" href="assets/img/favicon.ico">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-        <title>Awesome Landing Page by Creative Tim</title>
+        <title>Case Pro</title>
         <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
         <meta name="viewport" content="width=device-width" />
 
@@ -100,7 +100,7 @@
             </div>
             <div class="section section-gray section-clients" id="about">
                 <div class="container text-center">
-                    <h4 class="header-text">About Case pro</h4>
+                    <h4 class="header-text">About Case Pro</h4>
                     <p>
                         Practice and case management software provides attorneys with a convenient method of effectively managing client and case information, including contacts, calendaring, documents, and other specifics by facilitating automation in law practices. It can be used to share information with other attorneys in the firm and will help prevent having to enter duplicate data in conjunction with billing programs and data processors. Many programs link with personal digital assistants (PDAs) so that calendars and schedules are always handy. Some case management packages are Web-based, with more on the way, allowing anytime access to all features<br>
                     </p>

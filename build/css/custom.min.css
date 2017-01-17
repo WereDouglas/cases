@@ -190,10 +190,11 @@
 .nav-md .container.body .col-md-3.left_col {
     width: 230px;
     padding: 0;
-    position: absolute;
+    height: 100%;
+    position: fixed;
     display: -ms-flexbox;
-    display: flex;
-    z-index: 9999
+    display: block;
+    z-index: 9999;
 }
 .nav-md .container.body .col-md-3.left_col.menu_fixed {
     height: 100%;
@@ -1533,8 +1534,13 @@ span.right {
     background: #425567
 }
 .tile_count {
-    margin-bottom: 0px;
-    margin-top: 0px
+    /* margin-bottom: 0px; */
+    margin-top: 0px;
+    background: #395067;
+    color: #FFF;
+    margin-left: -20px;
+    padding: 10px;
+    margin-top: -10px;
 }
 .tile_count .tile_stats_count {
     border-bottom: 1px solid #D9DEE4;
@@ -1607,8 +1613,8 @@ a.user-profile {
     color: #5E6974 !important
 }
 .user-profile img {
-    width: 29px;
-    height: 29px;
+    width: 45px;
+    height: auto;
     border-radius: 50%;
     margin-right: 10px
 }

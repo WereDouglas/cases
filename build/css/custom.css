@@ -1495,8 +1495,8 @@ a.user-profile {
   color: #5E6974 !important; }
 
 .user-profile img {
-  width: 29px;
-  height: 29px;
+  width: 45px;
+  height: auto;
   border-radius: 50%;
   margin-right: 10px; }
 
