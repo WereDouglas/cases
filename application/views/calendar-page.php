@@ -154,9 +154,9 @@ if (is_array($sch)) {
     foreach ($sch as $loop) {
         $mydate = $loop->date;
         $prior = $loop->priority;
-        $days = $loop->period;
+        $days = $loop->hours;
          
-         $informations ='START:'. $loop->starts.':'.clean($loop->detail);
+         $informations ='START:'. $loop->start.':'.clean($loop->name);
                 
         $d = (int) date("d", strtotime($mydate));
         $m = (int) date("m", strtotime($mydate))-1;
@@ -176,25 +176,10 @@ if (is_array($sch)) {
                 $className = 'label-blue';
                 break;
         }
-
-        if (is_array($att)) {
-            foreach ($att as $val) {
-                if ($val->scheduleID == $loop->id) {                  
-
-                    if (is_array($users)) {
-                        foreach ($users as $user) {
-                            if ($user->id == $val->userID) {
-                                $information .= 'Att:';
-                                $information .= $user->name.' ';
-                            }
-                        }
-                    }
-                    }
-                    }
-                    }
+        
         ?>
                         {
-                            title: '<?php echo $informations.'-'.$loop->name.'-'.' '.$loop->contact.'-'.$loop->email; ?>',
+                            title: '<?php echo $informations.'-'.$loop->user.' '.$loop->file.' '; ?>',
                             start: new Date(<?php echo $y; ?>, <?php echo $m; ?>, <?php echo $d; ?>),
                             className: '<?php echo $className; ?>'
 

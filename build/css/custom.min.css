@@ -1538,17 +1538,19 @@ span.right {
     margin-top: 0px;
     background: #395067;
     color: #FFF;
-    margin-left: -20px;
-    padding: 10px;
-    margin-top: -10px;
+    margin-bottom:20px;
 }
 .tile_count .tile_stats_count {
-    border-bottom: 1px solid #D9DEE4;
-    padding: 0 10px 0 20px;
+    /* border-bottom: 1px solid #D9DEE4; */
+    /* padding: 0 10px 0 20px; */
     text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-    position: relative
+    /* overflow: hidden; */
+    /* white-space: nowrap; */
+    position: relative;
+    padding-top: 10px;
+    padding-left: 20px;
+    border: none;
+    padding-bottom: 0px;
 }
 @media (min-width: 992px) {
     footer {

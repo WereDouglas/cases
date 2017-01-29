@@ -2,6 +2,17 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/C:/wamp/www/caseprofessionals/application/views/login-page.php</file>
+            <file>file:/C:/wamp/www/caseprofessionals/application/config/config.php</file>
+            <file>file:/C:/wamp/www/caseprofessionals/application/config/database.php</file>
+            <file>file:/C:/wamp/www/caseprofessionals/application/controllers/Task.php</file>
+            <file>file:/C:/wamp/www/caseprofessionals/application/views/view-calendar.php</file>
+            <file>file:/C:/wamp/www/caseprofessionals/application/views/calendar-page.php</file>
+            <file>file:/C:/wamp/www/caseprofessionals/application/views/header-page.php</file>
+            <file>file:/C:/wamp/www/caseprofessionals/application/views/home-page.php</file>
+            <file>file:/C:/wamp/www/caseprofessionals/application/controllers/Home.php</file>
+            <file>file:/C:/wamp/www/caseprofessionals/application/views/login-page_2.php</file>
+        </group>
     </open-files>
 </project-private>

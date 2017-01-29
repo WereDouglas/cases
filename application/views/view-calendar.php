@@ -14,28 +14,68 @@
 <link rel="stylesheet" href="<?= base_url(); ?>css/mine.css" />
 <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>css/easyui.css?date=<?php echo date('Y-m-d') ?>">
 <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>css/icon.css?date=<?php echo date('Y-m-d') ?>">
+
+<!-- top tiles -->
+<div class="row tile_count ">
+
+    <div class="col-sm-2  col-xs-6 tile_stats_count">
+        <span class="count_top"><i class="fa fa-user"></i> Clients</span>
+        <div class="count"><?php echo count($clients) ?></div>
+
+    </div>
+
+
+    <div class="col-sm-2  col-xs-6 tile_stats_count">
+        <span class="count_top"><i class="fa fa-envelope-square"></i> Messages</span>
+        <div class="count"><?php echo count($messages) ?></div>
+    </div>
+    <div class="col-sm-2  col-xs-6 tile_stats_count">
+        <span class="count_top"><i class="fa fa-folder-open"></i> Files</span>
+        <div class="count green"><?php echo count($files) ?></div>
+    </div>
+    <div class="col-sm-2  col-xs-6 tile_stats_count">
+        <span class="count_top"><i class="fa fa-calendar"></i>Tasks</span>
+        <div class="count"><?php echo count($tasks) ?></div>
+        <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i><?php echo $fee; ?> </i>USD <?php echo date('F'); ?> FEES</span>
+
+    </div>
+    <div class="col-sm-2  col-xs-6 tile_stats_count">
+        <span class="count_top"><i class="fa fa-user"></i> Documents</span>
+        <div class="count"><?php foreach ($sizes as $loop) {
+    ?>  
+                <?php echo number_format(($loop->size / 1000), 1); ?>
+
+
+            <?php }
+            ?></div>
+        <span class="count_bottom"><i class="red"><i class="fa fa-sort-asc"></i><?php echo number_format(((($loop->size / 1000) / 1000) * 100), 1); ?>% </i>size(Mbs)</span>
+    </div>
+    <div class="col-sm-2 col-xs-6 tile_stats_count">
+        <span class="count_top"><i class="fa fa-user"></i>Active files </span>
+
+        <div class="count"><?php echo $highest; ?></div>
+        <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i><?php echo number_format(($highest / count($files) * 100), 1) ?>% </i><?php echo date('M'); ?>-statistics</span>
+
+    </div>
+</div>
+<!-- /top tiles -->
+
+
 <div class="row container">
     <?php echo $this->session->flashdata('msg'); ?>
-    <div id="mainb" style="height:300px;" class= "col-md-12 col-sm-12 col-xs-12"></div>
-
+   
     <div class="col-md-12 col-sm-12 col-xs-12">
         <!-- page content -->
-
         <div class="page-title">
             <div class="title_left">
                 <h3>Calendar <small>Click to add/edit events</small></h3>
             </div>
-
         </div>
-
         <div class="clearfix"></div>
-
         <div class="x_content">
-
             <div id='calendar'></div>
         </div>
-
-
+         <div id="mainb" style="height:300px;" class= "col-md-12 col-sm-12 col-xs-12"></div>
         <!-- /page content -->
     </div>
 
@@ -52,7 +92,7 @@
                 <div id="testmodal" style="padding: 5px 20px;">
                     <form  enctype="multipart/form-data"  action='<?= base_url(); ?>index.php/task/create'  method="post">
                         <div class="span12">
-                           
+
                             <div class="form-group">
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12 align-left">Date</label>
                                 <div class="col-md-6 col-sm-6 col-xs-12 align-left">
@@ -61,13 +101,13 @@
                             </div>
                             <div class="row-fluid">
                                 <label for="form-field-select-4">Choose Attendees</label>
-                                <input class="easyui-combobox" name="attend[]" style="width:100%;height:26px" data-options="
+                                <input class="easyui-combobox" name="username" style="width:100%;height:26px" data-options="
                                        url:'<?php echo base_url() ?>index.php/task/users',
                                        method:'get',
-                                       valueField:'userID',
+                                       valueField:'name',
                                        textField:'name',
 
-                                       multiple:true,
+                                       multiple:false,
                                        panelHeight:'auto'
                                        ">
                             </div>
@@ -570,9 +610,9 @@
         foreach ($sch as $loop) {
             $mydate = $loop->date;
             $prior = $loop->priority;
-            $days = $loop->period;
+            $days = $loop->hours;
 
-            $informations = '' . $loop->startTime . ': ' . clean($loop->details);
+            $informations = '' . $loop->start . ': ' . clean($loop->name);
             $informations .= 'A/T:';
             $informations .= $loop->name . ' ';
             $d = (int) date("d", strtotime($mydate));
@@ -595,7 +635,7 @@
             }
             ?>
                         {
-                            title: '<?php echo $informations . '-' . $loop->name . '-' . ' ' . $loop->contact . '-' . $loop->email; ?>',
+                            title: '<?php echo $informations . '-' . $loop->name . '-' . ' ' . $loop->user . '-' . $loop->file; ?>',
                             start: new Date(<?php echo $y; ?>, <?php echo $m; ?>, <?php echo $d; ?>),
                             className: '<?php echo $className; ?>'
 

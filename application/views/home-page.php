@@ -26,6 +26,7 @@
 
         <!-- Custom Theme Style -->
         <link href="<?= base_url(); ?>build/css/custom.min.css" rel="stylesheet">
+        <link rel=icon href="<?= base_url(); ?>images/favicon.ico">
     </head>
     <?php
     $using = array();
@@ -49,8 +50,7 @@
         $fee = $highest * 0.3;
     }
     ?>
-
-    <body class="nav-md">
+    <body class="nav-sm">
         <div class="container body">
             <div class="main_container">
                 <div class="col-md-3 left_col">
@@ -127,14 +127,14 @@
                                         </ul>
                                     </li>
                                     <li><a href="<?php echo base_url() . "index.php/document"; ?>" target="frame"><i class="fa fa-clone"></i> Documents<span class="label label-danger pull-right"><?php
-    foreach ($sizes as $loop) {
-        ?>  
+                                                foreach ($sizes as $loop) {
+                                                    ?>  
                                                     <?php echo number_format(($loop->size / 1000), 2) . 'MBS'; ?>
 
 
-    <?php
-}
-?></span></a>
+                                                    <?php
+                                                }
+                                                ?></span></a>
 
                                     </li>
                                 </ul>
@@ -194,7 +194,7 @@
                                 <li class="">
                                     <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                                         <img  height="50px" width="100px" class="" src="<?= base_url(); ?>uploads/<?php echo $this->session->userdata('orgimage'); ?>" alt="........" />
-<?php echo $this->session->userdata('username'); ?>
+                                        <?php echo $this->session->userdata('username'); ?>
                                         <span class=" fa fa-angle-down"></span>
                                     </a>
                                     <ul class="dropdown-menu dropdown-usermenu pull-right">
@@ -220,10 +220,10 @@
 
                                             </a>
                                         </li>
-<?php
-if (is_array($notsent) && count($notsent)) {
-    foreach ($notsent as $loop) {
-        ?>  
+                                        <?php
+                                        if (is_array($notsent) && count($notsent)) {
+                                            foreach ($notsent as $loop) {
+                                                ?>  
                                                 <li>
                                                     <a>
                                                         <span>
@@ -235,10 +235,10 @@ if (is_array($notsent) && count($notsent)) {
                                                 </li>
 
 
-        <?php
-    }
-}
-?>
+                                                <?php
+                                            }
+                                        }
+                                        ?>
 
 
                                     </ul>
@@ -250,10 +250,10 @@ if (is_array($notsent) && count($notsent)) {
                                     </a>
                                     <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
 
-<?php
-if (is_array($notcomplete) && count($notcomplete)) {
-    foreach ($notcomplete as $loop) {
-        ?>  
+                                        <?php
+                                        if (is_array($notcomplete) && count($notcomplete)) {
+                                            foreach ($notcomplete as $loop) {
+                                                ?>  
                                                 <li>
                                                     <a>
                                                         <span>
@@ -265,10 +265,10 @@ if (is_array($notcomplete) && count($notcomplete)) {
                                                 </li>
 
 
-        <?php
-    }
-}
-?>
+                                                <?php
+                                            }
+                                        }
+                                        ?>
 
 
                                     </ul>
@@ -336,49 +336,8 @@ if (is_array($notcomplete) && count($notcomplete)) {
                 <!-- /top navigation -->
 
                 <!-- page content -->
-                <div class="right_col" role="main">
-                    <!-- top tiles -->
-                    <div class="row tile_count">
-                        <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
-                            <span class="count_top"><i class="fa fa-user"></i> Clients</span>
-                            <div class="count"><?php echo count($clients) ?></div>
+                <div class="right_col" role="main">                    <!-- top tiles -->
 
-                        </div>
-
-
-                        <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
-                            <span class="count_top"><i class="fa fa-envelope-square"></i> Messages</span>
-                            <div class="count"><?php echo count($messages) ?></div>
-                        </div>
-                        <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
-                            <span class="count_top"><i class="fa fa-folder-open"></i> Files</span>
-                            <div class="count green"><?php echo count($files) ?></div>
-                        </div>
-                        <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
-                            <span class="count_top"><i class="fa fa-calendar"></i>Tasks</span>
-                            <div class="count"><?php echo count($tasks) ?></div>
-                            <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i><?php echo $fee; ?> </i>USD <?php echo date('F'); ?> FEES</span>
-
-                        </div>
-                        <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
-                            <span class="count_top"><i class="fa fa-user"></i> Documents</span>
-                            <div class="count"><?php foreach ($sizes as $loop) {
-                                            ?>  
-                                    <?php echo number_format(($loop->size / 1000), 1); ?>
-
-
-<?php }
-?></div>
-                            <span class="count_bottom"><i class="red"><i class="fa fa-sort-asc"></i><?php echo number_format(((($loop->size / 1000) / 1000) * 100), 1); ?>% </i>size(Mbs)</span>
-                        </div>
-                        <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
-                            <span class="count_top"><i class="fa fa-user"></i>Active files </span>
-
-                            <div class="count"><?php echo $highest; ?></div>
-                            <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i><?php echo number_format(($highest / count($files) * 100), 1) ?>% </i><?php echo date('M'); ?>-statistics</span>
-
-                        </div>
-                    </div>
                     <!-- /top tiles -->
 
                     <div class="row">

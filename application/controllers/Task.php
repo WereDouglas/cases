@@ -55,7 +55,7 @@ class Task extends CI_Controller {
 
         //$query = $this->Md->query("SELECT * FROM schedule where org = '" . $this->session->userdata('orgid') . "' ");
         // var_dump($query);
-        $query = $this->Md->query("SELECT * FROM attend INNER JOIN users ON attend.userID=users.userID INNER JOIN tasks ON attend.taskID=tasks.taskID where attend.orgID = '" . $this->session->userdata('orgID') . "' ");
+        $query = $this->Md->query("SELECT * FROM events  WHERE orgID = '" . $this->session->userdata('orgID') . "' ");
       //var_dump($query);
         if ($query) {
             $data['sch'] = $query;
@@ -108,7 +108,7 @@ class Task extends CI_Controller {
             $data['files'] = array();
         }
 
-        $query = $this->Md->query("SELECT * FROM  tasks where orgID = '" . $this->session->userdata('orgID') . "' ");
+        $query = $this->Md->query("SELECT * FROM  events where orgID = '" . $this->session->userdata('orgID') . "' ");
         if ($query) {
             $data['sch'] = $query;
         } else {
@@ -426,7 +426,7 @@ class Task extends CI_Controller {
 
         $this->load->helper(array('form', 'url'));
 
-        $day = $this->input->post('day');
+        $day = date('Y-m-d', strtotime($this->input->post('date')));
         if ($day == "") {
             $day = date('Y-m-d');
         }
@@ -440,24 +440,20 @@ class Task extends CI_Controller {
         }
         $taskID = $this->GUID();
 
-        $sch = array('taskID' => $taskID, 'date' => $this->input->post('date'), 'priority' => $this->input->post('priority'), 'court' => $court, 'period' => $this->input->post('period'), 'details' => $this->input->post('details'), 'orgID' => $this->session->userdata('orgID'), 'startTime' => $this->input->post('startTime'), 'endTime' => $this->input->post('endTime'), 'trigger' => $notify, 'userID' => $this->session->userdata('username'), 'created' => date('Y-m-d'), 'fileID' => $this->input->post('file'), 'action' => 'none');
-        $id = $this->Md->save($sch, 'tasks');
+        $sch = array('id' => $taskID, 'date' => $day, 'priority' => $this->input->post('priority'), 'court' => $court, 'hours' => $this->input->post('period'), 'name' => $this->input->post('details'), 'orgID' => $this->session->userdata('orgID'), 'start' => $day."T".$this->input->post('startTime').":00", 'end' => $day."T".$this->input->post('endTime').":00", 'notify' => $notify, 'user' => $this->session->userdata('username'), 'file' => $this->session->userdata('file'), 'created' => date('Y-m-d'), 'action' => 'create','sync' => 'f');
+        $id = $this->Md->save($sch, 'events');
 
         $message = "Reminder " . 'You have a meeting on ' . $this->input->post('date') . ' at ' . $this->input->post('startTime') . ' to ' . $this->input->post('endTime') . ' Details: ' . $this->input->post('details');
-        $attend = $this->input->post('attend');
-        foreach ($attend as $t) {
-
+       
             if ($notify == "True") {
                 $schedule = $day;                // echo $email;
 
          
-                $emails = $this->Md->query_cell("SELECT * FROM users where userID= '" .$t . "'", 'email');
-                $phones = $this->Md->query_cell("SELECT * FROM users where userID= '" . $t . "'", 'contact');
-                $names = $this->Md->query_cell("SELECT * FROM users where userID= '" . $t . "'", 'name');
+                $emails = $this->Md->query_cell("SELECT * FROM users where name= '" .$this->session->userdata('username') . "'", 'email');
+                $phones = $this->Md->query_cell("SELECT * FROM users where name= '" . $this->session->userdata('username') . "'", 'contact');
+                $names = $this->Md->query_cell("SELECT * FROM users where name= '" .$this->session->userdata('username'). "'", 'name');
+                 $id = $this->Md->query_cell("SELECT * FROM users where name= '" .$this->session->userdata('username'). "'", 'userID');
            
-                $schs = array('attendID' => $this->GUID(), 'orgID' => $this->session->userdata('orgID'), 'userID' => $t, 'taskID' => $taskID, 'action' => 'none', 'name' => $names, 'contact' => $phones);
-                $id = $this->Md->save($schs, 'attend');
-
                 $mail = array('messageID' => $this->GUID(), 'body' => $message, 'subject' => 'REMINDER', 'date' => $this->input->post('date'), 'to' => $names, 'created' => date('Y-m-d H:i:s'), 'from' => $this->session->userdata('orgemail'), 'sent' => 'false', 'type' => 'email', 'orgID' => $this->session->userdata('orgID'), 'action' => 'none', 'taskID' => $taskID, 'contact' => $phones, 'email' => $emails);
                 $this->Md->save($mail, 'message');           
 
@@ -468,7 +464,7 @@ class Task extends CI_Controller {
 						</div>');
                 
                 redirect('task/add', 'refresh');
-            }
+            
         }
         $this->session->set_flashdata('msg', '<div class="alert">                                                   
                                                 <strong>
