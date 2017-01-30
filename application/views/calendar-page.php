@@ -156,7 +156,7 @@ if (is_array($sch)) {
         $prior = $loop->priority;
         $days = $loop->hours;
          
-         $informations ='START:'. $loop->start.':'.clean($loop->name);
+         $informations ='START:'. date('H:i:s', strtotime($loop->start)).':'.clean($loop->name);
                 
         $d = (int) date("d", strtotime($mydate));
         $m = (int) date("m", strtotime($mydate))-1;

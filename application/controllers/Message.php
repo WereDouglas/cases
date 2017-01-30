@@ -15,7 +15,7 @@ class Message extends CI_Controller {
 
     public function index() {
 
-        $query = $this->Md->query("SELECT * FROM message where  orgID='" . $this->session->userdata('orgID') . "' AND date= '".  date('Y-m-d')."'");
+        $query = $this->Md->query("SELECT * FROM message where  orgID='" . $this->session->userdata('orgID') . "' AND date= '" . date('Y-m-d') . "'");
         if ($query) {
             $data['messages'] = $query;
         }
@@ -80,6 +80,30 @@ class Message extends CI_Controller {
                 echo $this->email->print_debugger();
                 $data = array('sent' => 'true');
                 $this->Md->update_dynamic($res->messageID, 'messageID', 'message', $data);
+                echo 'Sent ' . $res->email . '<br>';
+            }
+        }
+    }
+
+    public function event() {
+
+        $this->load->library('email');
+        $today = date('Y-m-d');
+        $get_result = $this->Md->query("SELECT * FROM events WHERE  date='" . $today . "' AND (notify  <>'false')");
+        foreach ($get_result as $res) {
+            if ($res->user != "") {
+                $emails = $this->Md->query_cell("SELECT * FROM users where name= '" . $res->user . "'", 'email');
+                $phones = $this->Md->query_cell("SELECT * FROM users where name= '" . $res->user . "'", 'contact');
+                $body = "Reminder " . 'You have a meeting on ' . $res->date. ' at ' . date('H:i:s', strtotime($res->start)) . ' to ' .date('H:i:s', strtotime($res->end)). ' Details: ' . $res->name;
+                $subject="REMINDER";
+                $this->email->from('info@caseprofessional.org', 'Case Professional');
+                $this->email->to($emails);
+                $this->email->subject($subject);
+                $this->email->message($body);
+                $this->email->send();
+                echo $this->email->print_debugger();
+                $data = array('notify' => 'false');
+                $this->Md->update_dynamic($res->id, 'id', 'events', $data);
                 echo 'Sent ' . $res->email . '<br>';
             }
         }

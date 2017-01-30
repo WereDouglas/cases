@@ -412,7 +412,7 @@ class User extends CI_Controller {
         $userID = $this->uri->segment(3);
         $query = $this->Md->cascade($userID, 'users', 'userID');
 
-        redirect('user/client', 'refresh');
+        redirect('user/staff', 'refresh');
     }
 
     public function user() {

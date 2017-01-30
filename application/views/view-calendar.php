@@ -612,7 +612,7 @@
             $prior = $loop->priority;
             $days = $loop->hours;
 
-            $informations = '' . $loop->start . ': ' . clean($loop->name);
+            $informations = '' . date('H:i:s', strtotime($loop->start)) . ': ' . clean($loop->name);
             $informations .= 'A/T:';
             $informations .= $loop->name . ' ';
             $d = (int) date("d", strtotime($mydate));
