@@ -14,7 +14,28 @@
 <link rel="stylesheet" href="<?= base_url(); ?>css/mine.css" />
 <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>css/easyui.css?date=<?php echo date('Y-m-d') ?>">
 <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>css/icon.css?date=<?php echo date('Y-m-d') ?>">
+ <?php
+    $using = array();
+    $using[] = count($usage_tasks);
+    $using[] = count($usage_dis);
+    $using[] = count($usage_fees);
+    $using[] = count($usage_exp);
+    // $using[] = 250;
+    $highest = max($using);
+    $fee = 0;
+    if (($highest * 1) < 30) {
+        $fee = 30;
+    } if ($highest <= 50 && (($highest * 1) > 30)) {
 
+        $fee = $highest * 1;
+    } if ($highest > 50 && $highest <= 250 && (($highest * 1) > 30)) {
+
+        $fee = $highest * 0.6;
+    } if ($highest >= 250 && (($highest * 1) > 30)) {
+
+        $fee = $highest * 0.3;
+    }
+    ?>
 <!-- top tiles -->
 <div class="row tile_count ">
 
