@@ -35,11 +35,10 @@ class Time extends CI_Controller {
 
         $phpdatese = strtotime($this->input->post('end'));
         $endTime = date('H:i:s', $phpdatese);
-
         $hours = abs(($endTime - $startTime));
 
         $eventID = $this->GUID();
-        $syc = array('id' => $eventID, 'orgID' => $this->session->userdata('orgID'), 'name' => $this->input->post('name'), 'start' => $this->input->post('start'), 'end' => $this->input->post('end'), 'user' => $this->input->post('resource'), 'hours' => $hours, 'file' => $this->input->post('file'), 'created' => date('Y-m-d H:i:s'), 'date' => $ending, 'action' => "none", 'status' => $this->input->post('status'));
+        $syc = array('id' => $eventID, 'orgID' => $this->session->userdata('orgID'), 'name' => $this->input->post('name'), 'start' => $this->input->post('start'), 'end' => $this->input->post('end'), 'user' => $this->input->post('resource'), 'hours' => $hours, 'file' => $this->input->post('file'), 'created' => date('Y-m-d'), 'date' => $ending, 'action' => "none",'court' => "false",'priority' => "medium",'notify' => "true",'sync' => 'f','status' => $this->input->post('status'));
         $this->Md->save($syc, 'events');
 
         $message = "You have a task due on " . $ending . " for " . $this->input->post('name');

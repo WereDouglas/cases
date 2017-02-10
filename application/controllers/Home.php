@@ -174,11 +174,11 @@ class Home extends CI_Controller {
         // echo md5($password) ;
 
 
-        $get_user = $this->Md->query("SELECT * FROM users where email = '$email' AND password='$password'");
+        $get_user = $this->Md->query("SELECT * FROM users where contact = '$email' AND password='$password'");
 
         if (count($get_user) > 0) {
 
-            $results = $this->Md->get('email', $email, 'users');
+            $results = $this->Md->get('contact', $email, 'users');
             // var_dump($results);
             //return;
             foreach ($results as $resv) {

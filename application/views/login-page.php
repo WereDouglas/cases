@@ -32,7 +32,7 @@
                         <div class="sign-in-htm">
                             <?php echo $this->session->flashdata('msg'); ?>
                             <div class="group">
-                                <label for="user" class="label">Username</label>
+                                <label for="user" class="label">Contact</label>
                                 <input id="emails" name="emails" type="text" class="input">
                             </div>
                             <div class="group">
