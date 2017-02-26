@@ -89,7 +89,7 @@ class Message extends CI_Controller {
 
         $this->load->library('email');
         $today = date('Y-m-d');
-        $get_result = $this->Md->query("SELECT * FROM events WHERE  date='" . $today . "' AND (notify  <>'false')");
+        $get_result = $this->Md->query("SELECT * FROM events WHERE  date='" . $today . "' AND (notify <>'false')");
         foreach ($get_result as $res) {
             if ($res->user != "") {
                 $emails = $this->Md->query_cell("SELECT * FROM users where name= '" . $res->user . "'", 'email');
