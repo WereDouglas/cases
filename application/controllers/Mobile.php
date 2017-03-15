@@ -40,11 +40,14 @@ class Mobile extends CI_Controller {
 
         $username = $this->input->post('username');
         $password = $this->input->post('password');
+
+        //  $username = "0782481746";
+        // $password = "123456";
         $password_now = md5($password);
 
-        $get_result = $this->Md->check($username, 'email', 'users');
+        $get_result = $this->Md->check($username, 'contact', 'users');
         if (!$get_result) {
-            $result = $this->Md->get('email', $username, 'users');
+            $result = $this->Md->get('contact', $username, 'users');
             // var_dump($result);
             foreach ($result as $res) {
                 $key = $username;
@@ -72,7 +75,7 @@ class Mobile extends CI_Controller {
                 }
             }
         } else {
-            $b["info"] = "invalid username!";
+            $b["info"] = "Invalid contact!";
             $b["status"] = "false";
             echo json_encode($b);
             return;
@@ -84,23 +87,37 @@ class Mobile extends CI_Controller {
         $this->load->helper(array('form', 'url'));
         // $info = array('name' =>'true');
         $username = $this->input->post('username');
-       // $username = "Douglas Were";
+        //$username = "Douglas Were";
         $orgID = $this->input->post('orgID');
-       //  $orgID ="A3CEA444-1F39-4F91-955D-0CA57E3C7962";
+        //$orgID = "A3CEA444-1F39-4F91-955D-0CA57E3C7962";
 
-        $query = $this->Md->query("SELECT * FROM attend INNER JOIN tasks ON attend.taskID = tasks.taskID WHERE attend.name ='" . $username . "' AND attend.orgID ='" . $orgID. "' AND (attend.sync<>'true')");
-
-        echo json_encode($query);
-
-        return;
+        $query = $this->Md->query("SELECT * FROM events  WHERE user ='" . $username . "' AND orgID ='" . $orgID . "' AND (cal<>'t' OR cal=NULL)");
+        //echo json_encode($query);
+       // return;
+        $g = array();
+       
+        foreach ($query as $res) {
+            $r = new stdClass();
+       
+            $r->details = $res->name;
+            $r->file = $res->file;
+            $r->startTime = date('H:i', strtotime($res->start));
+            $r->day = date('l', strtotime($res->start));
+            $r->endTime = date('H:i', strtotime($res->end));
+            $r->status = $res->status;
+            $r->date = $res->date;
+            $g[] = $r;
+        }
+        //header('Content-Type: application/json');
+        echo json_encode($g);
     }
 
     public function updated() {
 
         $this->load->helper(array('form', 'url'));
-        $info = array('sync' => 'true');
+        $info = array('cal' => 't');
         $name = $this->input->post('name');
-        $this->Md->update_dynamic($name, "name", "attend", $info);
+        $this->Md->update_dynamic($name, "user", "events", $info);
         return;
     }
 
@@ -548,11 +565,13 @@ class Mobile extends CI_Controller {
 
         $lawyer = $this->input->post('name');
         $orgID = $this->input->post('orgID');
+        // $lawyer = "Douglas Were";
+        // $orgID = "A3CEA444-1F39-4F91-955D-0CA57E3C7962";
 
         $g = new stdClass();
         $count = 1;
-        $query2 = $this->Md->query("select * from file WHERE orgID='$orgID' AND lawyer ='$lawyer'");
-        //$query2 = $this->Md->query("select * from file");
+        $query2 = $this->Md->query("select * from file WHERE orgID='" . $orgID . "' AND lawyer='" . $lawyer . "'");
+        // $query2 = $this->Md->query("select * from file");
         $results = $query2;
         foreach ($results as $res) {
             $r = new stdClass();
@@ -568,17 +587,18 @@ class Mobile extends CI_Controller {
         header('Content-Type: application/json');
         echo json_encode($g);
     }
-    
-     public function upcoming_files() {
+
+    public function upcoming_files() {
 
         $lawyer = $this->input->post('name');
         $orgID = $this->input->post('orgID');
-         //$lawyer = "Douglas Were";
+        // $lawyer = "Douglas Were";
         //$orgID = "A3CEA444-1F39-4F91-955D-0CA57E3C7962";
 
+
         $g = new stdClass();
         $count = 1;
-        $query2 = $this->Md->query("select * from file WHERE orgID='$orgID' AND lawyer ='$lawyer' AND due='".date('Y-m-d')."'");
+        $query2 = $this->Md->query("select * from file WHERE orgID='" . $orgID . "' AND lawyer ='" . $lawyer . "' AND due='" . date('Y-m-d') . "'");
         //$query2 = $this->Md->query("select * from file");
         $results = $query2;
         foreach ($results as $res) {
@@ -595,55 +615,67 @@ class Mobile extends CI_Controller {
         header('Content-Type: application/json');
         echo json_encode($g);
     }
-       public function upcoming_events() {
+
+    public function upcoming_events() {
 
         $lawyer = $this->input->post('name');
         $orgID = $this->input->post('orgID');
-        
-         // $lawyer = "Douglas Were";
-         //$orgID = "A3CEA444-1F39-4F91-955D-0CA57E3C7962";
+        // $lawyer = "Douglas Were";
+        // $orgID = "A3CEA444-1F39-4F91-955D-0CA57E3C7962";
+
 
         $g = new stdClass();
         $count = 1;
-        $query2 = $this->Md->query("select * from events WHERE orgID='$orgID' AND user ='$lawyer' AND date='".  date('Y-m-d')."' ");
-        //$query2 = $this->Md->query("select * from file");
+        $query2 = $this->Md->query("select * from events WHERE orgID='" . $orgID . "' AND user ='" . $lawyer . "' AND MONTH(STR_TO_DATE(date,'%Y-%m-%d'))='" . date('m') . "' AND YEAR(STR_TO_DATE(date,'%Y-%m-%d'))='" . date('Y') . "' ORDER BY date DESC ");
+        //$query2 = $this->Md->query("select * from events");
+
         $results = $query2;
         foreach ($results as $res) {
             $r = new stdClass();
             $r->count = $count++;
             $r->name = $res->name;
-            $r->start = $res->start;
-            $r->end = $res->end;
-            $r->status = $res->status;           
+            $r->file = $res->file;
+            $r->start = date('H:i', strtotime($res->start));
+            $r->day = date('l', strtotime($res->start));
+            $r->end = date('H:i', strtotime($res->end));
+            $r->status = $res->status;
+            $r->date = $res->date;
             $g->events[] = $r;
         }
         header('Content-Type: application/json');
         echo json_encode($g);
     }
-   
-   
-     public function clients() {
+
+    public function clients() {
 
         $lawyer = $this->input->post('name');
         $orgID = $this->input->post('orgID');
+        // $lawyer = "Douglas Were";
+        // $orgID = "A3CEA444-1F39-4F91-955D-0CA57E3C7962";
+
 
         $g = new stdClass();
         $count = 1;
-        $query2 = $this->Md->query("select * from client WHERE orgID='$orgID' AND lawyer ='$lawyer'");
-        //$query2 = $this->Md->query("select * from client");
+        $query2 = $this->Md->query("select * from client WHERE orgID='" . $orgID . "' AND lawyer ='" . $lawyer . "'");
+        // $query2 = $this->Md->query("select * from client");
         $results = $query2;
         foreach ($results as $res) {
             $r = new stdClass();
             $r->count = $count++;
             $r->name = $res->name;
-         
-            $r->contact = $res->contact;        
+            $r->image = $res->image;
+            $r->contact = $res->contact;
+            $r->email = $res->email;
+            $r->address = $res->address;
+            $r->status = $res->status;
+
             $g->clients[] = $r;
         }
         header('Content-Type: application/json');
         echo json_encode($g);
     }
-     public function docs() {
+
+    public function docs() {
 
         $lawyer = $this->input->post('name');
         $orgID = $this->input->post('orgID');
@@ -656,8 +688,8 @@ class Mobile extends CI_Controller {
         foreach ($results as $res) {
             $r = new stdClass();
             $r->count = $count++;
-            $r->name = $res->name;         
-            $r->fileUrl = $res->fileUrl;        
+            $r->name = $res->name;
+            $r->fileUrl = $res->fileUrl;
             $g->docs[] = $r;
         }
         header('Content-Type: application/json');

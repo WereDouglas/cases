@@ -38,7 +38,7 @@ class Time extends CI_Controller {
         $hours = abs(($endTime - $startTime));
 
         $eventID = $this->GUID();
-        $syc = array('id' => $eventID, 'orgID' => $this->session->userdata('orgID'), 'name' => $this->input->post('name'), 'start' => $this->input->post('start'), 'end' => $this->input->post('end'), 'user' => $this->input->post('resource'), 'hours' => $hours, 'file' => $this->input->post('file'), 'created' => date('Y-m-d'), 'date' => $ending, 'action' => "none",'court' => "false",'priority' => "medium",'notify' => "true",'sync' => 'f','status' => $this->input->post('status'));
+        $syc = array('id' => $eventID, 'orgID' => $this->session->userdata('orgID'), 'name' => $this->input->post('name'), 'start' => $this->input->post('start'), 'end' => $this->input->post('end'), 'user' => $this->input->post('resource'), 'hours' => $hours, 'file' => $this->input->post('file'), 'created' => date('Y-m-d'), 'date' => $ending, 'action' => "none", 'court' => "false", 'priority' => "medium", 'notify' => "true", 'sync' => 'f', 'cal' => 'f', 'status' => $this->input->post('status'));
         $this->Md->save($syc, 'events');
 
         $message = "You have a task due on " . $ending . " for " . $this->input->post('name');
@@ -53,8 +53,12 @@ class Time extends CI_Controller {
         header('Content-Type: application/json');
         echo json_encode($response);
     }
-    
-      public function mobile() {
+
+    public function mobile() {
+        
+        if($this->input->post('details')=="" || $this->input->post('end')=="" || $this->input->post('start')==""|| $this->input->post('orgID')==""){
+            return;
+        }
         $phpdate = strtotime($this->input->post('end'));
         $ending = date('Y-m-d', $phpdate);
 
@@ -68,7 +72,7 @@ class Time extends CI_Controller {
         $hours = abs(($endTime - $startTime));
 
         $eventID = $this->GUID();
-        $syc = array('id' => $eventID, 'orgID' => $this->input->post('orgID'), 'name' => $this->input->post('details'), 'start' => $this->input->post('start'), 'end' => $this->input->post('end'), 'user' => $this->input->post('resource'), 'hours' => $hours, 'file' => $this->input->post('file'), 'created' => date('Y-m-d H:i:s'), 'date' => $ending, 'action' => "none", 'status' => $this->input->post('status'));
+        $syc = array('id' => $eventID, 'orgID' => $this->input->post('orgID'), 'name' => $this->input->post('details'), 'start' => $this->input->post('start'), 'end' => $this->input->post('end'), 'user' => $this->input->post('user'), 'hours' =>  $this->input->post('hours'), 'file' => $this->input->post('file'), 'created' => date('Y-m-d H:i:s'), 'date' =>  $this->input->post('date'), 'action' => "none", 'status' => $this->input->post('status'), 'cost' => $this->input->post('cost'), 'notify' => $this->input->post('notify'), 'cal' => $this->input->post('cal'), 'court' => $this->input->post('court'), 'priority' => $this->input->post('priority'), 'sync' => $this->input->post('sync'));
         $this->Md->save($syc, 'events');
 
         $message = "You have a task due on " . $ending . " for " . $this->input->post('name');
@@ -92,14 +96,14 @@ class Time extends CI_Controller {
     public function advanced() {
 
         $this->load->helper(array('form', 'url'));
-        $query = $this->Md->query("SELECT * FROM events where orgID = '" . $this->session->userdata('orgID') . "' AND date= '".date('Y-m-d')."' ");
+        $query = $this->Md->query("SELECT * FROM events where orgID = '" . $this->session->userdata('orgID') . "' AND date= '" . date('Y-m-d') . "' ");
 
         if ($query) {
             $data['events'] = $query;
         } else {
             $data['events'] = array();
         }
-        
+
         $this->load->view('time-advanced', $data);
     }
 
@@ -116,7 +120,7 @@ class Time extends CI_Controller {
         $g->children = array();
         $g->eventHeight = 25;
         $groups[] = $g;
-        $query2 = $this->Md->query("select * from users WHERE category='staff' AND orgID= '" . $this->session->userdata('orgID')."'");
+        $query2 = $this->Md->query("select * from users WHERE category='staff' AND orgID= '" . $this->session->userdata('orgID') . "'");
         $results = $query2;
         foreach ($results as $res) {
 
@@ -204,7 +208,8 @@ class Time extends CI_Controller {
         $query = $this->Md->cascade($fileID, 'file', 'fileID');
         redirect('/file/view', 'refresh');
     }
-     public function updater() {
+
+    public function updater() {
         $this->load->helper(array('form', 'url'));
 
         if (!empty($_POST)) {

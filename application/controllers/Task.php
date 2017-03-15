@@ -486,7 +486,7 @@ class Task extends CI_Controller {
         }
         $taskID = $this->GUID();
 
-        $sch = array('id' => $taskID, 'date' => $day, 'priority' => $this->input->post('priority'), 'court' => $court, 'hours' => $this->input->post('period'), 'name' => $this->input->post('details'), 'orgID' => $this->session->userdata('orgID'), 'start' => $day."T".$this->input->post('startTime').":00", 'end' => $day."T".$this->input->post('endTime').":00", 'notify' => $notify, 'user' => $this->session->userdata('username'), 'file' => $this->session->userdata('file'), 'created' => date('Y-m-d'), 'action' => 'create','sync' => 'f');
+        $sch = array('id' => $taskID, 'date' => $day,'cost' => $this->input->post('cost'), 'cal' => 'f','priority' => $this->input->post('priority'), 'court' => $court, 'hours' => $this->input->post('period'), 'name' => $this->input->post('details'), 'orgID' => $this->session->userdata('orgID'), 'start' => $day."T".$this->input->post('startTime').":00", 'end' => $day."T".$this->input->post('endTime').":00", 'notify' => $notify, 'user' => $this->session->userdata('username'), 'file' => $this->session->userdata('file'), 'created' => date('Y-m-d'), 'action' => 'create','sync' => 'f');
         $id = $this->Md->save($sch, 'events');
 
         $message = "Reminder " . 'You have a meeting on ' . $this->input->post('date') . ' at ' . $this->input->post('startTime') . ' to ' . $this->input->post('endTime') . ' Details: ' . $this->input->post('details');

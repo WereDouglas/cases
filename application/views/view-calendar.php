@@ -14,28 +14,28 @@
 <link rel="stylesheet" href="<?= base_url(); ?>css/mine.css" />
 <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>css/easyui.css?date=<?php echo date('Y-m-d') ?>">
 <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>css/icon.css?date=<?php echo date('Y-m-d') ?>">
- <?php
-    $using = array();
-    $using[] = count($usage_tasks);
-    $using[] = count($usage_dis);
-    $using[] = count($usage_fees);
-    $using[] = count($usage_exp);
-    // $using[] = 250;
-    $highest = max($using);
-    $fee = 0;
-    if (($highest * 1) < 30) {
-        $fee = 30;
-    } if ($highest <= 50 && (($highest * 1) > 30)) {
+<?php
+$using = array();
+$using[] = count($usage_tasks);
+$using[] = count($usage_dis);
+$using[] = count($usage_fees);
+$using[] = count($usage_exp);
+// $using[] = 250;
+$highest = max($using);
+$fee = 0;
+if (($highest * 1) < 30) {
+    $fee = 30;
+} if ($highest <= 50 && (($highest * 1) > 30)) {
 
-        $fee = $highest * 1;
-    } if ($highest > 50 && $highest <= 250 && (($highest * 1) > 30)) {
+    $fee = $highest * 1;
+} if ($highest > 50 && $highest <= 250 && (($highest * 1) > 30)) {
 
-        $fee = $highest * 0.6;
-    } if ($highest >= 250 && (($highest * 1) > 30)) {
+    $fee = $highest * 0.6;
+} if ($highest >= 250 && (($highest * 1) > 30)) {
 
-        $fee = $highest * 0.3;
-    }
-    ?>
+    $fee = $highest * 0.3;
+}
+?>
 <!-- top tiles -->
 <div class="row tile_count ">
 
@@ -84,7 +84,7 @@
 
 <div class="row container">
     <?php echo $this->session->flashdata('msg'); ?>
-   
+
     <div class="col-md-12 col-sm-12 col-xs-12">
         <!-- page content -->
         <div class="page-title">
@@ -96,7 +96,7 @@
         <div class="x_content">
             <div id='calendar'></div>
         </div>
-         <div id="mainb" style="height:300px;" class= "col-md-12 col-sm-12 col-xs-12"></div>
+        <div id="mainb" style="height:300px;" class= "col-md-12 col-sm-12 col-xs-12"></div>
         <!-- /page content -->
     </div>
 
@@ -116,13 +116,13 @@
 
                             <div class="form-group">
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12 align-left">Date</label>
-                                <div class="col-md-6 col-sm-6 col-xs-12 align-left">
-                                    <input class="easyui-datebox" name="date" id="date"/>
-                                </div>
+                               
+                                    <input class="easyui-datebox form-control" name="date" id="date"/>
+                                
                             </div>
-                            <div class="row-fluid">
+                            <div class="form-group">
                                 <label for="form-field-select-4">Choose Attendees</label>
-                                <input class="easyui-combobox" name="username" style="width:100%;height:26px" data-options="
+                                <input class="easyui-combobo form-control" name="username" style="width:100%;height:26px" data-options="
                                        url:'<?php echo base_url() ?>index.php/task/users',
                                        method:'get',
                                        valueField:'name',
@@ -166,31 +166,38 @@
                                 <div class="control-group">
                                     <input class="form-control" type="text" name="period" value="1"  />
                                 </div>
-
-                                <div class="form-group"> 
-                                    <label class="control-label" for="form-field-1">Details</label>
-                                    <div class="control-group">
-                                        <textarea  class="form-control" name="details" class="" placeholder="details" ></textarea>
-                                    </div>
-                                </div>
-                                <div class="control-group">
-                                    <label>Priority</label>
-                                    <select class="form-control" id="priority" name="priority" >                                                         
-                                        <option value="High" >High</option>
-                                        <option value="Medium" >Medium</option>
-                                        <option value="Low">Low</option>
-                                    </select>
-                                </div>
-
-                                <label>
-                                    <input name="trig" type="checkbox" />
-                                    <span class="lbl"> Notify parties ?</span>
-                                </label>
-                                <label>
-                                    <input name="court" type="checkbox" />
-                                    <span class="lbl"> Due for court(Cause list) ?</span>
-                                </label>
                             </div>
+                              <div class="control-group">
+                                <label class="control-label" for="form-field-1">Cost</label>
+                                <div class="control-group">
+                                    <input class="form-control" type="number" name="cost" value="0"  />
+                                </div>
+                            </div>
+
+                            <div class="form-group"> 
+                                <label class="control-label" for="form-field-1">Details</label>
+                                <div class="control-group">
+                                    <textarea  class="form-control" name="details" class="" placeholder="details" ></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Priority</label>
+                                <select class="form-control" id="priority" name="priority" >                                                         
+                                    <option value="High" >High</option>
+                                    <option value="Medium" >Medium</option>
+                                    <option value="Low">Low</option>
+                                </select>
+                            </div>
+
+                            <label>
+                                <input name="trig" type="checkbox" />
+                                <span class="lbl"> Notify parties ?</span>
+                            </label>
+                            <label>
+                                <input name="court" type="checkbox" />
+                                <span class="lbl"> Due for court(Cause list) ?</span>
+                            </label>
+
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default antoclose" data-dismiss="modal">Close</button>
