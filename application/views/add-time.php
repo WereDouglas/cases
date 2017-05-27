@@ -25,37 +25,27 @@
         ?>
 
         <form id="f" style="padding: 10px;">
-            <h6>New task for <?php echo $resource; ?></h6>
+            <h3>New task for <?php echo $resource; ?></h3>
+            <div class="row"> 
+            <div class="col-md-6"> 
+                <div class="form-group">
+                    <label >Details</label>               
+                    <textarea type="text" id="name" class="form-control" name="name" value="" ></textarea>               
+                </div> 
+                <div class="form-group">
+                    <label >Start</label>
 
-            <div class=" item form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12">Details</label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
-                    <input type="text" id="name" class="form-control col-md-7 col-xs-12" name="name" value="" />
-                </div>
-            </div> 
-            <div class=" item form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12">Start</label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
                     <?php echo $start; ?> to  <?php echo $end; ?>
                     <input type="hidden" id="start" name="start" value="<?php echo $start; ?>" />
-                     <input type="hidden" id="end" name="end" value="<?php echo $end; ?>" />
+                    <input type="hidden" id="end" name="end" value="<?php echo $end; ?>" />
                     <input type="hidden" id="resource" name="resource" value="<?php echo $resource; ?>" />
-                </div>
-            </div> 
-            
-<!--            <div class=" item form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12">Details</label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
-                    
-                    <input type="Text" class="col-md-6 col-sm-6 col-xs-12" id="details" name="details" value="" />
-                </div>
-            </div> -->
 
-            <div class=" item form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12">File/Case</label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
+                </div> </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label >File/Case</label>            
 
-                    <input class="easyui-combobox" name="file" id="file" style="width:100%;height:26px" data-options="
+                    <input class="easyui-combobox form-control" name="file" id="file"  data-options="
                            url:'<?php echo base_url() ?>index.php/task/files',
                            method:'get',
                            valueField:'name',
@@ -63,44 +53,56 @@
                            multiple:false,
                            panelHeight:'auto'
                            ">
-                </div>
-            </div> 
-            <div class=" item form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12">Status</label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
-                    <select class="optional form-control col-md-7 col-xs-12" data-placeholder="Choose level of authority" name="status" id="status">
+
+                </div> 
+                <div class="form-group">
+                    <label >Status</label>
+
+                    <select class="optional form-control" data-placeholder="Choose level of authority" name="status" id="status">
                         <option value="Progressing" />Progressing
                         <option value="Complete" />Complete
                     </select>
+
                 </div>
-            </div>
-              <div class=" item form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12"></label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="form-group">              
+
                     <input class="btn-default btn"  type="submit"  value="Save" /> <a class="btn-danger btn" href="javascript:close();">Cancel</a>
-                </div>
-            </div> 
-            <div class="space"></div>
-        </form>
 
-        <script type="text/javascript">
-            function close(result) {
-                DayPilot.Modal.close(result);
-            }
-            $("#f").submit(function (ev) {
-                ev.preventDefault();
-                var f = $("#f");
-                var url = "<?php echo base_url() . "index.php/time/create/"; ?>";
-                $.post(url, f.serialize(), function (result) {
-                    close(eval(result));
-                });
+                </div> 
+                <div class="space"></div>
+
+            </div>
+        </div>
+
+
+        <!--            <div class=" item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Details</label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            
+                            <input type="Text" class="col-md-6 col-sm-6 col-xs-12" id="details" name="details" value="" />
+                        </div>
+                    </div> -->
+
+    </form>
+
+    <script type="text/javascript">
+        function close(result) {
+            DayPilot.Modal.close(result);
+        }
+        $("#f").submit(function (ev) {
+            ev.preventDefault();
+            var f = $("#f");
+            var url = "<?php echo base_url() . "index.php/time/create/"; ?>";
+            $.post(url, f.serialize(), function (result) {
+                close(eval(result));
             });
+        });
 
-            $(document).ready(function () {
-                $("#name").focus();
-            });
+        $(document).ready(function () {
+            $("#name").focus();
+        });
 
-        </script>
-    </body>
+    </script>
+</body>
 </html>
 <script type="text/javascript" src="<?= base_url(); ?>js/jquery.easyui.min.js"></script>

@@ -9,21 +9,16 @@
 
         <link rel="stylesheet" href="<?= base_url(); ?>css/style.css">
 
- <link rel=icon href="<?= base_url(); ?>images/favicon.ico">
+        <link rel=icon href="<?= base_url(); ?>images/favicon.ico">
     </head>
 
     <body>
         <div class="login-wrap">
             <div class="login-html">
-                <div class="row center-align" style="
-                     text-align: center;
-                     "> 
-                    <img  height="50px" width="50px" class="nav" src="<?= base_url(); ?>images/cp_logo.png" alt="Logo" />
-                    <h1 style="
-                        color: #FFF;
-                        margin: 0;
-                        margin-bottom: 37px;
-                        " >Case Professional</h1> </div>
+                <div class="row center-align" style="text-align: center;"> 
+                    
+                    <a href="<?php echo base_url();?>index.php/web"> <img  height="50px" width="50px" class="nav" src="<?= base_url(); ?>images/cp_logo.png" alt="Logo" /></a>
+                    <h1 style="color:#FFF; margin:0;margin-bottom: 37px;" >Case Professional</h1> </div>
                 <input id="tab-1" type="radio" name="tab" class="sign-in" checked><label for="tab-1" class="tab">Sign In</label>
                 <input id="tab-2" type="radio" name="tab" class="sign-up"><label for="tab-2" class="tab">Sign Up</label>
                 <div class="login-form">
@@ -49,6 +44,9 @@
                             <div class="hr"></div>
                             <div class="foot-lnk">
                                 <a href="#forgot">Forgot Password?</a>
+                            </div>
+                            <div class="foot-lnk">
+                                <a href="<?php echo base_url();?>index.php/web">About Case Professional</a>
                             </div>
                         </div>
                     </form>
@@ -90,8 +88,8 @@
                                     </div>
                                     <input type="hidden" class=" form-control field " id="street_number" disabled="true" placeholder="Street Address"></input>
                                     <input type="hidden" class=" form-control field " id="route" disabled="true" placeholder="City"></input>
-                                      <div class="group"><input class="field input" name="city" id="locality" disabled="true" placeholder="State"></input>
-                                      </div>
+                                    <div class="group"><input class="field input" name="city" id="locality" disabled="true" placeholder="State"></input>
+                                    </div>
                                     <div class="group">
                                         <input name="region" class="field input"id="administrative_area_level_1" disabled="true"></input>
                                     </div>

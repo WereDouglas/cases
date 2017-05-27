@@ -148,9 +148,6 @@
         </table>
     </div>
 </div>
-
-
-
 <?php require_once(APPPATH . 'views/footer-page.php'); ?>
 
 <script type="text/javascript">

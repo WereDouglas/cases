@@ -1,0 +1,13 @@
+
+
+1.while entering a new property,we don't need to repeat  the manage,plumber and electrician since we entered them while entering a client.
+ 2.The drop down for users and mangers of estates are the same. Kindly separate them.we have users who are  not managers.
+ 3.The system returns an error while trying to open it. 
+ 4. On the receipt for rent, after  Tenant Name add the property the tenant belongs to and the client,the room no. And number of months being paid for.We prefer to have the starting and ending date to appear automatically.                        
+
+1.while entering a new property,we don't need to repeat  the manager,plumber and electrician since we entered them while entering a client.
+ 2.The drop down for users and mangers of estates are the same. Kindly separate them.we have users who are  not managers. 
+ 3.The system returns an error while trying to create anew room under New .
+ 4. On the receipt for rent, after  Tenant Name add the property the tenant belongs to and the client,the room no. Add number of months being paid for.We prefer to have the starting and ending date to appear automatically.                        
+[
+

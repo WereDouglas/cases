@@ -7,7 +7,7 @@ class Api extends CI_Controller {
     function __construct() {
 
         parent::__construct();
-        error_reporting(E_PARSE);
+        //  error_reporting(E_PARSE);
         $this->load->model('Md');
         $this->load->library('session');
         $this->load->library('encrypt');
@@ -262,6 +262,37 @@ class Api extends CI_Controller {
             echo 'False';
         }
     }
+
+    public function uploading() {
+
+        $this->load->helper(array('form', 'url'));
+        $save = $this->input->post('save');
+        $delete = $this->input->post('delete');
+
+        //  $save = "INSERT INTO `client`(`clientID`, `orgID`, `name`, `email`, `contact`, `status`, `image`, `address`, `created`, `action`, `lawyer`, `registration`, `password`, `sync`) VALUES ('8ebae852-0764-47a7-a81b-233024c59349','A3CEA444-1F39-4F91-955D-0CA57E3C7962','Morris Mugisha','get@aol.com','078123121','Active','8ebae852-0764-47a7-a81b-233024c59349.jpg','Kampala','17/08/2016 20:21:22','none','Paul Mayiga','none','none','2017-04-11 18:03:30');";
+        //  $delete = "DELETE from client WHERE clientID ='8ebae852-0764-47a7-a81b-233024c59349'";     
+
+        $this->Md->queries($delete);
+        $id = $this->Md->queries($save);
+
+        if ($id) {
+            echo 'true';
+        } else {
+            echo 'False';
+        }
+    }
+
+    public function request() {
+
+        $this->load->helper(array('form', 'url'));
+        $query = $this->input->post('query');
+        $result = $this->Md->query($query);
+        if ($result) {
+            echo json_encode($result);
+        } else {
+            echo 'false';
+        }
+    }     
 
     public function reminders() {
 

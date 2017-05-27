@@ -171,7 +171,7 @@ class User extends CI_Controller {
         $this->load->library('email');
 
 
-   
+
         $password = $this->input->post('password');
         //$password = '123456';
         $this->load->helper(array('form', 'url'));
@@ -203,7 +203,7 @@ class User extends CI_Controller {
         echo 'INFORMATION UPDATED';
         $this->session->set_flashdata('msg', '<div class="alert alert-success">  <strong>USER PASSWORD CHANGED</strong></div>');
 
-         redirect('/user/profile/' . $name, 'refresh');
+        redirect('/user/profile/' . $name, 'refresh');
     }
 
     public function exists() {
@@ -272,13 +272,16 @@ class User extends CI_Controller {
         }
         $this->load->view('view-client', $data);
     }
-
     public function staff() {
 
         $this->load->helper(array('form', 'url'));
-        $query = $this->Md->query("SELECT * FROM users where  orgID='" . $this->session->userdata('orgID') . "' AND category='Staff'");
+        $query = $this->Md->query("SELECT * FROM users where  orgID='" . $this->session->userdata('orgID') . "'");
         if ($query) {
             $data['users'] = $query;
+        }
+        $query = $this->Md->query("SELECT * FROM roles where  orgID='" . $this->session->userdata('orgID') . "'");
+        if ($query) {
+            $data['roles'] = $query;
         }
         $this->load->view('view-staff', $data);
     }
@@ -371,47 +374,19 @@ class User extends CI_Controller {
         $this->load->helper(array('form', 'url'));
         $id = $this->input->post('id');
 
-        $user = array('name' => $this->input->post('name'), 'address' => $this->input->post('address'), 'contact' => $this->input->post('contact'), 'designation' => $this->input->post('designation'), 'status' => $this->input->post('status'), 'address' => $this->input->post('address'), 'category' => $this->input->post('category'));
+        $user = array('sync' => 'f','name' => $this->input->post('name'), 'address' => $this->input->post('address'), 'contact' => $this->input->post('contact'), 'designation' => $this->input->post('designation'), 'status' => $this->input->post('status'), 'address' => $this->input->post('address'), 'category' => $this->input->post('category'));
         // $this->Md->update($id, $user, 'users');
         $this->Md->update_dynamic($id, 'userID', 'users', $user);
         echo 'USER INFORMATION UPDATED';
         return;
     }
 
-    public function updateclient() {
-        if ($this->session->userdata('level') == 1 || $this->session->userdata('level') == 2) {
-            $this->load->helper(array('form', 'url'));
-            $id = $this->input->post('id');
-            $name = $this->input->post('name');
-            $contact = $this->input->post('contact');
-            $email = $this->input->post('email');
-            $address = $this->input->post('details');
-            $user = array('id' => $id, 'name' => $name, 'address' => $address, 'email' => $email, 'contact' => $contact, 'created' => date('Y-m-d H:i:s'));
-
-            $content = json_encode($user);
-            $query = $this->Md->query("SELECT * FROM client where org = '" . $this->session->userdata('orgid') . "'");
-            if ($query) {
-                foreach ($query as $res) {
-                    $syc = array('org' => $this->session->userdata('orgid'), 'object' => 'client', 'contents' => $content, 'action' => 'update', 'oid' => $id, 'created' => date('Y-m-d H:i:s'), 'checksum' => $this->GUID(), 'client' => $res->name);
-                    $this->Md->save($syc, 'sync_data');
-                }
-            }
-            $this->Md->update($id, $user, 'users');
-        } else {
-            $this->session->set_flashdata('msg', '<div class="alert alert-error">                                                   
-                                                <strong>
-                                                 You cannot carry out this action ' . '	</strong>									
-						</div>');
-            redirect('/user', 'refresh');
-        }
-    }
-
+ 
     public function delete() {
 
         $this->load->helper(array('form', 'url'));
         $userID = $this->uri->segment(3);
         $query = $this->Md->cascade($userID, 'users', 'userID');
-
         redirect('user/staff', 'refresh');
     }
 
@@ -546,6 +521,11 @@ class User extends CI_Controller {
 
     public function updater() {
         $this->load->helper(array('form', 'url'));
+         if (!strpos($this->session->userdata('actions'), 'update') == true) {
+             
+              echo "Permission denied";
+             return;
+         }
 
         if (!empty($_POST)) {
 

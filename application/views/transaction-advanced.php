@@ -10,15 +10,21 @@
     <form  enctype="multipart/form-data" class="form-horizontal form-label-left"  action='<?= base_url(); ?>index.php/transaction/generate_post'  method="post">
 
         <div class="box-body">
-            <div class="col-md-2">
-                <label>Start</label>
-                <input class="easyui-datebox col-md-6" name="starts" id="starts" data-options="formatter:myformatter,parser:myparser" ></input>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>Start</label>
+                    <input class="easyui-datebox form-control " name="starts" id="starts" data-options="formatter:myformatter,parser:myparser" ></input>
+                </div>
+
             </div>
-            <div class="col-md-2">
-                <label>End</label>
-                <input class="easyui-datebox col-md-6" name="ends" id="ends" data-options="formatter:myformatter,parser:myparser" ></input>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>End</label>
+                    <input class="easyui-datebox form-control" name="ends" id="ends" data-options="formatter:myformatter,parser:myparser" ></input>
+                </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-4">
+                  <label>End</label>
                 <button type="submit"  class="btn  btn-small btn-flat">Generate</button>
 
                 <button type="reset"  class="btn btn-small btn-flat">Reset</button>

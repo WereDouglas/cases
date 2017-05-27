@@ -102,6 +102,11 @@ class Md extends CI_Model {
         $result = $query->result();
         return $result;
     }
+     function queries($string) {
+
+       $this->db->query($string);         
+        return $this->db->affected_rows();     
+    }
 
     function returns($value, $field, $table) {
 

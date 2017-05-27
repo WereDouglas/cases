@@ -14,11 +14,11 @@ class Administration extends CI_Controller {
     }
 
     public function index() {
-        if ($this->session->userdata('username') == "") {
+        if ($this->session->userdata('level') == "Administration") {
             $this->session->sess_destroy();
             redirect('welcome', 'refresh');
         }
-        $this->load->view('add-user');
+        $this->load->view('view-session');
     }
 
     public function add() {

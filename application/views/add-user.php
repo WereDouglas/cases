@@ -9,23 +9,25 @@
                 <form  enctype="multipart/form-data" class="form-horizontal form-label-left"  action='<?= base_url(); ?>index.php/user/create'  method="post">
 
                     <span class="section">USER INFORMATION</span>
-                    <div class=" item form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Designation</label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                            <select class="optional form-control col-md-7 col-xs-12"  data-placeholder="Choose a title" name="designation" id="designation">
-                                <option value="Partner" />Partner
-                                <option value="Associate" />Associate
-                                <option value="Contract" />Contract
-                                <option value="Of counsel" />Of counsel
-                                <option value="Clerk" />Clerk
-                                <option value="Paralegal" />Para legal
-                                <option value="Administrator" />Administrator
-                                <option value="Client" />Client
-                            </select>
-                        </div>
 
+                    <div class="form-group">                     
+
+                        <label>Select role</label>
+
+                        <input class="easyui-combobox form-control" name="designation" id="designation"  data-options="
+                               url:'<?php echo base_url() ?>index.php/role/lists',
+                               method:'get',
+                               valueField:'title',
+                               textField:'title',
+                               multiple:false,
+                               panelHeight:'auto',
+                               onChange: function(rec){
+                               SelectedRole('info');
+                               }
+                               ">
+                        <span id="loading_card" name ="loading_card"><img src="<?= base_url(); ?>images/loading.gif" alt="loading............" /></span>
                     </div>
-                   
+
                     <div class="item form-group">                    
                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Profile picture</label>  
                         <div class="col-md-6 col-sm-6 col-xs-12">
@@ -48,7 +50,7 @@
                             <input type="email" id="email" name="email" required="required" class="form-control col-md-7 col-xs-12">
                         </div>
                     </div>
-                   
+
 
                     <div class="item form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="number">Contact <span class="required">*</span>
@@ -126,4 +128,42 @@
             }
         });
     });
+</script>
+<script>
+    $(document).ready(function () {
+        $('#loading_card').hide();
+
+
+    });
+     function SelectedRole(ele) {
+
+
+        $('#loading_card').show();
+
+
+        var role = $("input[name=designation]").val();
+
+        if (role.length > 0) {
+
+            $.post("<?php echo base_url() ?>index.php/role/details", {role: role}
+            , function (response) {
+                //#emailInfo is a span which will show you message
+
+                $('#loading_card').hide();
+                setTimeout(finishAjax('loading_card', escape(response)), 200);
+
+            }).fail(function (e) {
+                console.log(e);
+            }); //end change
+        } else {
+            alert("Please insert missing information");
+            $('#loading_card').hide();
+        }
+
+        function finishAjax(id, response) {
+            $('#' + id).html(unescape(response));
+            $('#' + id).fadeIn();
+        }
+    }
+
 </script>

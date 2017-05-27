@@ -623,7 +623,6 @@ class Mobile extends CI_Controller {
         // $lawyer = "Douglas Were";
         // $orgID = "A3CEA444-1F39-4F91-955D-0CA57E3C7962";
 
-
         $g = new stdClass();
         $count = 1;
         $query2 = $this->Md->query("select * from events WHERE orgID='" . $orgID . "' AND user ='" . $lawyer . "' AND MONTH(STR_TO_DATE(date,'%Y-%m-%d'))='" . date('m') . "' AND YEAR(STR_TO_DATE(date,'%Y-%m-%d'))='" . date('Y') . "' ORDER BY date DESC ");

@@ -16,7 +16,11 @@ class Organisation extends CI_Controller {
     public function index() {
         $this->load->view('login');
     }
-
+    public function lists() {
+        //  $query = $this->Md->query("SELECT * FROM client WHERE  orgID='" . $this->session->userdata('orgID') . "'");
+        $query = $this->Md->query("SELECT * FROM org");
+        echo json_encode($query);
+    }
     public function update() {
 
         if ($this->session->userdata('level') == 1) {
@@ -51,6 +55,13 @@ class Organisation extends CI_Controller {
 						</div>');
             redirect('welcome/info', 'refresh');
         }
+    }  public function session() {
+        
+       $new_session =  $this->input->post('organisation');
+        $this->session->set_userdata('orgid',$new_session);
+        $this->session->set_userdata('orgID',$new_session);
+        redirect('administration', 'refresh');
+        
     }
 
     public function api() {
@@ -131,7 +142,6 @@ class Organisation extends CI_Controller {
         if (function_exists('com_create_guid') === true) {
             return trim(com_create_guid(), '{}');
         }
-
         return sprintf('%04X%04X-%04X-%04X-%04X-%04X%04X%04X', mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(16384, 20479), mt_rand(32768, 49151), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535));
     }
 
@@ -192,6 +202,7 @@ class Organisation extends CI_Controller {
                                                  Organisation name already registered</strong>									
 						</div>');
             redirect('/home', 'refresh');
+            return;
         }
 
 
@@ -576,7 +587,7 @@ class Organisation extends CI_Controller {
                 $field_name = $split_data[0];
                 if (!empty($user_id) && !empty($field_name) && !empty($val)) {
                     //update the values
-                    $task = array($field_name => $val);
+                    $task = array($field_name => $val,'sync'=>'f');
                     // $this->Md->update($user_id, $task, 'tasks');
                     $this->Md->update_dynamic($user_id, 'orgID', 'org', $task);
                     echo "Updated";
@@ -588,7 +599,8 @@ class Organisation extends CI_Controller {
             echo "Invalid Requests";
         }
     }
-       public function update_image() {
+
+    public function update_image() {
 
         $this->load->helper(array('form', 'url'));
         //user information
@@ -605,7 +617,7 @@ class Organisation extends CI_Controller {
         $config['encrypt_name'] = FALSE;
         $config['allowed_types'] = 'jpg';
         $config['overwrite'] = TRUE;
-        
+
         $this->load->library('upload', $config);
         if (!$this->upload->do_upload($file_element_name)) {
             $status = 'error';
@@ -615,9 +627,9 @@ class Organisation extends CI_Controller {
 
             return;
         }
-         $data = $this->upload->data();         
+        $data = $this->upload->data();
         $userfile = $data['file_name'];
-            $user = array('image' => $userfile);
+        $user = array('image' => $userfile,'sync'=>'f');
         $this->Md->update_dynamic($userID, 'orgID', 'org', $user);
 
         $this->session->set_flashdata('msg', '<div class="alert alert-success">  <strong>Image updated saved</strong></div>');

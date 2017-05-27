@@ -50,6 +50,16 @@ class Message extends CI_Controller {
         return;
     }
 
+    public function mail() {
+
+        $mail = array('email' => $this->input->post('email'), 'created' => date('Y-m-d H:i:s'), 'active' => 'true');
+        $this->Md->save($mail, 'mailing');
+
+        redirect('web', 'refresh');
+
+        return;
+    }
+
     public function appmail() {
 
         $guid = $this->GUID();
@@ -85,6 +95,21 @@ class Message extends CI_Controller {
         }
     }
 
+    public function contact() {
+        $this->load->library('email');
+        if ($this->input->post('sender') != "") {
+            $this->email->from($this->input->post('sender'), 'Case Professional User contact us');
+            $this->email->to('weredouglas@gmail.com');
+            $this->email->subject('Contact us');
+            $this->email->message($this->input->post('message'));
+            $this->email->send();
+            echo $this->email->print_debugger();
+            $data = array('sent' => 'true');           
+           
+        }
+       redirect('web', 'refresh');
+    }
+
     public function event() {
 
         $this->load->library('email');
@@ -94,8 +119,8 @@ class Message extends CI_Controller {
             if ($res->user != "") {
                 $emails = $this->Md->query_cell("SELECT * FROM users where name= '" . $res->user . "'", 'email');
                 $phones = $this->Md->query_cell("SELECT * FROM users where name= '" . $res->user . "'", 'contact');
-                $body = "Reminder " . 'You have a meeting on ' . $res->date. ' at ' . date('H:i:s', strtotime($res->start)) . ' to ' .date('H:i:s', strtotime($res->end)). ' Details: ' . $res->name;
-                $subject="REMINDER";
+                $body = "Reminder " . 'You have a meeting on ' . $res->date . ' at ' . date('H:i:s', strtotime($res->start)) . ' to ' . date('H:i:s', strtotime($res->end)) . ' Details: ' . $res->name;
+                $subject = "REMINDER";
                 $this->email->from('info@caseprofessional.org', 'Case Professional');
                 $this->email->to($emails);
                 $this->email->subject($subject);

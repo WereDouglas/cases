@@ -11,6 +11,7 @@ class Client extends CI_Controller {
         $this->load->model('Md');
         $this->load->library('session');
         $this->load->library('encrypt');
+        date_default_timezone_set('Africa/Kampala');
     }
 
     public function index() {
@@ -60,9 +61,9 @@ class Client extends CI_Controller {
                 $this->session->set_flashdata('msg', '<div class="alert alert-error"> <strong>' . $msg . '</strong></div>');
             }
             $data = $this->upload->data();
-            $submitted = date('Y-m-d');
+         
             $userfile = $data['file_name'];
-            $users = array('clientID' => $userid, 'orgID' => $this->session->userdata('orgID'), 'name' => $this->input->post('name'), 'registration' => date('Y-m-d', strtotime($this->input->post('registration'))), 'email' => $this->input->post('email'), 'image' => $userfile, 'address' => $this->input->post('address'), 'contact' => $this->input->post('contact'), 'lawyer' => $this->input->post('supervisor'), 'created' => date('Y-m-d H:i:s'), 'status' => 'Active', 'action' => 'none');
+            $users = array('clientID' => $userid, 'orgID' => $this->session->userdata('orgID'), 'name' => $this->input->post('name'), 'registration' => date('Y-m-d', strtotime($this->input->post('registration'))), 'email' => $this->input->post('email'), 'image' => $userfile, 'address' => $this->input->post('address'), 'contact' => $this->input->post('contact'), 'lawyer' => $this->input->post('supervisor'), 'created' => date('Y-m-d H:i:s'), 'status' => 'Active', 'action' => 'none', 'sync' => date('Y-m-d H:i:s'));
             $this->Md->save($users, 'client');
 
             $emails = $this->Md->query_cell("SELECT * FROM users where name= '" . $this->input->post('supervisor') . "'", 'email');
@@ -110,7 +111,6 @@ class Client extends CI_Controller {
 
             redirect('/client/view', 'refresh');
         }
-
         // $mail = array('messageID' => $this->GUID(), 'body' => $message, 'subject' => 'REMINDER', 'date' => $this->input->post('date'), 'to' => $names, 'created' => date('Y-m-d H:i:s'), 'from' => $this->session->userdata('orgemail'), 'sent' => 'false', 'type' => 'email', 'orgID' => $this->session->userdata('orgID'), 'action' => 'none', 'taskID' => $taskID, 'contact' => $phones, 'email' => $emails);
         //$this->Md->save($mail, 'message');
     }
@@ -258,7 +258,7 @@ class Client extends CI_Controller {
         }
         $data = $this->upload->data();
         $userfile = $data['file_name'];
-        $user = array('image' => $userfile);
+        $user = array('image' => $userfile,'sync'=>date('Y-m-d H:i:s'));
         $this->Md->update_dynamic($userID, 'clientID', 'client', $user);
 
         $this->session->set_flashdata('msg', '<div class="alert alert-success">  <strong>Image updated saved</strong></div>');
@@ -388,7 +388,7 @@ class Client extends CI_Controller {
         $this->load->helper(array('form', 'url'));
         $id = $this->input->post('id');
 
-        $user = array('name' => $this->input->post('name'), 'address' => $this->input->post('address'), 'contact' => $this->input->post('contact'), 'designation' => $this->input->post('designation'), 'status' => $this->input->post('status'), 'address' => $this->input->post('address'), 'category' => $this->input->post('category'));
+        $user = array('sync'=>date('Y-m-d H:i:s'),'name' => $this->input->post('name'), 'address' => $this->input->post('address'), 'contact' => $this->input->post('contact'), 'status' => $this->input->post('status'), 'email' => $this->input->post('email'));
         // $this->Md->update($id, $user, 'users');
         $this->Md->update_dynamic($id, 'clientID', 'client', $user);
         echo 'USER INFORMATION UPDATED';
@@ -436,6 +436,7 @@ class Client extends CI_Controller {
     }
 
     public function user() {
+        
         $this->load->helper(array('form', 'url'));
         $userid = $this->uri->segment(3);
         $query = $this->Md->query("SELECT * FROM users where id = '" . $userid . "'");
@@ -579,7 +580,7 @@ class Client extends CI_Controller {
                 $field_name = $split_data[0];
                 if (!empty($user_id) && !empty($field_name) && !empty($val)) {
                     //update the values
-                    $task = array($field_name => $val);
+                    $task = array($field_name => $val,'sync'=>date('Y-m-d H:i:s'));
                     // $this->Md->update($user_id, $task, 'tasks');
                     $this->Md->update_dynamic($user_id, 'clientID', 'client', $task);
                     echo "Updated";
@@ -591,9 +592,7 @@ class Client extends CI_Controller {
             echo "Invalid Requests";
         }
     }
-
     public function migrate() {
-
 
         $query = $this->Md->query("SELECT * FROM users where category = 'client' AND orgID='" . $this->session->userdata('orgID') . "'");
         //  var_dump($query);

@@ -1,4 +1,176 @@
 <!-- Bootstrap -->
+<?php
+$jan = 0;
+$feb = 0;
+$mar = 0;
+$apr = 0;
+$may = 0;
+$jun = 0;
+$jul = 0;
+$aug = 0;
+$sept = 0;
+$oct = 0;
+$nov = 0;
+$dec = 0;
+
+$jan2 = 0;
+$feb2 = 0;
+$mar2 = 0;
+$apr2 = 0;
+$may2 = 0;
+$jun2 = 0;
+$jul2 = 0;
+$aug2 = 0;
+$sept2 = 0;
+$oct2 = 0;
+$nov2 = 0;
+$dec2 = 0;
+
+$jan3 = 0;
+$feb3 = 0;
+$mar3 = 0;
+$apr3 = 0;
+$may3 = 0;
+$jun3 = 0;
+$jul3 = 0;
+$aug3 = 0;
+$sept3 = 0;
+$oct3 = 0;
+$nov3 = 0;
+$dec3 = 0;
+
+if (is_array($payments_year) && count($payments_year)) {
+    foreach ($payments_year as $loop) {
+
+        if (date("m", strtotime($loop->date)) == "1") {
+            $jan = $jan + 1;
+        }
+        if (date("m", strtotime($loop->date)) == "2") {
+            $feb = $feb + 1;
+        }
+        if (date("m", strtotime($loop->date)) == "3") {
+            $mar = $mar + 1;
+        }
+        if (date("m", strtotime($loop->date)) == "4") {
+            $apr = $apr + 1;
+        }
+        if (date("m", strtotime($loop->date)) == "5") {
+            $may = $may + 1;
+        }
+        if (date("m", strtotime($loop->date)) == "6") {
+            $jun = $jun + 1;
+        }
+        if (date("m", strtotime($loop->date)) == "7") {
+            $jul = $jul + 1;
+        }
+        if (date("m", strtotime($loop->date)) == "8") {
+            $aug = $aug + 1;
+        }
+        if (date("m", strtotime($loop->date)) == "9") {
+            $sep = $sep + 1;
+        }
+        if (date("m", strtotime($loop->date)) == "10") {
+            $oct = $oct + 1;
+        }
+        if (date("m", strtotime($loop->date)) == "11") {
+            $nov = $jan + 1;
+        }
+        if (date("m", strtotime($loop->date)) == "12") {
+            $dec = $dec + 1;
+        }
+    }
+    // echo $march.'<br>';
+    //  echo $jan.'<br>';
+}
+ 
+
+if (is_array($clients) && count($clients)) {
+    foreach ($clients as $loop) {
+
+        if (date("m", strtotime($loop->created)) == "1") {
+            $jan2 = $jan2 + 1;
+        }
+        if (date("m", strtotime($loop->created)) == "2") {
+            $feb2 = $feb2 + 1;
+        }
+        if (date("m", strtotime($loop->created)) == "3") {
+            $mar2 = $mar2 + 1;
+        }
+        if (date("m", strtotime($loop->created)) == "4") {
+            $apr2 = $apr2 + 1;
+        }
+        if (date("m", strtotime($loop->created)) == "5") {
+            $may2 = $may2 + 1;
+        }
+        if (date("m", strtotime($loop->created)) == "6") {
+            $jun2 = $jun2 + 1;
+        }
+        if (date("m", strtotime($loop->created)) == "7") {
+            $jul2 = $jul2 + 1;
+        }
+        if (date("m", strtotime($loop->created)) == "8") {
+            $aug2 = $aug2 + 1;
+        }
+        if (date("m", strtotime($loop->created)) == "9") {
+            $sep2 = $sep2 + 1;
+        }
+        if (date("m", strtotime($loop->created)) == "10") {
+            $oct2 = $oct2 + 1;
+        }
+        if (date("m", strtotime($loop->created)) == "11") {
+            $nov2 = $jan2 + 1;
+        }
+        if (date("m", strtotime($loop->created)) == "12") {
+            $dec2 = $dec2 + 1;
+        }
+    }
+    // echo $march.'<br>';
+    //  echo $jan.'<br>';
+}
+if (is_array($files) && count($files)) {
+    foreach ($files as $loop) {
+
+        if (date("m", strtotime($loop->created)) == "1") {
+            $jan3 = $jan3 + 1;
+        }
+        if (date("m", strtotime($loop->created)) == "2") {
+            $feb3 = $feb3  + 1;
+        }
+        if (date("m", strtotime($loop->created)) == "3") {
+            $mar3 = $mar3 + 1;
+        }
+        if (date("m", strtotime($loop->created)) == "4") {
+            $apr3 = $apr3 + 1;
+        }
+        if (date("m", strtotime($loop->created)) == "5") {
+            $may3 = $may3 + 1;
+        }
+        if (date("m", strtotime($loop->created)) == "6") {
+            $jun3 = $jun3 + 1;
+        }
+        if (date("m", strtotime($loop->created)) == "7") {
+            $jul3 = $jul3 + 1;
+        }
+        if (date("m", strtotime($loop->created)) == "8") {
+            $aug3 = $aug3 + 1;
+        }
+        if (date("m", strtotime($loop->created)) == "9") {
+            $sep3 = $sep3 + 1;
+        }
+        if (date("m", strtotime($loop->created)) == "10") {
+            $oct3 = $oct3 + 1;
+        }
+        if (date("m", strtotime($loop->created)) == "11") {
+            $nov3 = $jan3 + 1;
+        }
+        if (date("m", strtotime($loop->created)) == "12") {
+            $dec3 = $dec3 + 1;
+        }
+    }
+    // echo $march.'<br>';
+    //  echo $jan.'<br>';
+}
+?>  
 <?php //var_dump($sch); ?>
 <link href="<?php echo base_url(); ?>vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
 <!-- Font Awesome -->
@@ -116,18 +288,16 @@ if (($highest * 1) < 30) {
 
                             <div class="form-group">
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12 align-left">Date</label>
-                               
-                                    <input class="easyui-datebox form-control" name="date" id="date"/>
+                                <input class="easyui-datebox form-control" name="date" id="date" value="<?php echo date('Y-m-d')?>"/>
                                 
                             </div>
-                            <div class="form-group">
-                                <label for="form-field-select-4">Choose Attendees</label>
-                                <input class="easyui-combobo form-control" name="username" style="width:100%;height:26px" data-options="
+                            <div class="row-fluid">
+                                <label for="form-field-select-4">Attending</label>
+                                <input class="easyui-combobox" name="username" style="width:100%;height:26px" data-options="
                                        url:'<?php echo base_url() ?>index.php/task/users',
                                        method:'get',
                                        valueField:'name',
                                        textField:'name',
-
                                        multiple:false,
                                        panelHeight:'auto'
                                        ">
@@ -516,7 +686,7 @@ if (($highest * 1) < 30) {
         },
         calculable: true,
         legend: {
-            data: ['Messaging', 'Scheduling', 'Time Sheets'],
+            data: ['Messaging', 'Clients', 'Files and cases'],
             y: 'bottom'
         },
         xAxis: [{
@@ -537,18 +707,19 @@ if (($highest * 1) < 30) {
                 }
             }],
         series: [{
-                name: 'Messaging',
+               name: 'Messaging And Events',
                 type: 'bar',
-                data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3]
+                data: [<?php echo $jan; ?>, <?php echo $feb; ?>, <?php echo $mar; ?>, <?php echo $apr; ?>, <?php echo $may; ?>,<?php echo $jun; ?>,<?php echo $jul; ?>, <?php echo $aug; ?>,<?php echo $sept; ?>, <?php echo $oct; ?>,<?php echo $nov; ?>, <?php echo $dec; ?>]
+              
             }, {
-                name: 'Scheduling',
+               name: 'Clients',
                 type: 'bar',
-                data: [2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2, 48.7, 18.8, 6.0, 2.3]
+               data: [<?php echo $jan2; ?>, <?php echo $feb2; ?>, <?php echo $mar2; ?>, <?php echo $apr2; ?>, <?php echo $may2; ?>,<?php echo $jun2; ?>,<?php echo $jul2; ?>, <?php echo $aug2; ?>,<?php echo $sept2; ?>, <?php echo $oct2; ?>,<?php echo $nov2; ?>, <?php echo $dec2; ?>]
             }, {
-                name: 'Time Sheets',
+                 name: 'Files and cases',
                 type: 'line',
                 yAxisIndex: 1,
-                data: [2.0, 2.2, 3.3, 4.5, 6.3, 10.2, 20.3, 23.4, 23.0, 16.5, 12.0, 6.2]
+                data: [<?php echo $jan3; ?>, <?php echo $feb3; ?>, <?php echo $mar3; ?>, <?php echo $apr3; ?>, <?php echo $may3; ?>,<?php echo $jun3; ?>,<?php echo $jul3; ?>, <?php echo $aug3; ?>,<?php echo $sept3; ?>, <?php echo $oct3; ?>,<?php echo $nov3; ?>, <?php echo $dec3; ?>]
             }]
     });
 

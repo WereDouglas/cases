@@ -129,7 +129,7 @@ h3 {
   height: 149px;
   background:url(ribbon.png);
   _background: none;
-  _filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src=ribbon.png);
+ 
 }
 #preview {
   background: #f9f9f9; position: relative;

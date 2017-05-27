@@ -39,6 +39,7 @@ class Document extends CI_Controller {
 
         $this->load->view('view-document', $data);
     }
+     
 
     public function upload() {
 

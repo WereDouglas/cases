@@ -43,7 +43,7 @@
                         <tr id="<?php echo $id; ?>" class="edit_tr">
                             <td> 
                                 <?php
-                                if ($loop->image != "" && @getimagesize(''.base_url().'uploads/' . $loop->image)) {
+                                if ($loop->image != "" && @getimagesize('' . base_url() . 'uploads/' . $loop->image)) {
                                     ?>
                                     <img  height="50px" width="50px"  src="<?= base_url(); ?>uploads/<?php echo $loop->image; ?>" alt="logo" />
                                     <?php
@@ -66,22 +66,21 @@
                                 <span id="designation_<?php echo $id; ?>" class="text"><?php echo $designation; ?></span>                                                       
                                 <select  name="designation" class="editbox" id="designation_input_<?php echo $id; ?>" >
                                     <option value="<?php echo $designation; ?>" /><?php echo $designation; ?>
-                                    <option value="Partner" />Partner
-                                    <option value="Associate" />Associate
-                                    <option value="Contract" />Contract
-                                    <option value="Of counsel" />Of counsel
-                                    <option value="Clerk" />Clerk
-                                    <option value="Paralegal" />Para legal
-                                    <option value="Administrator" />Administrator
-                                    <option value="Client" />Client
+                                    <?php foreach ($roles as $loops) { ?>
+                                        <option value="<?php echo $loops->title; ?>" /> <?php echo $loops->title; ?>                           
+                          
+
+                                    <?php } ?>
+
+
                                 </select>
                             </td> 
                             <td class="edit_td">
                                 <span id="status_<?php echo $id; ?>" class="text"><?php echo $status; ?></span>                                                       
                                 <select  name="status" class="editbox" id="status_input_<?php echo $id; ?>" >
                                     <option value="<?php echo $status; ?>" /><?php echo $status; ?>
-                                    <option value="Partner" />Active
-                                    <option value="Associate" />Dull
+                                    <option value="Active" />Active
+                                    <option value="Dull" />Dull
 
                                 </select>
                             </td>  

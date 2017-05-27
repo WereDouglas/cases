@@ -135,18 +135,11 @@
                                 <td id="currency:<?php echo $loop->orgID; ?>" contenteditable="true"><span class="blue"><?php echo $loop->currency; ?></span> </td>
 
                                 <td></td>
-
-
                             </tr>
                             <tr>
-
                                 <td>COUNTRY:</td>
                                 <td id="country:<?php echo $loop->orgID; ?>" contenteditable="true"><span class="blue"><?php echo $loop->country; ?></span> </td>
-
-
                                 <td></td>
-
-
                             </tr>
                             <tr>
 
@@ -154,8 +147,6 @@
                                 <td id="region:<?php echo $loop->orgID; ?>" contenteditable="true"><span class="blue"><?php echo $loop->region; ?></span> </td>
 
                                 <td></td>
-
-
                             </tr>
                             <tr>
 
@@ -176,24 +167,23 @@
 
 
                             </tr>
-                            <tr>
 
+                            <tr>
                                 <td>VAT No:</td>
                                 <td id="vat:<?php echo $loop->orgID; ?>" contenteditable="true"><span class="blue"><?php echo $loop->vat; ?></span> </td>
 
                                 <td></td>
-
-
                             </tr>
                             <tr>
 
                                 <td>TOP HEADER(receipt)</td>
                                 <td colspan="2" id="top:<?php echo $loop->orgID; ?>" contenteditable="true"><span class="blue"><?php echo $loop->top; ?></span> </td>
+                            </tr>
+                            <tr>
+                                <td>DATA SYNC:</td>
+                                <td id="data_sync:<?php echo $loop->orgID; ?>" contenteditable="true"><span class="blue"><?php echo $loop->data_sync; ?></span> </td>
 
-
-
-
-
+                                <td></td>
                             </tr>
 
                             <?php

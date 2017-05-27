@@ -15,6 +15,42 @@ class Home extends CI_Controller {
 
     public function index() {
 
+        $query = $this->Md->query("SELECT name,image FROM org  WHERE image<>''");
+
+        if ($query) {
+            $data['orgs'] = $query;
+        } else {
+            $data['orgs'] = array();
+        }
+        $query = $this->Md->query("SELECT * FROM template WHERE orgID=''  LIMIT 3 ");
+
+        if ($query) {
+            $data['docs'] = $query;
+        } else {
+            $data['docs'] = array();
+        }
+        $query = $this->Md->query("SELECT * FROM events WHERE YEAR(STR_TO_DATE(date,'%Y-%m-%d')) = '" . date('Y') . "' ");
+        if ($query) {
+            $data['payments_year'] = $query;
+        }
+         $query = $this->Md->query("SELECT * FROM users ");
+        if ($query) {
+            $data['users'] = $query;
+        }
+         $query = $this->Md->query("SELECT * FROM client");
+        if ($query) {
+            $data['clients'] = $query;
+        }
+        $query = $this->Md->query("SELECT * FROM file");
+        if ($query) {
+            $data['files'] = $query;
+        }
+        
+        $this->load->view('web', $data);
+    }
+
+    public function registration() {
+
         // $query = $this->Md->query("SELECT * FROM users where org='".$this->session->userdata('orgid')."'");
         $query = $this->Md->query("SELECT * FROM users");
 
@@ -27,6 +63,7 @@ class Home extends CI_Controller {
     }
 
     public function home() {
+
         if ($this->session->userdata('orgID') == "") {
             $this->session->sess_destroy();
             redirect('home', 'refresh');
@@ -78,7 +115,7 @@ class Home extends CI_Controller {
         if ($query) {
             $data['expenses_not_paid'] = $query;
         }
-        
+
         $query = $this->Md->query("SELECT * FROM fees where  orgID='" . $this->session->userdata('orgID') . "' AND paid<>'true'");
         if ($query) {
             $data['fees_not_paid'] = $query;
@@ -87,31 +124,31 @@ class Home extends CI_Controller {
         if ($query) {
             $data['dis_not_paid'] = $query;
         }
-         $query = $this->Md->query("SELECT SUM(sizes) AS size FROM document where  orgID='" . $this->session->userdata('orgID') . "'");
+        $query = $this->Md->query("SELECT SUM(sizes) AS size FROM document where  orgID='" . $this->session->userdata('orgID') . "'");
         // var_dump($query);
-         if ($query) {
+        if ($query) {
             $data['sizes'] = $query;
         }
-        
-         $query = $this->Md->query("SELECT  DISTINCT(fileID) FROM tasks WHERE  orgID='" . $this->session->userdata('orgID') . "' AND MONTH(date) = MONTH(CURDATE()) ORDER BY date DESC" );//AND date ='".date('m')."'
-         //var_dump($query);
-         if ($query) {
+
+        $query = $this->Md->query("SELECT  DISTINCT(fileID) FROM tasks WHERE  orgID='" . $this->session->userdata('orgID') . "' AND MONTH(date) = MONTH(CURDATE()) ORDER BY date DESC"); //AND date ='".date('m')."'
+        //var_dump($query);
+        if ($query) {
             $data['usage_tasks'] = $query;
         }
-        
-         $query = $this->Md->query("SELECT  DISTINCT(fileID) FROM disbursements WHERE  orgID='" . $this->session->userdata('orgID') . "' AND MONTH(date) = MONTH(CURDATE()) ORDER BY date DESC" );//AND date ='".date('m')."'
-         //var_dump($query);
-         if ($query) {
+
+        $query = $this->Md->query("SELECT  DISTINCT(fileID) FROM disbursements WHERE  orgID='" . $this->session->userdata('orgID') . "' AND MONTH(date) = MONTH(CURDATE()) ORDER BY date DESC"); //AND date ='".date('m')."'
+        //var_dump($query);
+        if ($query) {
             $data['usage_dis'] = $query;
         }
-         $query = $this->Md->query("SELECT  DISTINCT(fileID) FROM fees WHERE  orgID='" . $this->session->userdata('orgID') . "' AND MONTH(date) = MONTH(CURDATE()) ORDER BY date DESC" );//AND date ='".date('m')."'
-         //var_dump($query);
-         if ($query) {
+        $query = $this->Md->query("SELECT  DISTINCT(fileID) FROM fees WHERE  orgID='" . $this->session->userdata('orgID') . "' AND MONTH(date) = MONTH(CURDATE()) ORDER BY date DESC"); //AND date ='".date('m')."'
+        //var_dump($query);
+        if ($query) {
             $data['usage_fees'] = $query;
         }
-        $query = $this->Md->query("SELECT  DISTINCT(fileID) FROM expenses WHERE  orgID='" . $this->session->userdata('orgID') . "' AND MONTH(date) = MONTH(CURDATE()) ORDER BY date DESC" );//AND date ='".date('m')."'
-         //var_dump($query);
-         if ($query) {
+        $query = $this->Md->query("SELECT  DISTINCT(fileID) FROM expenses WHERE  orgID='" . $this->session->userdata('orgID') . "' AND MONTH(date) = MONTH(CURDATE()) ORDER BY date DESC"); //AND date ='".date('m')."'
+        //var_dump($query);
+        if ($query) {
             $data['usage_exp'] = $query;
         }
         //SELECT DISTINCT(Date) AS Date FROM buy ORDER BY Date DESC;
@@ -174,54 +211,55 @@ class Home extends CI_Controller {
         // echo md5($password) ;
 
 
-        $get_user = $this->Md->query("SELECT * FROM users where contact = '$email' AND password='$password'");
+        $get_user = $this->Md->query("SELECT *,org.email AS email,users.email AS userEmail,users.address AS userAddress,org.address AS address,users.orgID AS orgID,users.name AS user,org.name AS org,org.image AS orgImage,users.image AS image FROM users LEFT JOIN org ON org.orgID = users.orgID LEFT JOIN roles ON roles.title = users.designation WHERE contact = '$email' AND password='$password'");
 
         if (count($get_user) > 0) {
-
-            $results = $this->Md->get('contact', $email, 'users');
             // var_dump($results);
             //return;
-            foreach ($results as $resv) {
-
-                $orgs = $this->Md->get('orgID', $resv->orgID, 'org');
-                foreach ($orgs as $res) {
-                    $name = $res->name;
-                    $orgimage = $res->image;
-                    $starts = $res->starts;
-                    $ends = $res->ends;
-                    $code = $res->code;
-                    $license = $res->keys;
-                    $address = $res->address;
-                    $orgemail = $res->email;
-                    $currency = $res->currency;
-                    $country = $res->country;
-                    $top = $res->top;
-                    $vat = $res->vat;
-                    $tin = $res->tin;
-                }
-                $this->session->set_userdata('name', $name);
-                $this->session->set_userdata('orgimage', $orgimage);
-                $this->session->set_userdata('address', $address);
-                $this->session->set_userdata('starts', $starts);
-                $this->session->set_userdata('ends', $ends);
-                $this->session->set_userdata('code', $code);
-                $this->session->set_userdata('top', $top);
-                $this->session->set_userdata('vat', $vat);
-                $this->session->set_userdata('tin', $tin);
-                $this->session->set_userdata('country', $country);
-                $this->session->set_userdata('orgemail', $orgemail);
-                $this->session->set_userdata('license', $license);
+            foreach ($get_user as $resv) {
+                $level = $resv->level;
+                $this->session->set_userdata('name', $resv->org);
+                $this->session->set_userdata('orgimage', $resv->orgImage);
+                $this->session->set_userdata('address', $resv->address);
+                $this->session->set_userdata('level', $level);
+                $this->session->set_userdata('code', $resv->code);
+                $this->session->set_userdata('top', $resv->top);
+                $this->session->set_userdata('vat', $resv->vat);
+                $this->session->set_userdata('tin', $resv->tin);
+                $this->session->set_userdata('country', $resv->country);
+                $this->session->set_userdata('orgemail', $resv->emaill);
+                // $this->session->set_userdata('license', $license);
                 $this->session->set_userdata('username', $resv->name);
-                $this->session->set_userdata('orgid', $resv->org);
+                $this->session->set_userdata('orgid', $resv->orgID);
 
+                $views = $this->Md->query_cell("SELECT * FROM  roles where title= '" . $resv->designation . "' AND orgID = '" . $resv->orgID . "'", 'views');
+                $actions = $this->Md->query_cell("SELECT * FROM  roles where title= '" . $resv->designation . "' AND orgID = '" . $resv->orgID . "'", 'actions');
+
+                if (strlen($views) < 3 || strlen($actions) < 3) {
+                    if (strlen($resv->designation) > 2) {
+
+                        $user = array('sync' => 'f', 'id' => $this->GUID(), 'title' => $resv->designation, 'views' => 'calendar time sheets files clients tasks  templates  documents users page', 'actions' => 'create update delete edit', 'orgID' => $resv->orgID);
+                        $this->Md->save($user, 'roles');
+                        $views = 'calendar time sheets files clients tasks  templates documents users';
+                        $actions = 'create update delete edit';
+                    } else {
+
+                        $user = array('sync' => 'f', 'id' => $this->GUID(), 'title' => 'Administrator', 'views' => 'fee expense petty wallet report calendar time sheets files clients tasks payments expenses wallet templates roles  documents users page additions', 'actions' => 'create update delete edit', 'orgID' => $resv->orgID);
+                        $this->Md->save($user, 'roles');
+                        $views = 'fee expense petty wallets report profile organisation calendar time sheets files clients tasks payments expenses wallet templates roles  documents users page additions';
+                        $actions = 'create update delete edit';
+                    }
+                }
                 $newdata = array(
                     'userID' => $resv->userID,
                     'orgID' => $resv->orgID,
-                    'username' => $resv->name,
-                    'email' => $resv->email,
+                    'username' => $resv->user,
+                    'email' => $resv->userEmail,
                     'userimage' => $resv->image,
                     'category' => $resv->category,
                     'designation' => $resv->designation,
+                    'views' => $views,
+                    'actions' => $actions,
                     'status' => $resv->status,
                     'logged_in' => TRUE
                 );
@@ -230,9 +268,17 @@ class Home extends CI_Controller {
             redirect('home/home', 'refresh');
         } else {
 
-            $this->session->set_flashdata('msg', '<div class="alert alert-error">  <strong>  ! User does not exist</div>');
+            $this->session->set_flashdata('msg', '<span href="<?php echo base_url(); ?>index.php/home/registration" class="btn btn-error"> ! User does not exist</span>');
             redirect('home', 'refresh');
         }
+    }
+
+    public function GUID() {
+        if (function_exists('com_create_guid') === true) {
+            return trim(com_create_guid(), '{}');
+        }
+
+        return sprintf('%04X%04X-%04X-%04X-%04X-%04X%04X%04X', mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(16384, 20479), mt_rand(32768, 49151), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535));
     }
 
     public function student() {

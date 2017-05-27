@@ -4,173 +4,83 @@
 <?php echo $this->session->flashdata('msg'); ?>
 
 <div class=" col-md-12 x_panel">
+    <div class="alert alert-info" id="status"></div>
     <h2>DOCUMENTS</h2>  
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-sm">ADD</button>
     <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-md">
             <div class="modal-content col-md-6 col-sm-12">
-                <form  enctype="multipart/form-data" class="form-horizontal form-label-left"  action='<?= base_url(); ?>index.php/document/create'  method="post">
+                <form  enctype="multipart/form-data" class="form-label-left"  action='<?= base_url(); ?>index.php/document/create'  method="post">
 
                     <h1> <span class="section">DOCUMENT INFORMATION</span></h1>
-                    <div class="col-md-12 col-sm-12">                               
-                        <table class="pure-table" style="width:100%;">
+                                               
+                        <div class="form-group">
+                            <label >Name</label> 
+                            <input id="name" class="form-control"   name="name" placeholder="Name" required="required" type="text">
+                        </div>
+                        <div class="form-group">
+                            <label >Select client</label>                            
 
+                            <input class="easyui-combobox form-control" name="client" id="client" style="width:10%;height:26px" data-options="
+                                   url:'<?php echo base_url() ?>index.php/task/client',
+                                   method:'get',
+                                   valueField:'name',
+                                   textField:'name',
+                                   multiple:false,
+                                   panelHeight:'auto'
+                                   ">
+                        </div>
+                        <div class="form-group">
+                            <label >Document owner</label>
+                            <input class="easyui-combobox form-control" name="lawyer" id="file" style="width:10%;height:26px" data-options="
+                                   url:'<?php echo base_url() ?>index.php/task/staff',
+                                   method:'get',
+                                   valueField:'name',
+                                   textField:'name',
+                                   multiple:false,
+                                   panelHeight:'auto'
+                                   ">
+                        </div>
+                        <div class="form-group">
+                            <label >File/ case</label> 
 
-                            <tbody>
+                            <input class="easyui-combobox form-control span12" name="file" id="file"  data-options="
+                                   url:'<?php echo base_url() ?>index.php/task/files',
+                                   method:'get',
+                                   valueField:'name',
+                                   textField:'name',
+                                   multiple:false,
+                                   panelHeight:'auto'
+                                   "> 
 
+                        </div>
+                        <div class="form-group">
+                            <label >Details</label> 
 
-                                <tr>
-                                    <td >Name</td> 
-                                    <td >
-                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <textarea class="form-control" id="form-field-9" name="details" data-maxlength="50"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label >Note</label> 
+                            <textarea class="form-control" id="form-field-9" name="note" data-maxlength="10"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label >Browse for document</label>
+                            <input type="file" name="userfile" id="userfile" class="btn-default btn-small"/>
+                        </div>
+                        <div class="form-group">
+                            <button id="send" type="submit" class="btn btn-success align-right">Submit</button>
 
-                                            <input id="name" class="form-control col-sm-3 col-xs-12"   name="name" placeholder="Name" required="required" type="text">
-                                        </div>
-                                    </td> 
-                                    <td >
+                            <button data-dismiss="modal" class="btn btn-primary align-right">Cancel</button>
 
-                                    </td> 
+                        </div>
 
-
-                                </tr>
-                                <tr>
-                                    <td >Select client</td> 
-                                    <td >
-                                        <div class="col-md-6 col-sm-6 col-xs-12">
-                                            <input class="easyui-combobox form-control" name="client" id="client" style="width:10%;height:26px" data-options="
-                                                   url:'<?php echo base_url() ?>index.php/task/client',
-                                                   method:'get',
-                                                   valueField:'name',
-                                                   textField:'name',
-                                                   multiple:false,
-                                                   panelHeight:'auto'
-                                                   ">
-                                        </div>
-                                    </td> 
-                                    <td >
-
-                                    </td> 
-
-
-                                </tr>
-                                <tr>
-                                    <td >Document owner</td> 
-                                    <td > 
-                                        <div class="col-md-6 col-sm-6 col-xs-12">
-                                            <input class="easyui-combobox form-control" name="lawyer" id="file" style="width:10%;height:26px" data-options="
-                                                   url:'<?php echo base_url() ?>index.php/task/staff',
-                                                   method:'get',
-                                                   valueField:'name',
-                                                   textField:'name',
-                                                   multiple:false,
-                                                   panelHeight:'auto'
-                                                   ">
-                                        </div>
-                                    </td> 
-                                    <td >
-
-                                    </td> 
-
-
-                                </tr>
-                                <tr>
-                                    <td >File/ case</td> 
-                                    <td > <div class="col-md-6 col-sm-6 col-xs-12">
-                                            <input class="easyui-combobox form-control span12" name="file" id="file"  data-options="
-                                                   url:'<?php echo base_url() ?>index.php/task/files',
-                                                   method:'get',
-                                                   valueField:'name',
-                                                   textField:'name',
-                                                   multiple:false,
-                                                   panelHeight:'auto'
-                                                   "> 
-
-                                        </div>
-                                    </td> 
-                                    <td >
-
-                                    </td> 
-
-
-                                </tr>
-                                <tr>
-                                    <td >Details</td> 
-                                    <td > <textarea class="span12" id="form-field-9" name="details" data-maxlength="50"></textarea>
-                                    </td> 
-                                    <td >
-
-                                    </td> 
-
-
-                                </tr>
-                                <tr>
-                                    <td >Note</td> 
-                                    <td ><textarea class="span12" id="form-field-9" name="note" data-maxlength="10"></textarea>
-                                    </td> 
-                                    <td >
-
-                                    </td> 
-
-
-                                </tr>
-                                <tr>
-                                    <td >Browse for document</td> 
-                                    <td >  <div class="col-md-6 col-sm-6 col-xs-12">
-                                            <input type="file" name="userfile" id="userfile" class="btn-default btn-small"/>
-
-                                        </div> </td> 
-                                    <td >
-
-                                    </td> 
-
-
-                                </tr>
-                                <tr>
-
-                                    <td > <button id="send" type="submit" class="btn btn-success align-right">Submit</button>
-                                    </td> 
-                                    <td >
-                                        <button data-dismiss="modal" class="btn btn-primary align-right">Cancel</button>
-
-                                    </td> 
-                                    <td ></td> 
-
-
-                                </tr>
-
-
-
-
-                            </tbody>
-                        </table>
-
-                    </div>
-
-                    <div class="form-group col-md-12">
-
-                        <div class="col-md-6 col-sm-6 col-xs-6">                       
-
-                            <div class="col-md-12 col-sm-12 col-xs-12">
-
-
-                            </div>
-                        </div> 
-
-
-                    </div>
-
-
+                </form>
             </div>
-
-
-
-            </form>
         </div>
     </div>
 </div>
 
 <div class="x_content scroll">
-
     <table id="datatable" class="table table-striped table-bordered scroll ">
         <thead>
             <tr>
@@ -208,7 +118,7 @@
                         <a class="btn btn-danger btn-xs" href="<?php echo base_url() . "index.php/document/delete/" . $loop->documentID; ?>"><li class="fa fa-trash">Delete</li></a>
                     </td>
                     <td class="center">
-                        <a class="btn btn-successr btn-xs" href="<?php echo base_url() . "documents/" . $loop->fileUrl; ?>"><li class="fa fa-download">Download</li></a>
+                        <a target="new" class="btn btn-successr btn-xs" href="<?php echo base_url() . "documents/" . $loop->name; ?>"><li class="fa fa-download">Download</li></a>
                     </td>
                     <td class="center">
                         <?php echo $loop->sizes; ?>
@@ -243,6 +153,7 @@
 </script>
 <script>
     $(document).ready(function () {
+        $("#status").hide();
         $(function () {
             //acknowledgement message
             var message_status = $("#status");
@@ -264,8 +175,5 @@
 
         });
     });
-
-
-
 
 </script>

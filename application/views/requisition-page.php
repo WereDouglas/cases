@@ -39,138 +39,95 @@
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-sm">ADD</button>
     <div class="modal bs-example-modal-sm" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-md col-md-12 col-sm-12">
-            <div class="modal-content col-md-12 col-sm-12">             
-
-
+            <div class="modal-content col-md-12 col-sm-12">
                 <div class="col-md-12 col-sm-12"> 
-                    <div class="col-md-12 col-sm-12">
-                        <h1 class="count orange align-center"><b>REQUISITION</b></h1>                              
-                    </div>
+
+                    <h1 class="count orange align-center"><b>REQUISITION</b></h1>                              
+
 
                     <form  enctype="multipart/form-data" class="form-horizontal col-md-12 col-sm-12"  action='<?= base_url(); ?>index.php/expense/request'  method="post">
-                        <br>
-                        <div class=" form-group col-md-12 col-sm-12">   
-                            <div class="col-md-12 col-sm-12">     
-                                <div class="form-group">
-                                    <label class="control-label col-md-3 col-sm-3">Date</label>
-                                    <div class="col-md-8 col-sm-8 ">                                   
-                                        <input class="easyui-datebox" name="date" id="date"/>                                    
-                                    </div>
-                                </div>
-                            </div>
-                            <label class="control-label col-md-3 col-sm-3">Select client</label>
-                            <div class="col-md-8 col-sm-8">
-                                <input class="easyui-combobox form-control" name="client" id="client" style="width:70%;height:26px" data-options="
-                                       url:'<?php echo base_url() ?>index.php/task/client',
-                                       method:'get',
-                                       valueField:'name',
-                                       textField:'name',
-                                       multiple:false,
-                                       panelHeight:'auto'
-                                       ">
-                            </div>
-                        </div>
-                        <div class="form-group col-md-12 col-sm-12">     
-                            <label class="control-label col-md-3 col-sm-3 ">File/Case</label>
-                            <div class="col-md-8 col-sm-8 ">
 
-                                <input class="easyui-combobox form-control" name="file" id="file" style="width:70%;height:26px" data-options="
-                                       url:'<?php echo base_url() ?>index.php/task/files',
-                                       method:'get',
-                                       valueField:'name',
-                                       textField:'name',
-                                       multiple:false,
-                                       panelHeight:'auto'
-                                       ">
-                            </div>
+                        <div class="form-group">
+                            <label >Date</label>                                                                   
+                            <input class="easyui-datebox" name="date" id="date"/>                                    
+                        </div>
+                        <div class="form-group">  
+                            <label>Select client</label>
+
+                            <input class="easyui-combobox form-control" name="client" id="client" style="width:70%;height:26px" data-options="
+                                   url:'<?php echo base_url() ?>index.php/task/client',
+                                   method:'get',
+                                   valueField:'name',
+                                   textField:'name',
+                                   multiple:false,
+                                   panelHeight:'auto'
+                                   ">
+
+                        </div>
+                        <div class="form-group">     
+                            <label>File/Case</label>
+                            <input class="easyui-combobox form-control" name="file" id="file" style="width:70%;height:26px" data-options="
+                                   url:'<?php echo base_url() ?>index.php/task/files',
+                                   method:'get',
+                                   valueField:'name',
+                                   textField:'name',
+                                   multiple:false,
+                                   panelHeight:'auto'
+                                   ">
+                        </div> 
+                        <div class="form-group">     
+                            <label>Requested by</label>
+                            <input class="easyui-combobox form-control" name="laywer" id="lawyer" style="width:70%;height:26px" data-options="
+                                   url:'<?php echo base_url() ?>index.php/task/users',
+                                   method:'get',
+                                   valueField:'name',
+                                   textField:'name',
+                                   multiple:false,
+                                   panelHeight:'auto'
+                                   ">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Reason for request</label>
+                            <textarea class="form-control" id="form-field-9" name="reason" data-maxlength="10"></textarea>
+
+                        </div>
+
+                        <div class="form-group">
+                            <label >Amount requested</label> 
+                            <input id="amount" class="form-control"  name="amount" placeholder="" required="required" type="text">
+                        </div>                      
+                        <div class="form-group">                           
+                            <label >Method of payment</label>                                
+                            <select class="form-control" id="method" name="method" >                                                         
+                                <option value="Cash" >Cash</option>
+                                <option value="Cheque" >Cheque</option>
+                            </select> 
+                        </div> 
+
+                        <div class="form-group">
+                            <label >Outcome</label>
+                            <input id="outcome" class="form-control"  name="outcome" placeholder=""  type="text">
 
                         </div> 
-                        <div class=" form-group col-md-12 col-sm-12">     
-                            <label class="control-label col-md-3 col-sm-3 ">Requested by</label>
-                            <div class="col-md-8 col-sm-8 ">
 
-                                <input class="easyui-combobox form-control" name="laywer" id="lawyer" style="width:70%;height:26px" data-options="
-                                       url:'<?php echo base_url() ?>index.php/task/users',
-                                       method:'get',
-                                       valueField:'name',
-                                       textField:'name',
-                                       multiple:false,
-                                       panelHeight:'auto'
-                                       ">
-                            </div>
-
+                        <div class="form-group">     
+                            <label >To be authorised by</label>
+                            <input class="easyui-combobox form-control" name="signed" id="signed" style="width:70%;height:26px" data-options="
+                                   url:'<?php echo base_url() ?>index.php/task/users',
+                                   method:'get',
+                                   valueField:'name',
+                                   textField:'name',
+                                   multiple:false,
+                                   panelHeight:'auto'
+                                   ">
                         </div>
-
-                        <div class="col-md-12 col-sm-12">                       
-
-                            <div class="item form-group">
-                                <label class="control-label col-md-3 col-sm-3">Reason for request</label>
-                                <div class="col-md-9 col-sm-9">
-                                    <textarea class="col-md-9 col-sm-9" id="form-field-9" name="reason" data-maxlength="10"></textarea>
-                                </div>
-                            </div>
-                        </div>                    
-
-                        <div class="item form-group col-md-12 col-sm-12">
-                            <div class="item form-group">
-                                <label class="control-label col-md-3 col-sm-3" for="name">Amount requested</label> 
-                                <div class="col-md-9 col-sm-9 ">
-                                    <input id="amount" style="border:0;outline:0; height:32px;  border-bottom: 1px solid grey;width: 100%;"  name="amount" placeholder="" required="required" type="text">
-                                </div> 
-                            </div> 
-
+                        <div class="form-group">
+                            <label >Deadline</label>
+                            <input class="easyui-datebox" name="deadline" id="deadline"/> 
                         </div>
-                        <div class="item form-group col-md-12 col-sm-12">
-                            <div class="item form-group">
-                                <label class="control-label col-md-3 col-sm-3" for="name">Method of payment</label> 
-                                <div class="col-md-9 col-sm-9 ">
-                                    <select class="form-control" id="method" name="method" >                                                         
-                                        <option value="Cash" >Cash</option>
-                                        <option value="Cheque" >Cheque</option>
-
-                                    </select></div> 
-                            </div> 
-
-                        </div>
-                        <div class="item form-group col-md-12 col-sm-12">
-                            <div class="item form-group">
-                                <label class="control-label col-md-3 col-sm-3" for="name">Outcome</label> 
-                                <div class="col-md-9 col-sm-9 ">
-                                    <input id="outcome" style="border:0;outline:0; height:32px;  border-bottom: 1px solid grey;width: 100%;"  name="outcome" placeholder=""  type="text">
-                                </div> 
-                            </div> 
-
-                        </div>
-                        <div class=" form-group col-md-12 col-sm-12">     
-                            <label class="control-label col-md-3 col-sm-3 ">To be authorised by</label>
-                            <div class="col-md-8 col-sm-8 ">
-
-                                <input class="easyui-combobox form-control" name="signed" id="signed" style="width:70%;height:26px" data-options="
-                                       url:'<?php echo base_url() ?>index.php/task/users',
-                                       method:'get',
-                                       valueField:'name',
-                                       textField:'name',
-                                       multiple:false,
-                                       panelHeight:'auto'
-                                       ">
-                            </div>
-
-                        </div>
-                        <div class=" form-group col-md-12 col-sm-12">   
-                            <div class="col-md-12 col-sm-12">     
-                                <div class="form-group">
-                                    <label class="control-label col-md-3 col-sm-3">Deadline</label>
-                                    <div class="col-md-8 col-sm-8 ">                                   
-                                        <input class="easyui-datebox" name="deadline" id="deadline"/>                                    
-                                    </div>
-                                </div>
-                            </div>
-                        </div> 
-                        <div class="col-md-12 col-sm-12">                           
-                            <button id="send" type="submit" class="btn btn-success align-right">Submit</button>
-                            <button  class="btn btn-primary align-right"  data-dismiss="modal">Cancel</button>
-                        </div>
-
+                        <button  class="btn btn-primary align-left"  data-dismiss="modal">Cancel</button>
+                        <button id="send" type="submit" class="btn btn-success align-right">Submit</button>
 
                     </form>
 

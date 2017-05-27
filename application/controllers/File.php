@@ -39,40 +39,6 @@ class File extends CI_Controller {
         $this->load->view('file-page', $data);
     }
 
-    public function upload() {
-
-        $this->load->helper(array('form', 'url'));
-        if ($this->input->post('action') == 'update') {
-
-            $result = $this->Md->check($this->input->post('userID'), 'userID', 'users');
-
-            if (!$result) {
-                $id = $this->input->post('userID');
-                $user = array('name' => $this->input->post('name'), 'address' => $this->input->post('address'), 'image' => $this->input->post('image'), 'contact' => $this->input->post('contact'), 'designation' => $this->input->post('designation'), 'status' => $this->input->post('status'), 'address' => $this->input->post('address'), 'category' => $this->input->post('category'));
-
-                $this->Md->update_dynamic($id, 'userID', 'users', $user);
-                echo 'user information updated';
-                return;
-            } else {
-                $users = array('userID' => $this->input->post('userID'), 'orgID' => $this->input->post('orgID'), 'image' => $this->input->post('image'), 'name' => $this->input->post('name'), 'email' => $this->input->post('email'), 'password' => ($this->input->post('password')), 'designation' => $this->input->post('designation'), 'image' => $this->input->post('image'), 'address' => $this->input->post('address'), 'contact' => $this->input->post('contact'), 'category' => $this->input->post('category'), 'created' => $this->input->post('created'), 'status' => $this->input->post('status'), 'action' => 'null');
-                $this->Md->save($users, 'users');
-                echo "Information saved online";
-                return;
-            }
-        }
-        if ($this->input->post('action') == 'create') {
-
-            $files = array('fileID' => $this->input->post('fileID'), 'client' => $this->input->post('client'), 'lawyer' => $this->input->post('lawyer'), 'orgID' => $this->session->userdata('orgID'), 'details' => $this->input->post('details'), 'name' => $this->input->post('name'), 'type' => $this->input->post('type'), 'created' => date('Y-m-d H:i:s'), 'status' => $this->input->post('status'), 'no' => $this->input->post('no'), 'subject' => $this->input->post('subject'), 'citation' => $this->input->post('citation'), 'law' => $this->input->post('law'));
-            $this->Md->save($files, 'file');
-
-            echo "File information saved online";
-            return;
-        }
-        if ($this->input->post('action') == 'delete') {
-            $query = $this->Md->cascade($this->input->post('fileID'), 'file', 'fileID');
-        }
-    }
-
     public function add() {
 
         $query = $this->Md->query("SELECT * FROM users where orgID = '" . $this->session->userdata('orgID') . "'");
@@ -343,7 +309,7 @@ class File extends CI_Controller {
         $this->load->helper(array('form', 'url'));
         $id = $this->input->post('id');
 
-        $file = array('name' => $this->input->post('name'), 'type' => $this->input->post('type'), 'details' => $this->input->post('details'), 'subject' => $this->input->post('subject'), 'client' => $this->input->post('client'), 'lawyer' => $this->input->post('lawyer'), 'no' => $this->input->post('no'), 'type' => $this->input->post('type'), 'citation' => $this->input->post('citation'), 'law' => $this->input->post('law'), 'status' => $this->input->post('status'));
+        $file = array('name' => $this->input->post('name'), 'type' => $this->input->post('type'), 'details' => $this->input->post('details'), 'subject' => $this->input->post('subject'), 'client' => $this->input->post('client'), 'lawyer' => $this->input->post('lawyer'), 'no' => $this->input->post('no'), 'type' => $this->input->post('type'), 'citation' => $this->input->post('citation'), 'law' => $this->input->post('law'), 'status' => $this->input->post('status'),'sync' =>  date('Y-m-d H:i:s'));
         $this->Md->update_dynamic($id, 'fileID', 'file', $file);
         echo 'FILE INFORMATION UPDATED';
     }
@@ -374,7 +340,7 @@ class File extends CI_Controller {
         $no = $this->session->userdata('code') . "/" . $app . "/" . date('y') . "/" . date('m') . (int) date('d') . (int) date('H') . (int) date('i') . (int) date('ss');
         $orgID = $this->session->userdata('orgID');
         if ($this->input->post('client') != "" || $this->input->post('name') != "") {
-            $files = array('fileID' => $this->GUID(), 'client' => $this->input->post('client'), 'contact' => $contact, 'lawyer' => $this->input->post('lawyer'), 'orgID' => $this->session->userdata('orgID'), 'details' => $this->input->post('details'), 'name' => $this->input->post('name'), 'contact_person' => $this->input->post('contact_person'), 'contact_number' => $this->input->post('contact_number'), 'opened' => date('Y-m-d', strtotime($this->input->post('opened'))), 'type' => $this->input->post('type'), 'created' => date('Y-m-d'), 'status' => 'Active', 'no' => $this->input->post('no'), 'subject' => $this->input->post('subject'), 'case' => $this->input->post('case'), 'note' => $this->input->post('note'), 'progress' => $this->input->post('progress'), 'citation' => $this->input->post('citation'), 'law' => $this->input->post('law'), 'action' => 'none', 'due' =>  date('Y-m-d', strtotime($this->input->post('due'))));
+            $files = array('fileID' => $this->GUID(), 'client' => $this->input->post('client'), 'contact' => $contact, 'lawyer' => $this->input->post('lawyer'), 'orgID' => $this->session->userdata('orgID'), 'details' => $this->input->post('details'), 'name' => $this->input->post('name'), 'contact_person' => $this->input->post('contact_person'), 'contact_number' => $this->input->post('contact_number'), 'opened' => date('Y-m-d', strtotime($this->input->post('opened'))), 'type' => $this->input->post('type'), 'created' => date('Y-m-d'), 'status' => 'Active', 'no' => $this->input->post('no'), 'subject' => $this->input->post('subject'), 'case' => $this->input->post('case'), 'note' => $this->input->post('note'), 'progress' => $this->input->post('progress'), 'citation' => $this->input->post('citation'), 'law' => $this->input->post('law'), 'action' => 'none', 'due' =>  date('Y-m-d', strtotime($this->input->post('due'))),'sync' =>  date('Y-m-d H:i:s'));
             $this->Md->save($files, 'file');
 
             $this->session->set_flashdata('msg', '<div class="alert alert-success">
@@ -426,7 +392,7 @@ class File extends CI_Controller {
                 $field_name = $split_data[0];
                 if (!empty($user_id) && !empty($field_name) && !empty($val)) {
                     //update the values
-                    $task = array($field_name => $val);
+                    $task = array($field_name => $val,'sync' =>  date('Y-m-d H:i:s'));
                     // $this->Md->update($user_id, $task, 'tasks');
                     $this->Md->update_dynamic($user_id, 'fileID', 'file', $task);
                     echo "Updated";

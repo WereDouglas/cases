@@ -65,6 +65,7 @@
                             <div class="menu_section">
                                 <h3>Home</h3>
                                 <ul class="nav side-menu">
+                                    
                                     <li><a href="<?php echo base_url() . "index.php/task/add"; ?>" target="frame"><i class="fa fa-calendar"></i> Calendar </a>
 
                                         <!--                                        <ul class="nav child_menu">
@@ -73,88 +74,139 @@
                                         
                                                                                 </ul>-->
                                     </li>
+                                                                  
                                     <li><a href="<?php echo base_url() . "index.php/task/cause"; ?>" target="frame"><i class="fa fa-bank"></i>Cause list <span class="fa fa-chevron-down"></span></a> </li>
 
+                                    <?php if (strpos($this->session->userdata('views'), 'time') == true || strpos($this->session->userdata('views'), 'sheets') == true ) { ?>
+                                        <li><a><i class="fa fa-balance-scale"></i>Time sheet<span class="fa fa-chevron-down"></span></a>
+                                            <ul class="nav child_menu">
 
-                                    <li><a><i class="fa fa-balance-scale"></i>Time sheet<span class="fa fa-chevron-down"></span></a>
-                                        <ul class="nav child_menu">
+                                                <li><a href="<?php echo base_url() . "index.php/time/"; ?>" target="frame">View</a></li>
+                                                <li><a href="<?php echo base_url() . "index.php/time/advanced"; ?>" target="frame">Advanced</a></li>
 
-                                            <li><a href="<?php echo base_url() . "index.php/time/"; ?>" target="frame">View</a></li>
-                                            <li><a href="<?php echo base_url() . "index.php/time/advanced"; ?>" target="frame">Advanced</a></li>
+                                            </ul>
+                                        </li>
+                                    <?php } ?>
+                                    <?php if (strpos($this->session->userdata('views'), 'clients') == true) { ?>
+                                        <li><a><i class="fa fa-user"></i>Clients<span class="fa fa-chevron-down"></span></a>
+                                            <ul class="nav child_menu">
+                                                <li><a href="<?php echo base_url() . "index.php/client/add"; ?>" target="frame">Add Client</a></li>
+                                                <li><a href="<?php echo base_url() . "index.php/client/view"; ?>" target="frame">View Clients</a></li>
+                                                <li><a href="<?php echo base_url() . "index.php/client/advanced"; ?>" target="frame">Advanced</a></li>
+                                            </ul>
+                                        </li>
+                                    <?php } ?>
+                                       
+                                        <li><a><i class="fa fa-folder"></i>Files/Cases<span class="fa fa-chevron-down"></span></a>
+                                            <ul class="nav child_menu">
+                                                <li><a href="<?php echo base_url() . "index.php/file/add"; ?>" target="frame">Add</a></li>
+                                                <li><a href="<?php echo base_url() . "index.php/file/view"; ?>" target="frame">View</a></li>
+                                                <li><a href="<?php echo base_url() . "index.php/file/advanced"; ?>" target="frame">Advanced</a></li>
+                                            </ul>
+                                        </li>
+                                   
+                                    <?php if (strpos($this->session->userdata('views'), 'events') == true) { ?>
+                                        <li><a><i class="fa fa-briefcase"></i>Files<span class="fa fa-chevron-down"></span></a>
+                                            <ul class="nav child_menu">
+                                                <li><a href="<?php echo base_url() . "index.php/file/add"; ?>" target="frame">New</a></li>
+                                                <li><a href="<?php echo base_url() . "index.php/file/view"; ?>" target="frame">View</a></li>
+                                                <li><a href="<?php echo base_url() . "index.php/file/advanced"; ?>" target="frame">Advanced</a></li>
 
-                                        </ul>
+                                            </ul>
+                                        </li>
+                                    <?php } ?>
+                                    <?php if (strpos($this->session->userdata('views'), 'events') == true) { ?>
+
+                                        <li><a><i class="fa fa-table"></i>Tasks <span class="fa fa-chevron-down"></span></a>
+                                            <ul class="nav child_menu">
+                                                <li><a href="<?php echo base_url() . "index.php/task/view"; ?>" target="frame">List of events</a></li>
+
+                                            </ul>
+                                        </li>
+                                    <?php } ?>
+                                    <?php if (strpos($this->session->userdata('views'), 'payments') == true) { ?>
+                                        <li><a><i class="fa fa-paypal"></i>Payments<span class="fa fa-chevron-down"></span></a>
+                                            <ul class="nav child_menu">
+                                                <li><a href="<?php echo base_url() . "index.php/payment/payments"; ?>" target="frame">Payments</a></li>
+                                                <li><a href="<?php echo base_url() . "index.php/payment/invoices"; ?>" target="frame">Invoices</a></li>
+                                                <li><a href="<?php echo base_url() . "index.php/payment/fees"; ?>" target="frame">Fees</a></li>   
+                                                <li><a href="<?php echo base_url() . "index.php/payment/disbursements"; ?>" target="frame">Disbursements</a></li>   
+                                                <li><a href="<?php echo base_url() . "index.php/transaction/advanced"; ?>" target="frame">Advanced</a></li>
+
+                                            </ul>
+                                        </li>
+                                    <?php } ?>
+                                    <?php if (strpos($this->session->userdata('views'), 'expenses') == true) { ?>
+                                        <li><a><i class="fa fa-cart-plus"></i>Expenses <span class="fa fa-chevron-down"></span></a>
+                                            <ul class="nav child_menu">
+                                                <li><a href="<?php echo base_url() . "index.php/expense/expenses"; ?>" target="frame">Expenses</a></li>
+                                                <li><a href="<?php echo base_url() . "index.php/petty"; ?>" target="frame">Petty expenses</a></li>
+
+                                                <li><a href="<?php echo base_url() . "index.php/expense/requisitions"; ?>" target="frame">Requisitions</a></li>
+                                                <li><a href="<?php echo base_url() . "index.php/transaction/advanced"; ?>" target="frame">Advanced</a></li>
+
+                                            </ul>
+                                        </li>
+                                    <?php } ?>
+                                    <?php if (strpos($this->session->userdata('views'), 'wallets') == true) { ?>
+                                        <li><a><i class="fa fa-cc-amex"></i>Wallet <span class="fa fa-chevron-down"></span></a>
+                                            <ul class="nav child_menu">
+                                                <li><a href="<?php echo base_url() . "index.php/wallet"; ?>" target="frame">Wallets</a></li>
+                                                <li><a href="<?php echo base_url() . "index.php/wallet/reports"; ?>" target="frame">Reports</a></li>
+
+                                            </ul>
+                                        </li>
+                                    <?php } ?>
+                                    <?php if (strpos($this->session->userdata('views'), 'documents') == true) { ?>
+                                        <li><a href="<?php echo base_url() . "index.php/document"; ?>" target="frame"><i class="fa fa-clone"></i> Documents<span class="label label-danger pull-right">
+                                            <?php
+                                                    foreach ($sizes as $loop) {
+                                                        ?>  
+                                                        <?php echo number_format(($loop->size / 1000), 2) . 'MBS'; ?>
+
+
+                                                        <?php
+                                                    }
+                                                    ?></span></a>
+
+                                        </li>
+                                    <?php } ?>
+                                    <li><a href="<?php echo base_url() . "index.php/template"; ?>" target="frame"><i class="fa fa-file"></i>Templates<span class="label label-danger pull-right">
+                                            </span></a>
+
                                     </li>
-                                    <li><a><i class="fa fa-user"></i>Clients<span class="fa fa-chevron-down"></span></a>
-                                        <ul class="nav child_menu">
-                                            <li><a href="<?php echo base_url() . "index.php/client/add"; ?>" target="frame">Add Client</a></li>
-                                            <li><a href="<?php echo base_url() . "index.php/client/view"; ?>" target="frame">View Clients</a></li>
-                                            <li><a href="<?php echo base_url() . "index.php/client/advanced"; ?>" target="frame">Advanced</a></li>
-                                        </ul>
-                                    </li>
+                                    <?php if ($this->session->userdata('level') == "Administrator") { ?>
+                                        <li><a href="<?php echo base_url() . "index.php/administration"; ?>" target="frame"><i class="fa fa-code"></i>Manage<span class="label label-danger pull-right">
+                                                </span></a>
+                                        </li>
+                                    <?php } ?>
 
-                                    <li><a><i class="fa fa-briefcase"></i>Files<span class="fa fa-chevron-down"></span></a>
-                                        <ul class="nav child_menu">
-                                            <li><a href="<?php echo base_url() . "index.php/file/add"; ?>" target="frame">New</a></li>
-                                            <li><a href="<?php echo base_url() . "index.php/file/view"; ?>" target="frame">View</a></li>
-                                            <li><a href="<?php echo base_url() . "index.php/file/advanced"; ?>" target="frame">Advanced</a></li>
-
-                                        </ul>
-                                    </li>
-
-
-                                    <li><a><i class="fa fa-table"></i>Tasks <span class="fa fa-chevron-down"></span></a>
-                                        <ul class="nav child_menu">
-                                            <li><a href="<?php echo base_url() . "index.php/task/view"; ?>" target="frame">All</a></li>
-
-                                        </ul>
-                                    </li>
-                                    <li><a><i class="fa fa-paypal"></i>Payments<span class="fa fa-chevron-down"></span></a>
-                                        <ul class="nav child_menu">
-                                            <li><a href="<?php echo base_url() . "index.php/payment/payments"; ?>" target="frame">Payments</a></li>
-                                            <li><a href="<?php echo base_url() . "index.php/payment/invoices"; ?>" target="frame">Invoices</a></li>
-                                            <li><a href="<?php echo base_url() . "index.php/payment/fees"; ?>" target="frame">Fees</a></li>   
-                                            <li><a href="<?php echo base_url() . "index.php/payment/disbursements"; ?>" target="frame">Disbursements</a></li>   
-                                            <li><a href="<?php echo base_url() . "index.php/transaction/advanced"; ?>" target="frame">Advanced</a></li>
-
-                                        </ul>
-                                    </li>
-                                    <li><a><i class="fa fa-cc-mastercard"></i>Expenses <span class="fa fa-chevron-down"></span></a>
-                                        <ul class="nav child_menu">
-                                            <li><a href="<?php echo base_url() . "index.php/expense/expenses"; ?>" target="frame">Expenses</a></li>
-                                            <li><a href="<?php echo base_url() . "index.php/expense/requisitions"; ?>" target="frame">Requisitions</a></li>
-                                            <li><a href="<?php echo base_url() . "index.php/transaction/advanced"; ?>" target="frame">Advanced</a></li>
-
-                                        </ul>
-                                    </li>
-                                    <li><a href="<?php echo base_url() . "index.php/document"; ?>" target="frame"><i class="fa fa-clone"></i> Documents<span class="label label-danger pull-right"><?php
-                                                foreach ($sizes as $loop) {
-                                                    ?>  
-                                                    <?php echo number_format(($loop->size / 1000), 2) . 'MBS'; ?>
-
-
-                                                    <?php
-                                                }
-                                                ?></span></a>
-
-                                    </li>
                                 </ul>
                             </div>
                             <div class="menu_section">
                                 <h3>Settings</h3>
                                 <ul class="nav side-menu">
-                                    <li><a href="<?php echo base_url() . "index.php/message/"; ?>" target="frame"><i class="fa fa-envelope-o"></i> Messages </a></li>                                  
+<!--                                    <li><a href="<?php echo base_url() . "index.php/message/"; ?>" target="frame"><i class="fa fa-envelope-o"></i> Messages </a></li>                                  -->
 
                                     <li><a href="<?php echo base_url() . "files/Cp.msi"; ?>"><i class="fa fa-laptop"></i> Desktop application<span class="label label-success pull-right">Coming Soon</span></a></li>
 
                                     <li><a><i class="fa fa-user"></i>Users<span class="fa fa-chevron-down"><span class="label label-danger pull-right"><?php echo count($users) ?></span></span></a>
                                         <ul class="nav child_menu">
-                                            <li><a href="<?php echo base_url() . "index.php/user/add"; ?>" target="frame">Add user</a></li>
-                                            <li><a href="<?php echo base_url() . "index.php/user/staff"; ?>" target="frame">Staff</a></li>
-                                            <li><a href="<?php echo base_url() . "index.php/user/charges"; ?>" target="frame">Charges</a></li>
+                                            <?php if (strpos($this->session->userdata('views'), 'users') == true) { ?>
+                                                <li><a href="<?php echo base_url() . "index.php/user/add"; ?>" target="frame">Add user</a></li>
+
+                                                <li><a href="<?php echo base_url() . "index.php/user/staff"; ?>" target="frame">Users</a></li>                                              
+                                                <li><a href="<?php echo base_url() . "index.php/user/charges"; ?>" target="frame">Charges</a></li>
+                                            <?php } ?>
+                                            <?php if (strpos($this->session->userdata('views'), 'roles') == true) { ?>
+                                                <li><a href="<?php echo base_url() . "index.php/role"; ?>" target="frame">Roles</a></li>
+                                            <?php } ?>
+
                                         </ul>
                                     </li>
-                                    <li><a href="<?php echo base_url() . "index.php/organisation/profile"; ?>" target="frame"><i class="fa fa-cogs"></i> Organisational profile<span class="label label-success pull-right">manage</span></a></li>
-
+                                    <?php if (strpos($this->session->userdata('views'), 'profile') == true || strpos($this->session->userdata('views'), 'organisation') == true) { ?>
+                                        <li><a href="<?php echo base_url() . "index.php/organisation/profile"; ?>" target="frame"><i class="fa fa-cogs"></i> Organisational profile<span class="label label-success pull-right">manage</span></a></li>
+                                    <?php } ?>
                                 </ul>
 
                             </div>
@@ -193,7 +245,7 @@
                             <ul class="nav navbar-nav navbar-right">
                                 <li class="">
                                     <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                                        <img  height="50px" width="100px" class="" src="<?= base_url(); ?>uploads/<?php echo $this->session->userdata('orgimage'); ?>" alt="........" />
+                                        <img  height="50px" width="100px" class="" src="<?= base_url(); ?>uploads/<?php echo $this->session->userdata('userimage'); ?>" alt="........" />
                                         <?php echo $this->session->userdata('username'); ?>
                                         <span class=" fa fa-angle-down"></span>
                                     </a>
