@@ -188,6 +188,7 @@ if (is_array($files) && count($files)) {
         <link href="<?= base_url(); ?>web/css/custom.css" rel="stylesheet">
         <script src="<?= base_url(); ?>web/js/respond.js"></script>
         <link rel=icon href="<?= base_url(); ?>images/favicon.ico">
+        <link rel="shortcut icon" href="<?= base_url(); ?>images/favicon.ico">
     </head>
 
     <body>

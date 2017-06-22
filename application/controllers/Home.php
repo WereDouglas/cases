@@ -265,7 +265,7 @@ class Home extends CI_Controller {
                 );
                 $this->session->set_userdata($newdata);
             }
-            redirect('home/home', 'refresh');
+            redirect('home', 'refresh');
         } else {
 
             $this->session->set_flashdata('msg', '<span href="<?php echo base_url(); ?>index.php/home/registration" class="btn btn-error"> ! User does not exist</span>');
