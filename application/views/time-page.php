@@ -1,190 +1,271 @@
-<html>
-    <head>
-        <title></title>
-        <link href="<?php echo base_url(); ?>vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-        <link type="text/css" rel="stylesheet" href="<?= base_url(); ?>media/layout.css?<?php echo "me";?>" />
 
-        <link type="text/css" rel="stylesheet" href="<?= base_url(); ?>themes/scheduler_8.css" />    
-        <link type="text/css" rel="stylesheet" href="<?= base_url(); ?>themes/bubble_default.css" />    
-        <link type="text/css" rel="stylesheet" href="<?= base_url(); ?>themes/navigator_white.css" /> 
+<link rel='stylesheet' type='text/css' href='<?= base_url(); ?>libs/css/smoothness/jquery-ui-1.8.11.custom.css' />
+<link rel="stylesheet" type="text/css" href="<?= base_url(); ?>js/jquery.weekcalendar.css" />
+<link rel="stylesheet" type="text/css" href="<?= base_url(); ?>skins/default.css" />
+<link rel="stylesheet" type="text/css" href="<?= base_url(); ?>skins/gcalendar.css" />
+<style type="text/css">
+    body {
+        font-family: "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
+        margin: 0;
+    }
 
-        <!-- helper libraries -->
-        <script src="<?= base_url(); ?>js/jquery-1.9.1.min.js" type="text/javascript"></script>	
-        <!-- daypilot libraries -->
-        <script src="<?= base_url(); ?>js/daypilot/daypilot-all.min.js" type="text/javascript"></script>
+    h1 {
+        margin:0 0 2em;
+        padding: 0.5em;
+        font-size: 1.3em;
+    }
 
+    p.description {
+        font-size: 0.8em;
+        padding: 1em;
+        position: absolute;
+        top: 1.2em;
+        margin-right: 400px;
+    }
 
-    </head>
-    <body>
+    #calendar_selection {
+        font-size: 0.7em;
+        position: absolute;
+        top: 1em;
+        right: 1em;
+        padding: 1em;
+        background: #ffc;
+        border: 1px solid #dda;
+        width: 270px;
+    }
 
-        <div class="shadow"></div>
-        <div class="hideSkipLink">
-        </div>
-        <div class="main">
-            <div class=" col-md-2 x_panel">
-                <div class="space">
+    #message {
+        font-size: 0.7em;
+        position: absolute;
+        top: 1em;
+        right: 320px;
+        padding: 1em;
+        background: #ddf;
+        border: 1px solid #aad;
+        width: 270px;
+    }
+</style>
 
-<!--                    <a href="<?php echo base_url() . "index.php/time/admin"; ?>" target="frame"><i class="fa fa-calendar"></i> Admin <span class="fa fa-chevron-down"></span></a>|-->
+<script type='text/javascript' src='<?= base_url(); ?>libs/jquery-1.4.4.min.js'></script>
+<script type='text/javascript' src='<?= base_url(); ?>libs/jquery-ui-1.8.11.custom.min.js'></script>
+<script type='text/javascript' src='<?= base_url(); ?>libs/jquery-ui-i18n.js'></script>
 
-                </div>
+<script type="text/javascript" src="<?= base_url(); ?>libs/date.js"></script>
+<script type="text/javascript" src="<?= base_url(); ?>/js/jquery.weekcalendar.js"></script>
+<script type="text/javascript">
+    (function ($) {
+    var d = new Date();
+            d.setDate(d.getDate() - d.getDay());
+            var year = d.getFullYear();
+            var month = d.getMonth();
+            var day = d.getDate();
+            var eventData1 = {
+            options: {
+            timeslotsPerHour: 4,
+                    timeslotHeight: 20,
+                    defaultFreeBusy: {free: false}
+            },
+                    events : [
 
-                <div  class=" col-md-12 x_panel" >
-                    <div id="navigator"></div>
-                </div>
-            </div>
-            <div class="clear">   </div>
-            <div  class=" col-md-10 x_panel" >
-                <div id="scheduler"></div>
-            </div>  
+<?php
 
-            <script type="text/javascript">
-                var nav = new DayPilot.Navigator("navigator");
-                nav.onTimeRangeSelected = function (args) {
-                    var day = args.day;
+function clean($string) {
+    $string = str_replace(' ', '', $string); // Replaces all spaces with hyphens.
 
-                    if (dp.visibleStart() <= day && day < dp.visibleEnd()) {
-                        dp.scrollTo(day, "fast");
-                    } else {
-                        var start = day.firstDayOfMonth();
-                        var days = day.daysInMonth();
-                        dp.startDate = start;
-                        dp.days = days;
-                        dp.update();
-                        dp.scrollTo(day, "fast");
-                        loadEvents();
+    return preg_replace('/[^A-Za-z0-9\-]/', '', $string); // Removes special chars.
+}
+
+if (is_array($evs)) {
+    $count = 6;
+    foreach ($evs as $loop) {
+
+        $start = date('Y-m-d H:m', strtotime($loop->starts));
+        $end = date('Y-m-d H:m', strtotime($loop->ends));
+        $details = clean($loop->details);
+        //start
+        $syear = date('Y', strtotime($loop->starts));
+        $smonth = date('m', strtotime($loop->starts));
+        $sday = date('d', strtotime($loop->starts));
+        $shr = date('H', strtotime($loop->starts));
+        $smin = date('m', strtotime($loop->starts));
+        //end 
+        $eyear = date('Y', strtotime($loop->ends));
+        $emonth = date('m', strtotime($loop->ends));
+        $eday = date('d', strtotime($loop->ends));
+        $ehr = date('H', strtotime($loop->ends));
+        $emin = date('i', strtotime($loop->ends));
+        ?>
+
+                      //      {'id':1, 'start': new Date(syear, smonth, sday, shr), 'end': new Date(eyear, emonth, eday, ehr, emin), 'title': '<?php echo $details ?>', userId: 2},
+      
+         {'id':1, 'start': new Date(<?php echo date('Y', strtotime($loop->starts)); ?>, <?php echo date('m', strtotime($loop->starts)); ?>, <?php echo date('d', strtotime($loop->starts)); ?>, <?php echo date('H', strtotime($loop->starts)); ?>), 'end': new Date(<?php echo date('Y', strtotime($loop->ends)); ?>, <?php echo date('m', strtotime($loop->ends)); ?>,<?php echo date('d', strtotime($loop->ends)); ?>, <?php echo date('H', strtotime($loop->ends)); ?>, <?php echo date('i', strtotime($loop->ends)); ?>), 'title': '<?php echo $details ?>', userId: 2},
+      
+            <?php
+    }
+}
+?>
+                    {'id':1, 'start': new Date(year, month, day, 12), 'end': new Date(year, month, day, 13, 30), 'title': 'Lunch with Mike', userId: 0},
+                    {'id':2, 'start': new Date(year, month, day, 14), 'end': new Date(year, month, day, 14, 45), 'title': 'Dev Meeting', userId: 1},
+                    {'id':3, 'start': new Date(year, month, day, 18), 'end': new Date(year, month, day + 1, 18, 45), 'title': 'Hair cut', userId: 1},
+                    {'id':4, 'start': new Date(year, month, day, 8), 'end': new Date(year, month, day + 2, 9, 30), 'title': 'Team breakfast', userId: 0},
+                    {'id':5, 'start': new Date(year, month, day + 1, 14), 'end': new Date(year, month, day + 1, 15), 'title': 'Product showcase', userId: 1}
+                    ],
+                    freebusys: [
+                    {'start': new Date(year, month, day), 'end': new Date(year, month, day + 3), 'free': false, userId: [0, 1, 2, 3]},
+                    {'start': new Date(year, month, day, 8), 'end': new Date(year, month, day, 12), 'free': true, userId: [0, 1, 2, 3]},
+                    {'start': new Date(year, month, day + 1, 8), 'end': new Date(year, month, day + 1, 12), 'free': true, userId: [0, 1, 2, 3]},
+                    {'start': new Date(year, month, day + 2, 8), 'end': new Date(year, month, day + 2, 12), 'free': true, userId: [0, 1, 2, 3]},
+                    {'start': new Date(year, month, day + 1, 14), 'end': new Date(year, month, day + 1, 18), 'free': true, userId: [0, 1, 2, 3]},
+                    {'start': new Date(year, month, day + 2, 8), 'end': new Date(year, month, day + 2, 12), 'free': true, userId: [0, 3]},
+                    {'start': new Date(year, month, day + 2, 14), 'end': new Date(year, month, day + 2, 18), 'free': true, userId: 1}
+                    ]
+            };
+            d = new Date();
+            d.setDate(d.getDate() - (d.getDay() - 3));
+            year = d.getFullYear();
+            month = d.getMonth();
+            day = d.getDate();
+            var eventData2 = {
+            options: {
+            timeslotsPerHour: 3,
+                    timeslotHeight: 30,
+                    defaultFreeBusy: {free: false}
+            },
+                    events: [
+                    {'id': 1, 'start': new Date(year, month, day, 12), 'end': new Date(year, month, day, 13, 00), 'title': 'Lunch with Sarah', userId: [1, 2]},
+                    {'id': 2, 'start': new Date(year, month, day, 14), 'end': new Date(year, month, day, 14, 40), 'title': 'Team Meeting', userId: 0},
+                    {'id': 3, 'start': new Date(year, month, day + 1, 18), 'end': new Date(year, month, day + 1, 18, 40), 'title': 'Meet with Joe', userId: 1},
+                    {'id': 4, 'start': new Date(year, month, day - 1, 8), 'end': new Date(year, month, day - 1, 9, 20), 'title': 'Coffee with Alison', userId: 1},
+                    {'id': 5, 'start': new Date(year, month, day + 1, 14), 'end': new Date(year, month, day + 1, 15, 00), 'title': 'Product showcase', userId: 0}
+                    ],
+                    freebusys: [
+                    {'start': new Date(year, month, day - 1, 8), 'end': new Date(year, month, day - 1, 18), 'free': true, userId: [0, 1, 2, 3]},
+                    {'start': new Date(year, month, day, 8), 'end': new Date(year, month, day + 0, 18), 'free': true, userId: [0, 1, 2, 3]},
+                    {'start': new Date(year, month, day + 1, 8), 'end': new Date(year, month, day + 1, 18), 'free': true, userId: [0, 3]},
+                    {'start': new Date(year, month, day + 2, 14), 'end': new Date(year, month, day + 2, 18), 'free': true, userId: 1}
+                    ]
+            };
+            function updateMessage() {
+            var dataSource = $('#data_source').val();
+                    $('#message').fadeOut(function () {
+            if (dataSource === '1') {
+            $('#message').text('Displaying event data set 1 with timeslots per hour of 4 and timeslot height of 20px. Moreover, the calendar is free by default.');
+            } else if (dataSource === '2') {
+            $('#message').text('Displaying event data set 2 with timeslots per hour of 3 and timeslot height of 30px. Moreover, the calendar is busy by default.');
+            } else {
+            $('#message').text('Displaying no events.');
+            }
+
+            $(this).fadeIn();
+            });
+            }
+
+    $(document).ready(function () {
+    var $calendar = $('#calendar').weekCalendar({
+    timeslotsPerHour: 4,
+            scrollToHourMillis: 0,
+            height: function ($calendar) {
+            return $(window).height() - $('h1').outerHeight(true);
+            },
+            eventRender: function (calEvent, $event) {
+            if (calEvent.end.getTime() < new Date().getTime()) {
+            $event.css('backgroundColor', '#aaa');
+                    $event.find('.wc-time').css({
+            backgroundColor: '#999',
+                    border: '1px solid #888'
+            });
+            }
+            },
+            eventNew: function (calEvent, $event, FreeBusyManager, calendar) {
+            var isFree = true;
+                    $.each(FreeBusyManager.getFreeBusys(calEvent.start, calEvent.end), function () {
+                    if (
+                            this.getStart().getTime() != calEvent.end.getTime()
+                            && this.getEnd().getTime() != calEvent.start.getTime()
+                            && !this.getOption('free')
+                            ) {
+                    isFree = false;
+                            return false;
                     }
-                };
-                nav.init();
+                    });
+                    if (!isFree) {
+            alert('looks like you tried to add an event on busy part !');
+                    $(calendar).weekCalendar('removeEvent', calEvent.id);
+                    return false;
+            }
 
-                var dp = new DayPilot.Scheduler("scheduler");
+            alert('You\'ve added a new event. You would capture this event, add the logic for creating a new event with your own fields, data and whatever backend persistence you require.');
+                    calEvent.id = calEvent.userId + '_' + calEvent.start.getTime();
+                    $(calendar).weekCalendar('updateFreeBusy', {
+            userId: calEvent.userId,
+                    start: calEvent.start,
+                    end: calEvent.end,
+                    free: false
+            });
+            },
+            data: function (start, end, callback) {
+            var dataSource = $('#data_source').val();
+                    if (dataSource === '1') {
+            callback(eventData1);
+            } else if (dataSource === '2') {
+            callback(eventData2);
+            } else {
+            callback({
+            options: {
+            defaultFreeBusy: {
+            free: true
+            }
+            },
+                    events: []
+            });
+            }
+            },
+            users: ['<?php
+foreach ($users as $loop) {
+    echo $loop->surname;
+}
+?>', 'user 1', 'user 2', 'long username', 'user 4'],
+            showAsSeparateUser: true,
+            displayOddEven: true,
+            displayFreeBusys: true,
+            daysToShow: 7,
+            switchDisplay: {'1 day': 1, '3 next days': 3, 'work week': 5, 'full week': 7},
+            headerSeparator: ' ',
+            useShortDayNames: true,
+            // I18N
+            firstDayOfWeek: $.datepicker.regional[''].firstDay,
+            shortDays: $.datepicker.regional[''].dayNamesShort,
+            longDays: $.datepicker.regional[''].dayNames,
+            shortMonths: $.datepicker.regional[''].monthNamesShort,
+            longMonths: $.datepicker.regional[''].monthNames,
+            dateFormat: 'd F y'
+    });
+            $('#data_source').change(function () {
+    $calendar.weekCalendar('refresh');
+            updateMessage();
+    });
+            updateMessage();
+    });
+    })(jQuery);
+</script>
+</head>
+<body>
+    <h1>Weekly Schedule</h1>
 
-                dp.treeEnabled = true;
+    <p class="description">
+        This calendar demonstrates the differents new options that allow user
+        management and freebusy display / computation.
+    </p>
 
-                dp.heightSpec = "Max";
-                dp.height = 300;
+    <div id="message" class="ui-corner-all"></div>
 
-                dp.scale = "Hour";
-                dp.startDate = DayPilot.Date.today().firstDayOfMonth();
-                dp.days = DayPilot.Date.today().daysInMonth();
-                dp.cellWidth = 40;
+    <div id="calendar_selection" class="ui-corner-all">
+        <strong>Event Data Source: </strong>
+        <select id="data_source">
+            <option value="">Select Event Data</option>
+            <option value="1">Event Data 1</option>
+            <option value="2">Event data 2</option>
+        </select>
+    </div>
 
-                dp.eventHeight = 40;
-                dp.durationBarVisible = false;
-
-                dp.treePreventParentUsage = true;
-
-                dp.onBeforeEventRender = function (args) {
-                };
-
-                var slotPrices = {
-                    "06:00": "-",
-                    "07:00": "-",
-                    "08:00": "-",
-                    "09:00": "-",
-                    "10:00": "-",
-                    "11:00": "- ",
-                    "12:00": "-",
-                    "13:00": "-",
-                    "14:00": "-",
-                    "15:00": "-",
-                    "16:00": "-",
-                    "17:00": "-",
-                    "18:00": "-",
-                    "19:00": "-",
-                    "20:00": "-",
-                    "21:00": "-",
-                    "22:00": "-",
-                };
-
-                dp.onBeforeCellRender = function (args) {
-
-                    if (args.cell.isParent) {
-                        return;
-                    }
-
-                    if (args.cell.start < new DayPilot.Date()) {  // past
-                        return;
-                    }
-
-                    if (args.cell.utilization() > 0) {
-                        return;
-                    }
-
-                    var color = "green";
-
-                    var slotId = args.cell.start.toString("HH:mm");
-                    var price = slotPrices[slotId];
-
-                    var min = 5;
-                    var max = 15;
-                    var opacity = (price - min) / max;
-                    var text = " " + price;
-                    args.cell.html = "<div style='cursor: default; position: absolute; left: 0px; top:0px; right: 0px; bottom: 0px; padding-left: 3px; text-align: center; background-color: " + color + "; color:white; opacity: " + opacity + ";'>" + text + "</div>";
-                };
-
-                dp.timeHeaders = [
-                    {groupBy: "Month", format: "MMMM yyyy"},
-                    {groupBy: "Day", format: "dddd, MMMM d"},
-                    {groupBy: "Hour", format: "h tt"}
-                ];
-
-                dp.businessBeginsHour = 6;
-                dp.businessEndsHour = 23;
-                dp.businessWeekends = true;
-                dp.showNonBusiness = false;
-
-                dp.allowEventOverlap = false;
-
-                //dp.cellWidthSpec = "Auto";
-                dp.bubble = new DayPilot.Bubble();
-
-                dp.onTimeRangeSelecting = function (args) {
-                    if (args.start < new DayPilot.Date()) {
-                        args.right.enabled = true;
-                        args.right.html = "Scheduling in the past ";
-                        args.allowed = true;
-                    } else if (args.duration.totalHours() > 8) {
-                        args.right.enabled = true;
-                        args.right.html = "You can only book up to 8 hours";
-                        args.allowed = true;
-                    }
-                };
-                // event creating
-                // http://api.daypilot.org/daypilot-scheduler-ontimerangeselected/
-                dp.onTimeRangeSelected = function (args) {
-                    var modal = new DayPilot.Modal();
-                    modal.onClosed = function (args) {
-                        dp.clearSelection();
-                        loadEvents();
-                    };
-                    modal.showUrl("<?php echo base_url() . "index.php/time/add/"; ?>" + args.start + "/" + args.end + "/" + args.resource);
-                };
-
-                dp.init();
-
-                var scrollTo = DayPilot.Date.today();
-                if (new DayPilot.Date().getHours() > 12) {
-                    scrollTo = scrollTo.addHours(12);
-                }
-                dp.scrollTo(scrollTo);
-
-                loadResources();
-                loadEvents();
-
-                function loadResources() {
-                    dp.rows.load("<?php echo base_url() . "index.php/time/resources/"; ?>");
-
-                }
-
-                function loadEvents() {
-                    dp.events.load("<?php echo base_url() . "index.php/time/events/"; ?>");  // POST request with "start" and "end" JSON parameters
-                }
-
-            </script>
-
-        </div>
-        <div class="clear">
-        </div>
-    </body>
-</html>
-
+    <div id="calendar"></div>

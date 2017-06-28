@@ -557,7 +557,7 @@
   -moz-border-radius: 1px 1px 1px 1px;
   -webkit-border-radius: 1px 1px 1px 1px;
   border-radius: 1px 1px 1px 1px;
-  width: 100% !important;
+  
 }
 .textbox .textbox-text {
     display: block;

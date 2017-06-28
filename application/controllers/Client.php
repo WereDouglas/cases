@@ -19,10 +19,18 @@ class Client extends CI_Controller {
             $this->session->sess_destroy();
             redirect('welcome', 'refresh');
         }
-        $this->load->view('add-user');
+        $query = $this->Md->query("SELECT * FROM client  WHERE  orgID='" . $this->session->userdata('orgID') . "'");
+         //var_dump($query);
+        if ($query) {
+            $data['users'] = $query;
+        } else {
+            $data['users'] = array();
+        }
+        $this->load->view('view-clients',$data);
     }
 
     public function add() {
+        
 
         $this->load->view('add-client');
     }
@@ -30,55 +38,48 @@ class Client extends CI_Controller {
     public function create() {
 
         $this->load->helper(array('form', 'url'));
-
         //user information
-        $userid = $this->GUID();
+        $id = $this->GUID();
+        $name = $this->input->post('name');
 
-        if ($this->input->post('name') != "") {
+        $query = $this->Md->query("SELECT * FROM client WHERE contact='" . $this->input->post('contact') . "' AND orgID='" . $this->session->userdata('orgID') . "' ");
+        if (count($query)) {
 
-            $result = $this->Md->check($this->input->post('name'), 'name', 'client');
-
-            if (!$result) {
-                $this->session->set_flashdata('msg', '<div class="alert alert-error">                                                   
-                                                <strong>
-                                                 Client name  already registered try again	</strong>									
-						</div>');
-                redirect('/client/add', 'refresh');
-            }
-            ///organisation image uploads
-            $file_element_name = 'userfile';
-            $new_name = $userid;
-            $config['file_name'] = $userid;
-            $config['upload_path'] = 'uploads/';
-            $config['allowed_types'] = '*';
-            $config['encrypt_name'] = FALSE;
-            $config['allowed_types'] = 'jpg';
-
-            $this->load->library('upload', $config);
-            if (!$this->upload->do_upload($file_element_name)) {
-                $status = 'error';
-                $msg = $this->upload->display_errors('', '');
-                $this->session->set_flashdata('msg', '<div class="alert alert-error"> <strong>' . $msg . '</strong></div>');
-            }
-            $data = $this->upload->data();
-         
-            $userfile = $data['file_name'];
-            $users = array('clientID' => $userid, 'orgID' => $this->session->userdata('orgID'), 'name' => $this->input->post('name'), 'registration' => date('Y-m-d', strtotime($this->input->post('registration'))), 'email' => $this->input->post('email'), 'image' => $userfile, 'address' => $this->input->post('address'), 'contact' => $this->input->post('contact'), 'lawyer' => $this->input->post('supervisor'), 'created' => date('Y-m-d H:i:s'), 'status' => 'Active', 'action' => 'none', 'sync' => date('Y-m-d H:i:s'));
-            $this->Md->save($users, 'client');
-
-            $emails = $this->Md->query_cell("SELECT * FROM users where name= '" . $this->input->post('supervisor') . "'", 'email');
-            $phones = $this->Md->query_cell("SELECT * FROM users where name= '" . $this->input->post('supervisor') . "'", 'contact');
-            $names = $this->Md->query_cell("SELECT * FROM users where name= '" . $this->input->post('supervisor') . "'", 'name');
-            $message = 'You have been assigned to the file ' . $this->input->post('name') . ' ';
-            $mail = array('messageID' => $this->GUID(), 'body' => $message, 'subject' => 'REMINDER', 'date' => date('Y-m-d'), 'to' => $names, 'created' => date('Y-m-d H:i:s'), 'from' => $this->session->userdata('orgemail'), 'sent' => 'false', 'type' => 'email', 'orgID' => $this->session->userdata('orgID'), 'action' => 'none', 'taskID' => $taskID, 'contact' => $phones, 'email' => $emails);
-            $this->Md->save($mail, 'message');
-
-            $this->session->set_flashdata('msg', '<div class="alert alert-success">  <strong>Information saved</strong></div>');
-
-            redirect('/client/add', 'refresh');
+            $status .= '<div class="alert alert-success">  <strong>Client is already registered</strong></div>';
+            $this->session->set_flashdata('msg', $status);
+            redirect('client', 'refresh');
+            return;
         }
-    }
+        $file_element_name = 'userfile';
+        $config['file_name'] = $this->input->post('name');
+        $config['upload_path'] = 'uploads/';
+        $config['allowed_types'] = '*';
+        $config['encrypt_name'] = FALSE;
+        $this->load->library('upload', $config);
+        if (!$this->upload->do_upload($file_element_name)) {
+            $status = 'errors';
+            $msg = $this->upload->display_errors('', '');
+            $status .= '<div class="alert alert-error"> <strong>' . $msg . '</strong></div>';
+        }
+        $data = $this->upload->data();
+        
+        $userfile = $data['file_name'];  
+        $path = 'uploads/'.$userfile;
+        $type = pathinfo($path, PATHINFO_EXTENSION);
+        $data = file_get_contents($path);
+        $base64 =  base64_encode($data);
 
+        $b = array('id' => $id, 'name' => $this->input->post('name'), 'email' => $this->input->post('email'),'contact' => $this->input->post('contact'),'userID' => $this->input->post('userID'),'status' => $this->input->post('status'), 'image' =>  $base64,'address' => $this->input->post('address'),'no' => $this->input->post('no'),'created' => date('d-m-Y H:i:s'),'orgID'=>$this->session->userdata('orgID') ,'nationality' => $this->input->post('nationality'),'type' => $this->input->post('type')  );
+        $this->Md->save($b, 'client');
+        $status .= '<div class="alert alert-success">  <strong>Information submitted</strong></div>';
+        $this->session->set_flashdata('msg', $status);
+        redirect('client', 'refresh');
+    }
+  public function lists() {
+        $query = $this->Md->query("SELECT * FROM client WHERE  orgID='" . $this->session->userdata('orgID') . "' ");
+        //$query = $this->Md->query("SELECT * FROM client");
+        echo json_encode($query);
+    }
     public function mail() {
 
         $this->load->library('email');
@@ -383,17 +384,17 @@ class Client extends CI_Controller {
         return sprintf('%04X%04X-%04X-%04X-%04X-%04X%04X%04X', mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(16384, 20479), mt_rand(32768, 49151), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535));
     }
 
-    public function update() {
-
-        $this->load->helper(array('form', 'url'));
-        $id = $this->input->post('id');
-
-        $user = array('sync'=>date('Y-m-d H:i:s'),'name' => $this->input->post('name'), 'address' => $this->input->post('address'), 'contact' => $this->input->post('contact'), 'status' => $this->input->post('status'), 'email' => $this->input->post('email'));
-        // $this->Md->update($id, $user, 'users');
-        $this->Md->update_dynamic($id, 'clientID', 'client', $user);
-        echo 'USER INFORMATION UPDATED';
-        return;
-    }
+//    public function update() {
+//
+//        $this->load->helper(array('form', 'url'));
+//        $id = $this->input->post('id');
+//
+//        $user = array('sync'=>date('Y-m-d H:i:s'),'name' => $this->input->post('name'), 'address' => $this->input->post('address'), 'contact' => $this->input->post('contact'), 'status' => $this->input->post('status'), 'email' => $this->input->post('email'));
+//        // $this->Md->update($id, $user, 'users');
+//        $this->Md->update_dynamic($id, 'clientID', 'client', $user);
+//        echo 'USER INFORMATION UPDATED';
+//        return;
+//    }
 
     public function updateclient() {
         if ($this->session->userdata('level') == 1 || $this->session->userdata('level') == 2) {
@@ -426,13 +427,13 @@ class Client extends CI_Controller {
     public function delete() {
 
         $this->load->helper(array('form', 'url'));
-        $userID = $this->uri->segment(3);
-        $query = $this->Md->cascade($userID, 'client', 'clientID');
+        $id = $this->uri->segment(3);
+        $query = $this->Md->cascade($id, 'client', 'id');
         $this->session->set_flashdata('msg', '<div class="alert alert-error">                                                   
                                                 <strong>
                                                 Client deleted ' . '	</strong>									
 						</div>');
-        redirect('client/view', 'refresh');
+        redirect('client', 'refresh');
     }
 
     public function user() {
@@ -565,7 +566,7 @@ class Client extends CI_Controller {
         $this->client();
     }
 
-    public function updater() {
+    public function update() {
         $this->load->helper(array('form', 'url'));
 
         if (!empty($_POST)) {
@@ -580,9 +581,9 @@ class Client extends CI_Controller {
                 $field_name = $split_data[0];
                 if (!empty($user_id) && !empty($field_name) && !empty($val)) {
                     //update the values
-                    $task = array($field_name => $val,'sync'=>date('Y-m-d H:i:s'));
+                    $task = array($field_name => $val,'created'=>date('d-m-Y H:i:s'));
                     // $this->Md->update($user_id, $task, 'tasks');
-                    $this->Md->update_dynamic($user_id, 'clientID', 'client', $task);
+                    $this->Md->update_dynamic($user_id, 'id', 'client', $task);
                     echo "Updated";
                 } else {
                     echo "Invalid Requests";

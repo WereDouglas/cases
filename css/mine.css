@@ -155,8 +155,14 @@ img {
   
     font-size: 12px;    
 }
-
-
+.modal-body {   
+  height: auto !important;
+  
+}
+input, textarea, .uneditable-input {
+    width: 100% !important;
+    height: auto !important;
+}
 .edit_td input {
     width: 150px;
     padding: 0px;
@@ -249,7 +255,5 @@ select {
 }
 .modal {
     background-color:#fff !important;
+     top:1% !important;
 }
-
-
-

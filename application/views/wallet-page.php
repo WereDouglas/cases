@@ -1,7 +1,5 @@
-
-<?php require_once(APPPATH . 'views/header-page.php'); ?>       
-
-<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>css/pure-min.css">
+<?php require_once(APPPATH . 'views/css-page.php'); ?>
+<link rel="stylesheet" href="<?= base_url(); ?>css/mine.css" />
 <style>
     horizontal .control-label {
         padding-top: 7px;
@@ -46,7 +44,7 @@
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>ID</th>
+                   
                     <th>DATE</th>
                     <th>PARTICULARS</th>
                     <th>AMOUNT</th>
@@ -65,9 +63,7 @@
                     ?>  
                     <tr class="odd edit_tr" id="<?php echo $loop->id; ?>">
                         <td><?php echo $count++; ?></td>
-                        <td id="date:<?php echo $loop->id; ?>" contenteditable="false">
-                            <?php echo $loop->id; ?>                     
-                        </td>
+                        
                         <td id="date:<?php echo $loop->id; ?>" contenteditable="true">
                             <?php echo $loop->date; ?>                     
                         </td>
@@ -90,7 +86,7 @@
 
                             </select>
                         </td>
-                        <td id="user:<?php echo $loop->id; ?>" contenteditable="true">
+                        <td >
                             <?php echo $loop->user; ?>                   
                         </td>
 
@@ -154,140 +150,70 @@
     </div>
 </div>
 <!-- jQuery -->
-<script src="<?= base_url(); ?>vendors/jquery/dist/jquery.min.js"></script>
-<!-- Bootstrap -->
-<script src="<?= base_url(); ?>vendors/bootstrap/dist/js/bootstrap.min.js"></script>
 
-<script type="text/javascript" src="<?= base_url(); ?>js/jquery.easyui.min.js"></script>
-<script src="<?= base_url(); ?>vendors/datatables.net/js/jquery.dataTables.min.js"></script>
-<script src="<?= base_url(); ?>vendors/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
-<script src="<?= base_url(); ?>vendors/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
-<script src="<?= base_url(); ?>vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js"></script>
-<script src="<?= base_url(); ?>vendors/datatables.net-buttons/js/buttons.flash.min.js"></script>
-<script src="<?= base_url(); ?>vendors/datatables.net-buttons/js/buttons.html5.min.js"></script>
-<script src="<?= base_url(); ?>vendors/datatables.net-buttons/js/buttons.print.min.js"></script>
-<script src="<?= base_url(); ?>vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js"></script>
-<script src="<?= base_url(); ?>vendors/datatables.net-keytable/js/dataTables.keyTable.min.js"></script>
-<script src="<?= base_url(); ?>vendors/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
-<script src="<?= base_url(); ?>vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
-<script src="<?= base_url(); ?>vendors/datatables.net-scroller/js/datatables.scroller.min.js"></script>
+<!-- /sidebar chats -->  
+<?php require_once(APPPATH . 'views/js-page.php'); ?>
+<script src="<?= base_url(); ?>js/validator.js"></script>
 <script>
-    $(document).ready(function () {
-        var handleDataTableButtons = function () {
-            if ($("#datatable-buttons").length) {
-                $("#datatable-buttons").DataTable({
-                    dom: "Bfrtip",
-                    buttons: [
-                        {
-                            extend: "copy",
-                            className: "btn-sm"
-                        },
-                        {
-                            extend: "csv",
-                            className: "btn-sm"
-                        },
-                        {
-                            extend: "excel",
-                            className: "btn-sm"
-                        },
-                        {
-                            extend: "pdfHtml5",
-                            className: "btn-sm"
-                        },
-                        {
-                            extend: "print",
-                            className: "btn-sm"
-                        },
-                    ],
-                    responsive: true
-                });
-            }
-        };
+                                                    $(document).ready(function () {
+                                                        $('#loading_card').hide();
+                                                        $("#status").hide();
+                                                        $(function () {
+                                                            //acknowledgement message
+                                                            var message_status = $("#status");
+                                                            $("td[contenteditable=true]").blur(function () {
+                                                                var field_id = $(this).attr("id");
+                                                                var value = $(this).text();
+                                                                $.post('<?php echo base_url() . "index.php/user/update/"; ?>', field_id + "=" + value, function (data) {
+                                                                    if (data != '')
+                                                                    {
+                                                                        message_status.show();
+                                                                        message_status.text(data);
+                                                                        //hide the message
+                                                                        setTimeout(function () {
+                                                                            message_status.hide()
+                                                                        }, 4000);
+                                                                    }
+                                                                });
+                                                            });
 
-        TableManageButtons = function () {
-            "use strict";
-            return {
-                init: function () {
-                    handleDataTableButtons();
-                }
-            };
-        }();
+                                                        });
 
-        $('#datatable').dataTable();
-        $('#datatable-keytable').DataTable({
-            keys: true
-        });
+                                                    });
 
-        $('#datatable-responsive').DataTable();
-
-        $('#datatable-scroller').DataTable({
-            ajax: "js/datatables/json/scroller-demo.json",
-            deferRender: true,
-            scrollY: 380,
-            scrollCollapse: true,
-            scroller: true
-        });
-
-        var table = $('#datatable-fixed-header').DataTable({
-            fixedHeader: true
-        });
-
-        TableManageButtons.init();
-
-
-    });
 </script>
 <script type="text/javascript">
-    function ExportToExcel(datatable) {
-        var htmltable = document.getElementById('datatables');
-        var html = htmltable.outerHTML;
-        window.open('data:application/vnd.ms-excel,' + ';filename=exportData.xlsx;' + encodeURIComponent(html));
-        var result = "data:application/vnd.ms-excel,";
-        this.href = result;
-        this.download = "my-custom-filename.xls";
-        return true;
-    }
+    $(function () {
+        $("#userfile").on("change", function ()
+        {
+            var files = !!this.files ? this.files : [];
+            if (!files.length || !window.FileReader)
+                return; // no file selected, or no FileReader support
 
+            if (/^image/.test(files[0].type)) { // only image file
+                var reader = new FileReader(); // instance of the FileReader
+                reader.readAsDataURL(files[0]); // read the local file
+
+                reader.onloadend = function () { // set image data as background of div
+                    $("#imagePreview").css("background-image", "url(" + this.result + ")");
+                }
+            }
+        });
+    });
 </script>
 <script>
-    $(document).ready(function () {
-        $('#loading_card').hide();
-        $("#status").hide();
-        $(function () {
-            //acknowledgement message
-            var message_status = $("#status");
-            $("td[contenteditable=true]").blur(function () {
-                var field_id = $(this).attr("id");
-                var value = $(this).text();
-                $.post('<?php echo base_url() . "index.php/wallet/updater/"; ?>', field_id + "=" + value, function (data) {
-                    if (data != '')
-                    {
-                        message_status.show();
-                        message_status.text(data);
-                        //hide the message
-                        setTimeout(function () {
-                            message_status.hide()
-                        }, 4000);
-                    }
-                });
-            });
 
+    function NavigateToSite(ele) {
+        var selectedVal = $(ele).attr("value");
+        //var selectedVal = document.getElementById("myLink").getAttribute('value');
+        //href= "index.php/patient/add_user/'
+        $.post("<?php echo base_url() ?>index.php/user/reset", {
+            userID: selectedVal
+        }, function (response) {
+            alert(response);
         });
 
-
-
-    });
-    $(document).on('click', '.printdiv-btn', function (e) {
-        e.preventDefault();
-
-        var $this = $(this);
-        //  var originalContent = $('body').html();
-        var printArea = $this.parents('.printableArea').html();
-
-        $('body').html(printArea);
-        window.print();
-        $('body').html(printArea);
-    });
+    }
     function SelectedRole(ele) {
 
 
@@ -330,32 +256,32 @@
         {
             var ID = $(this).attr('id');
 
-            $("#method" + ID).hide();
-            $("#method_input_" + ID).show();
+            $("#role" + ID).hide();
+            $("#role_input_" + ID).show();
 
 
         }).change(function ()
         {
             var ID = $(this).attr('id');
-            var method = $("#method_input_" + ID).val();
+            var role = $("#role_input_" + ID).val();
 
 
-            var dataString = 'id=' + ID + '&method=' + method;
+            var dataString = 'id=' + ID + '&role=' + role;
 
-            $("#method_" + ID).html('<img src="<?= base_url(); ?>images/loading.gif" />'); // Loading image
+            $("#role_" + ID).html('<img src="<?= base_url(); ?>images/loading.gif" />'); // Loading image
 
-            if (method.length > 0)
+            if (role.length > 0)
             {
 
                 $.ajax({
                     type: "POST",
-                    url: "<?php echo base_url() . "index.php/wallet/updating/"; ?>",
+                    url: "<?php echo base_url() . "index.php/user/updating/"; ?>",
                     data: dataString,
                     cache: false,
                     success: function (html)
                     {
 
-                        $("#method_" + ID).html(method);
+                        $("#role_" + ID).html(role);
 
 
                     }

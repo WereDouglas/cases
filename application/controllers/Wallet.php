@@ -16,7 +16,7 @@ class Wallet extends CI_Controller {
 
     public function index() {
 
-        $query = $this->Md->query("SELECT * FROM wallet where orgID = '" . $this->session->userdata('orgID') . "' ");
+        $query = $this->Md->query("SELECT *,users.surname AS user,wallet.id As id FROM wallet LEFT JOIN users ON users.id = wallet.userID  WHERE wallet.orgID = '" . $this->session->userdata('orgID') . "' ");
 
         if ($query) {
             $data['wallets'] = $query;

@@ -27,7 +27,21 @@
         <!-- Custom Theme Style -->
         <link href="<?= base_url(); ?>build/css/custom.min.css" rel="stylesheet">
         <link rel=icon href="<?= base_url(); ?>images/favicon.ico">
+
+        <link href="<?= base_url(); ?>css/dashboard.css" rel="stylesheet">
+        <link href="<?= base_url(); ?>css/style2.css" rel="stylesheet">
     </head>
+    <style>
+
+        .nav li {
+            float: left;
+        }
+        .main_menu_side {
+            padding: 0;
+            background-color:gainsboro;
+        }
+
+    </style>
     <?php
     $using = array();
     $using[] = count($usage_tasks);
@@ -51,344 +65,238 @@
     }
     ?>
     <body class="nav-sm">
-        <div class="container body">
-            <div class="main_container">
-                <div class="col-md-3 left_col">
-                    <div class="left_col scroll-view">
-                        <div class="navbar nav_title" style="border: 0;">
-                            <a href="index.html" class="site_title"> <span>Case professional</span></a>
-                        </div>
+        <div class="navbar navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container"> 
+                    <div class="nav-collapse">
+                        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span
+                                class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span> </a><img  height="auto" width="45px"  src="<?= base_url(); ?>images/cp_logo.png" alt="Logo" /><font size="3">Case Professional</font>
 
-                        <div class="clearfix"></div>
-                        <!-- sidebar menu -->
-                        <div id="sidebar-menu" class="main_menu_side hidden-print main_menu toggled">
-                            <div class="menu_section">
-                                <h3>Home</h3>
-                                <ul class="nav side-menu">
-                                    
-                                    <li><a href="<?php echo base_url() . "index.php/task/add"; ?>" target="frame"><i class="fa fa-calendar"></i> Calendar </a>
+                        <ul class="nav pull-right">
+                            <li role="presentation" class="dropdown">
+                                <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
+                                    <i class="fa fa-envelope-o"></i>
+                                    <span class="badge bg-green"><?php echo count($notsent); ?></span>
+                                </a>
+                                <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
+                                    <li>
+                                        <a>
+                                            <span class="image"> <img  height="50px" width="100px" class="" src="<?= base_url(); ?>uploads/<?php echo $this->session->userdata('userimage'); ?>" alt="........" /></span>
+                                            <span>
+                                                <span><?php echo $this->session->userdata('username'); ?></span>
 
-                                        <!--                                        <ul class="nav child_menu">
-                                                                                    <li><a ha href="<?php echo base_url() . "index.php/task/add"; ?>" target="frame">Schedules</a></li>
-                                        
-                                        
-                                                                                </ul>-->
+                                            </span>
+
+                                        </a>
                                     </li>
-                                                                  
-                                    <li><a href="<?php echo base_url() . "index.php/task/cause"; ?>" target="frame"><i class="fa fa-bank"></i>Cause list <span class="fa fa-chevron-down"></span></a> </li>
+                                    <?php
+                                    if (is_array($notsent) && count($notsent)) {
+                                        foreach ($notsent as $loop) {
+                                            ?>  
+                                            <li>
+                                                <a>
+                                                    <span>
+                                                        <span><?php echo $loop->subject; ?></span>
+                                                        <span class="time"><?php echo $loop->date; ?></span>
+                                                    </span>
 
-                                    <?php if (strpos($this->session->userdata('views'), 'time') == true || strpos($this->session->userdata('views'), 'sheets') == true ) { ?>
-                                        <li><a><i class="fa fa-balance-scale"></i>Time sheet<span class="fa fa-chevron-down"></span></a>
-                                            <ul class="nav child_menu">
+                                                </a>
+                                            </li>
 
-                                                <li><a href="<?php echo base_url() . "index.php/time/"; ?>" target="frame">View</a></li>
-                                                <li><a href="<?php echo base_url() . "index.php/time/advanced"; ?>" target="frame">Advanced</a></li>
 
-                                            </ul>
-                                        </li>
-                                    <?php } ?>
-                                    <?php if (strpos($this->session->userdata('views'), 'clients') == true) { ?>
-                                        <li><a><i class="fa fa-user"></i>Clients<span class="fa fa-chevron-down"></span></a>
-                                            <ul class="nav child_menu">
-                                                <li><a href="<?php echo base_url() . "index.php/client/add"; ?>" target="frame">Add Client</a></li>
-                                                <li><a href="<?php echo base_url() . "index.php/client/view"; ?>" target="frame">View Clients</a></li>
-                                                <li><a href="<?php echo base_url() . "index.php/client/advanced"; ?>" target="frame">Advanced</a></li>
-                                            </ul>
-                                        </li>
-                                    <?php } ?>
-                                       
-                                        <li><a><i class="fa fa-folder"></i>Files/Cases<span class="fa fa-chevron-down"></span></a>
-                                            <ul class="nav child_menu">
-                                                <li><a href="<?php echo base_url() . "index.php/file/add"; ?>" target="frame">Add</a></li>
-                                                <li><a href="<?php echo base_url() . "index.php/file/view"; ?>" target="frame">View</a></li>
-                                                <li><a href="<?php echo base_url() . "index.php/file/advanced"; ?>" target="frame">Advanced</a></li>
-                                            </ul>
-                                        </li>
-                                   
-                                    <?php if (strpos($this->session->userdata('views'), 'events') == true) { ?>
-                                        <li><a><i class="fa fa-briefcase"></i>Files<span class="fa fa-chevron-down"></span></a>
-                                            <ul class="nav child_menu">
-                                                <li><a href="<?php echo base_url() . "index.php/file/add"; ?>" target="frame">New</a></li>
-                                                <li><a href="<?php echo base_url() . "index.php/file/view"; ?>" target="frame">View</a></li>
-                                                <li><a href="<?php echo base_url() . "index.php/file/advanced"; ?>" target="frame">Advanced</a></li>
-
-                                            </ul>
-                                        </li>
-                                    <?php } ?>
-                                    <?php if (strpos($this->session->userdata('views'), 'events') == true) { ?>
-
-                                        <li><a><i class="fa fa-table"></i>Tasks <span class="fa fa-chevron-down"></span></a>
-                                            <ul class="nav child_menu">
-                                                <li><a href="<?php echo base_url() . "index.php/task/view"; ?>" target="frame">List of events</a></li>
-
-                                            </ul>
-                                        </li>
-                                    <?php } ?>
-                                    <?php if (strpos($this->session->userdata('views'), 'payments') == true) { ?>
-                                        <li><a><i class="fa fa-paypal"></i>Payments<span class="fa fa-chevron-down"></span></a>
-                                            <ul class="nav child_menu">
-                                                <li><a href="<?php echo base_url() . "index.php/payment/payments"; ?>" target="frame">Payments</a></li>
-                                                <li><a href="<?php echo base_url() . "index.php/payment/invoices"; ?>" target="frame">Invoices</a></li>
-                                                <li><a href="<?php echo base_url() . "index.php/payment/fees"; ?>" target="frame">Fees</a></li>   
-                                                <li><a href="<?php echo base_url() . "index.php/payment/disbursements"; ?>" target="frame">Disbursements</a></li>   
-                                                <li><a href="<?php echo base_url() . "index.php/transaction/advanced"; ?>" target="frame">Advanced</a></li>
-
-                                            </ul>
-                                        </li>
-                                    <?php } ?>
-                                    <?php if (strpos($this->session->userdata('views'), 'expenses') == true) { ?>
-                                        <li><a><i class="fa fa-cart-plus"></i>Expenses <span class="fa fa-chevron-down"></span></a>
-                                            <ul class="nav child_menu">
-                                                <li><a href="<?php echo base_url() . "index.php/expense/expenses"; ?>" target="frame">Expenses</a></li>
-                                                <li><a href="<?php echo base_url() . "index.php/petty"; ?>" target="frame">Petty expenses</a></li>
-
-                                                <li><a href="<?php echo base_url() . "index.php/expense/requisitions"; ?>" target="frame">Requisitions</a></li>
-                                                <li><a href="<?php echo base_url() . "index.php/transaction/advanced"; ?>" target="frame">Advanced</a></li>
-
-                                            </ul>
-                                        </li>
-                                    <?php } ?>
-                                    <?php if (strpos($this->session->userdata('views'), 'wallets') == true) { ?>
-                                        <li><a><i class="fa fa-cc-amex"></i>Wallet <span class="fa fa-chevron-down"></span></a>
-                                            <ul class="nav child_menu">
-                                                <li><a href="<?php echo base_url() . "index.php/wallet"; ?>" target="frame">Wallets</a></li>
-                                                <li><a href="<?php echo base_url() . "index.php/wallet/reports"; ?>" target="frame">Reports</a></li>
-
-                                            </ul>
-                                        </li>
-                                    <?php } ?>
-                                    <?php if (strpos($this->session->userdata('views'), 'documents') == true) { ?>
-                                        <li><a href="<?php echo base_url() . "index.php/document"; ?>" target="frame"><i class="fa fa-clone"></i> Documents<span class="label label-danger pull-right">
                                             <?php
-                                                    foreach ($sizes as $loop) {
-                                                        ?>  
-                                                        <?php echo number_format(($loop->size / 1000), 2) . 'MBS'; ?>
+                                        }
+                                    }
+                                    ?>
 
-
-                                                        <?php
-                                                    }
-                                                    ?></span></a>
-
-                                        </li>
-                                    <?php } ?>
-                                    <li><a href="<?php echo base_url() . "index.php/template"; ?>" target="frame"><i class="fa fa-file"></i>Templates<span class="label label-danger pull-right">
-                                            </span></a>
-
-                                    </li>
-                                    <?php if ($this->session->userdata('level') == "Administrator") { ?>
-                                        <li><a href="<?php echo base_url() . "index.php/administration"; ?>" target="frame"><i class="fa fa-code"></i>Manage<span class="label label-danger pull-right">
-                                                </span></a>
-                                        </li>
-                                    <?php } ?>
 
                                 </ul>
-                            </div>
-                            <div class="menu_section">
-                                <h3>Settings</h3>
-                                <ul class="nav side-menu">
-<!--                                    <li><a href="<?php echo base_url() . "index.php/message/"; ?>" target="frame"><i class="fa fa-envelope-o"></i> Messages </a></li>                                  -->
+                            </li>
+                            <li role="presentation" class="dropdown">
+                                <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
+                                    <i class="fa fa-calendar"></i>
+                                    <span class="badge bg-red"><?php echo count($notcomplete); ?></span>
+                                </a>
+                                <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
 
-                                    <li><a href="<?php echo base_url() . "files/Cp.msi"; ?>"><i class="fa fa-laptop"></i> Desktop application<span class="label label-success pull-right">Coming Soon</span></a></li>
+                                    <?php
+                                    if (is_array($notcomplete) && count($notcomplete)) {
+                                        foreach ($notcomplete as $loop) {
+                                            ?>  
+                                            <li>
+                                                <a>
+                                                    <span>
+                                                        <span><?php echo $loop->name . ' for ' . $loop->user; ?></span>
+                                                        <span class="time"><?php echo $loop->date; ?></span>
+                                                    </span>
 
-                                    <li><a><i class="fa fa-user"></i>Users<span class="fa fa-chevron-down"><span class="label label-danger pull-right"><?php echo count($users) ?></span></span></a>
-                                        <ul class="nav child_menu">
-                                            <?php if (strpos($this->session->userdata('views'), 'users') == true) { ?>
-                                                <li><a href="<?php echo base_url() . "index.php/user/add"; ?>" target="frame">Add user</a></li>
-
-                                                <li><a href="<?php echo base_url() . "index.php/user/staff"; ?>" target="frame">Users</a></li>                                              
-                                                <li><a href="<?php echo base_url() . "index.php/user/charges"; ?>" target="frame">Charges</a></li>
-                                            <?php } ?>
-                                            <?php if (strpos($this->session->userdata('views'), 'roles') == true) { ?>
-                                                <li><a href="<?php echo base_url() . "index.php/role"; ?>" target="frame">Roles</a></li>
-                                            <?php } ?>
-
-                                        </ul>
+                                                </a>
+                                            </li>
+                                            <?php
+                                        }
+                                    }
+                                    ?>
+                                </ul>
+                            </li>
+                            <li role="presentation" class="dropdown">
+                                <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
+                                    <i class="fa fa-bank"></i>
+                                    <span class="badge bg-red"><?php echo count($expenses_not_approved); ?></span>
+                                </a>
+                                <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
+                                    <li>
+                                        Expenses not yet approved
                                     </li>
-                                    <?php if (strpos($this->session->userdata('views'), 'profile') == true || strpos($this->session->userdata('views'), 'organisation') == true) { ?>
-                                        <li><a href="<?php echo base_url() . "index.php/organisation/profile"; ?>" target="frame"><i class="fa fa-cogs"></i> Organisational profile<span class="label label-success pull-right">manage</span></a></li>
-                                    <?php } ?>
+
+
                                 </ul>
 
-                            </div>
+                            </li>
+                            <li role="presentation" class="dropdown">
+                                <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
+                                    <i class="fa fa-money"></i>
+                                    <span class="badge bg-red"><?php echo count($expenses_not_paid); ?></span>
+                                </a>
 
-                        </div>
-                        <!-- /sidebar menu -->
+                                <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
+                                    <li>
+                                        Expenses not yet paid
+                                    </li>
 
-                        <!-- /menu footer buttons -->
-                        <div class="sidebar-footer hidden-small">
-                            <a data-toggle="tooltip" data-placement="top" title="Settings">
-                                <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
-                            </a>
-                            <a data-toggle="tooltip" data-placement="top" title="FullScreen">
-                                <span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
-                            </a>
-                            <a data-toggle="tooltip" data-placement="top" title="Lock">
-                                <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
-                            </a>
-                            <a data-toggle="tooltip" data-placement="top" title="Logout">
-                                <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
-                            </a>
-                        </div>
-                        <!-- /menu footer buttons -->
+
+                                </ul>
+                            </li>
+
+                            <li role="presentation" class="dropdown">
+                                <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
+                                    <i class="fa fa-balance-scale"></i>
+                                    <span class="badge bg-red"><?php echo count($fees_not_paid); ?></span>
+                                </a>
+                                <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
+                                    <li>
+                                        Fees not yet paid
+                                    </li>
+
+
+                                </ul>
+
+
+                            <li role="presentation" class="dropdown">
+                                <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
+                                    <i class="fa fa-briefcase"></i>
+                                    <span class="badge bg-red"><?php echo count($dis_not_paid); ?></span>
+                                </a>
+                                <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
+                                    <li>
+                                        Disbursements not yet paid
+                                    </li>
+                                </ul>
+
+                            </li>
+                            <li class="">
+                                <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                    <?php
+                                    if ($this->session->userdata('user_image') != "") {
+
+                                        echo '<img class="nav-user-photo" src="data:image/jpeg;base64,' . $this->session->userdata('user_image') . '" />';
+                                    } else {
+                                        ?>
+
+                                        <img class="nav-user-photo" src="<?= base_url(); ?>images/temp.png" alt="image" title="Change the name">
+                                        <?php
+                                    }
+                                    ?>   <?php echo $this->session->userdata('username'); ?>
+                                    <span class=" fa fa-angle-down"></span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-usermenu pull-right">
+                                    <li><a href="<?php echo base_url() . "index.php/user/profile/" . $this->session->userdata('username'); ?>" target="frame"> Profile</a></li>
+
+                                    <li><a href="<?php echo base_url() . "index.php/home/logout"; ?>"><i class="fa fa-sign-out pull-right"></i> Log Out</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+
                     </div>
+                    <!--/.nav-collapse --> 
                 </div>
+                <!-- /container --> 
+            </div>
+            <!-- /navbar-inner --> 
+        </div>
+        <!-- /navbar -->
+        <div class="subnavbar">
+            <div class="subnavbar-inner">
+                <div class="container">
+                    <ul class="mainnav">
+                        <li class="active"><a href="<?php echo base_url() . "index.php/time/calendar"; ?>" target="frame"><i class="fa fa-calendar" style="color:#60ace0"></i><span> Calendar </span></a> </li>
 
-                <!-- top navigation -->
-                <div class="top_nav">
-                    <div class="nav_menu">
-                        <nav>
-                            <div class="nav toggle">
-                                <a id="menu_toggle"><img  height="30px" width="30px"  src="<?= base_url(); ?>images/cp_logo.png" alt="Logo" /></a>
-                            </div>
+                        <li><a href="<?php echo base_url() . "index.php/time/"; ?>" target="frame"><i class="fa fa-balance-scale" style="color:#60ace0"></i><span>Time sheet</span></a>
+                        </li>
+                        <li><a href="<?php echo base_url() . "index.php/client"; ?>" target="frame"><i class="fa fa-user " style="color:#ac8f74"></i><span>Clients</span></a>
 
+                        </li>
+                        <li><a href="<?php echo base_url() . "index.php/file/"; ?>" target="frame"><i class="fa fa-folder" style="color:#fe4500"></i><span>Files/Cases</span></a>
 
-                            <ul class="nav navbar-nav navbar-right">
-                                <li class="">
-                                    <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                                        <img  height="50px" width="100px" class="" src="<?= base_url(); ?>uploads/<?php echo $this->session->userdata('userimage'); ?>" alt="........" />
-                                        <?php echo $this->session->userdata('username'); ?>
-                                        <span class=" fa fa-angle-down"></span>
-                                    </a>
-                                    <ul class="dropdown-menu dropdown-usermenu pull-right">
-                                        <li><a href="<?php echo base_url() . "index.php/user/profile/" . $this->session->userdata('username'); ?>" target="frame"> Profile</a></li>
-
-                                        <li><a href="<?php echo base_url() . "index.php/home/logout"; ?>"><i class="fa fa-sign-out pull-right"></i> Log Out</a></li>
-                                    </ul>
-                                </li>
-
-                                <li role="presentation" class="dropdown">
-                                    <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
-                                        <i class="fa fa-envelope-o"></i>
-                                        <span class="badge bg-green"><?php echo count($notsent); ?></span>
-                                    </a>
-                                    <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
-                                        <li>
-                                            <a>
-                                                <span class="image"> <img  height="50px" width="100px" class="" src="<?= base_url(); ?>uploads/<?php echo $this->session->userdata('userimage'); ?>" alt="........" /></span>
-                                                <span>
-                                                    <span><?php echo $this->session->userdata('username'); ?></span>
-
-                                                </span>
-
-                                            </a>
-                                        </li>
-                                        <?php
-                                        if (is_array($notsent) && count($notsent)) {
-                                            foreach ($notsent as $loop) {
-                                                ?>  
-                                                <li>
-                                                    <a>
-                                                        <span>
-                                                            <span><?php echo $loop->subject; ?></span>
-                                                            <span class="time"><?php echo $loop->date; ?></span>
-                                                        </span>
-
-                                                    </a>
-                                                </li>
-
-
+                        </li>
+                        <li class="dropdown"><a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-clone" style="color:#364a5e"></i><span>Documents</span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="<?php echo base_url() . "index.php/document"; ?>" target="frame"><span>Documents<p class="label label-danger">
                                                 <?php
-                                            }
-                                        }
-                                        ?>
+                                                foreach ($sizes as $loop) {
+                                                    ?>  
+                                                    <?php echo number_format(($loop->size / 1000000), 2) . 'MBS'; ?>
 
 
-                                    </ul>
-                                </li>
-                                <li role="presentation" class="dropdown">
-                                    <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
-                                        <i class="fa fa-calendar"></i>
-                                        <span class="badge bg-red"><?php echo count($notcomplete); ?></span>
-                                    </a>
-                                    <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
-
-                                        <?php
-                                        if (is_array($notcomplete) && count($notcomplete)) {
-                                            foreach ($notcomplete as $loop) {
-                                                ?>  
-                                                <li>
-                                                    <a>
-                                                        <span>
-                                                            <span><?php echo $loop->name . ' for ' . $loop->user; ?></span>
-                                                            <span class="time"><?php echo $loop->date; ?></span>
-                                                        </span>
-
-                                                    </a>
-                                                </li>
-
-
-                                                <?php
-                                            }
-                                        }
-                                        ?>
-
-
-                                    </ul>
-                                </li>
-                                <li role="presentation" class="dropdown">
-                                    <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
-                                        <i class="fa fa-bank"></i>
-                                        <span class="badge bg-red"><?php echo count($expenses_not_approved); ?></span>
-                                    </a>
-                                    <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
-                                        <li>
-                                            Expenses not yet approved
-                                        </li>
-
-
-                                    </ul>
+                                                    <?php
+                                                }
+                                                ?></p></span></a>
 
                                 </li>
-                                <li role="presentation" class="dropdown">
-                                    <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
-                                        <i class="fa fa-money"></i>
-                                        <span class="badge bg-red"><?php echo count($expenses_not_paid); ?></span>
-                                    </a>
-
-                                    <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
-                                        <li>
-                                            Expenses not yet paid
-                                        </li>
-
-
-                                    </ul>
-                                </li>
-                                <li role="presentation" class="dropdown">
-                                    <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
-                                        <i class="fa fa-balance-scale"></i>
-                                        <span class="badge bg-red"><?php echo count($fees_not_paid); ?></span>
-                                    </a>
-                                    <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
-                                        <li>
-                                            Fees not yet paid
-                                        </li>
-
-
-                                    </ul>
-
-                                <li role="presentation" class="dropdown">
-                                    <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
-                                        <i class="fa fa-briefcase"></i>
-                                        <span class="badge bg-red"><?php echo count($dis_not_paid); ?></span>
-                                    </a>
-                                    <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
-                                        <li>
-                                            Disbursements not yet paid
-                                        </li>
-
-
-                                    </ul>
-
-                                </li>
+                                <li><a href="<?php echo base_url() . "index.php/library"; ?>" target="frame"><span>Library</span></a></li>
+                                <li><a href="<?php echo base_url() . "index.php/card"; ?>" target="frame"><span>Business Cards</span></a></li>
 
                             </ul>
-                        </nav>
-                    </div>
-                </div>
-                <!-- /top navigation -->
+                        </li>    
+                        <li class="dropdown"><a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-briefcase" style="color:#5fba7c"></i><span>Accounts & Finance</span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="<?php echo base_url() . "index.php/wallet"; ?>" target="frame">Wallet</a></li>
+                                <li><a href="<?php echo base_url() . "index.php/expense"; ?>" target="frame">Expenses</a></li>
+                                <li><a href="<?php echo base_url() . "index.php/payment"; ?>" target="frame">Payments</a></li>                                           
 
-                <!-- page content -->
-                <div class="right_col" role="main">                    <!-- top tiles -->
+                            </ul>
+                        </li>                                    
+                        <li class="dropdown"><a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-cogs" style="color:#fde377"></i><span>Setup</span></a>
+                            <ul class="dropdown-menu">
+                                 <li><a href="<?php echo base_url() . "index.php/service"; ?>" target="frame">Services</a></li>   
+                                <li><a href="<?php echo base_url() . "index.php/department"; ?>" target="frame">Departments</a></li>   
+                                <li><a href="<?php echo base_url() . "index.php/category"; ?>" target="frame">Categories</a></li>
+                                <li><a href="<?php echo base_url() . "index.php/branch"; ?>" target="frame">Branches/Offices</a></li>
+                                <li><a href="<?php echo base_url() . "index.php/organisation"; ?>" target="frame">Company/Organisation</a></li>
+                                <li><a href="<?php echo base_url() . "index.php/organisation/profile"; ?>" target="frame"><i class="fa fa-cogs" style="color:#60ace0"></i> Organisational profile<span class="label label-success pull-right">manage</span></a></li>
+                                <li><a href="<?php echo base_url() . "file/Case%20Professional.pro"; ?>"><i class="fa fa-laptop" style="color:#60ace0"></i> Desktop application</a></li>
+
+                            </ul>
+                        </li>
+                         <li class="dropdown"><a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user" style="color:#252523"></i><span>Users</span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="<?php echo base_url() . "index.php/user"; ?>" target="frame">Users</a></li>
+                                <li><a href="<?php echo base_url() . "index.php/role"; ?>" target="frame">Roles & Permissions</a></li>
+                               
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <!-- /container --> 
+            </div>
+            <!-- /subnavbar-inner --> 
+        </div>
+        <!-- page content -->
+        <div class="container body">
+            <div class="main_container">
+
+
+
+                <div class="" role="main">                    <!-- top tiles -->
 
                     <!-- /top tiles -->
 
@@ -400,7 +308,7 @@
                                     // obj.style.width = obj.contentWindow.document.body.scrollHeight + 'px';
                                 }
                             </script>
-                            <iframe id="frame" name="frame" frameborder="no" border="0" onload="resizeIframe(this)" scrolling="no"  style="padding: 10px; min-height:600px;" width="100%" class="span12" src="<?php echo base_url() . "index.php/task/add"; ?>"> </iframe>         
+                            <iframe id="frame" name="frame" frameborder="no" border="0" onload="resizeIframe(this)" scrolling="no"  style="padding: 10px; min-height:750px;" width="100%" class="span12" src="<?php echo base_url() . "index.php/time/calendar"; ?>"> </iframe>         
 
                         </div>
 

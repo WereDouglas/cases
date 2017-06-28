@@ -1,503 +1,284 @@
-<link href="<?php echo base_url(); ?>assets/css/bootstrap.min.css" rel="stylesheet" />
-<link href="<?php echo base_url(); ?>assets/css/bootstrap-responsive.min.css" rel="stylesheet" />
-<link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/font-awesome.min.css" />
-<link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/fullcalendar.css" />
+<link rel="stylesheet" href="<?= base_url(); ?>assets/css/font-awesome.min.css" />
+<link href="<?= base_url(); ?>assets/css/bootstrap.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="<?= base_url(); ?>assets/css/ace-responsive.min.css" />
+<link rel="stylesheet" href="<?= base_url(); ?>assets/css/ace-skins.min.css" />
+<script src="<?= base_url(); ?>js/raven.min.js"></script></head>
+<script src="<?= base_url(); ?>js/dhtmlxscheduler.js" type="text/javascript" charset="utf-8"></script>
+<link rel="stylesheet" href="<?= base_url(); ?>css/dhtmlxscheduler.css" type="text/css" charset="utf-8">
+<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>css/easyui.css?date=<?php echo date('Y-m-d') ?>">
+<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>css/icon.css?date=<?php echo date('Y-m-d') ?>">
+<link rel="stylesheet" href="<?= base_url(); ?>css/mine.css" />
+<style type="text/css" >
+    html, body{
+        margin:0;
+        padding:0;
+        height:100%;
+        overflow:hidden;
+    }
 
-<link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/chosen.css" />
-<!--fonts-->
-<?php require_once(APPPATH . 'views/css-page.php'); ?>
+    .dhx_cal_event div.dhx_footer,
+    .dhx_cal_event.past_event div.dhx_footer,
+    .dhx_cal_event.event_english div.dhx_footer,
+    .dhx_cal_event.event_math div.dhx_footer,
+    .dhx_cal_event.event_science div.dhx_footer{
+        background-color: transparent !important;
+    }
+    .dhx_cal_event .dhx_body{
+        -webkit-transition: opacity 0.1s;
+        transition: opacity 0.1s;
+        opacity: 0.7;
+    }
+    .dhx_cal_event .dhx_title{
+        line-height: 12px;
+    }
+    .dhx_cal_event_line:hover,
+    .dhx_cal_event:hover .dhx_body,
+    .dhx_cal_event.selected .dhx_body,
+    .dhx_cal_event.dhx_cal_select_menu .dhx_body{
+        opacity: 1;
+    }
 
-<link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/ace.min.css" />
-<style>
-    select {
-        width: 100%;
-        background-color: #fff;
-        border: 1px solid #ccc;
+    .dhx_cal_event.event_math div, .dhx_cal_event_line.event_math{
+        background-color: #d81b1b !important;
+        border-color: #d81b1b !important;
+    }
+    .dhx_cal_event_clear.event_math{
+        color:#d81b1b !important;
+    }
+
+    .dhx_cal_event.event_science div, .dhx_cal_event_line.event_science{
+        background-color: #1ca790 !important;
+        border-color: #1ca790 !important;
+    }
+    .dhx_cal_event_clear.event_science{
+        color:#1ca790!important;
+    }
+
+    .dhx_cal_event.event_english div, .dhx_cal_event_line.event_english{
+        background-color: #c0dcf3 !important;
+        border-color: #c0dcf3 !important;
+    }
+    .dhx_cal_event_clear.event_english{
+        color:#c0dcf3 !important;
     }
 </style>
-<div class="page-content">
-    <div class="page-header position-relative">
-        <h3> Schedules </h3>
 
-    </div><!--/.page-header-->
-    <div class="row-fluid">
-        <div class="span12">
-            <!--PAGE CONTENT BEGINS-->
-
-            <div class="row-fluid">
-                <div class="span12">
+<?php //echo var_dump($evs);?>
 
 
-                    <div id="calendar"></div>
-                </div>
+<script type="text/javascript" charset="utf-8">
+    function init() {
+        scheduler.config.xml_date = "%Y-%m-%d %H:%i";
+        scheduler.config.time_step = 60;
+        scheduler.config.multi_day = true;
+        scheduler.locale.labels.section_subject = "Subject";
+        scheduler.config.first_hour = 6;
+        scheduler.config.limit_time_select = true;
+        scheduler.config.details_on_dblclick = true;
+        scheduler.config.details_on_create = true;
 
-                
-            </div>
+        scheduler.templates.event_class = function (start, end, event) {
+            var css = "";
 
-            <!--PAGE CONTENT ENDS-->
-        </div><!--/.span-->
-    </div><!--/.row-fluid-->
-</div><!--/.page-content-->
+            if (event.subject) // if event has subject property then special class should be assigned
+                css += "event_" + event.subject;
 
+            if (event.id == scheduler.getState().select_id) {
+                css += " selected";
+            }
+            return css; // default return
 
-<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-small btn-inverse">
-    <i class="icon-double-angle-up icon-only bigger-110"></i>
-</a>
+            /*
+             Note that it is possible to create more complex checks
+             events with the same properties could have different CSS classes depending on the current view:
+             
+             var mode = scheduler.getState().mode;
+             if(mode == "day"){
+             // custom logic here
+             }
+             else {
+             // custom logic here
+             }
+             */
+        };
 
-<!--basic scripts-->
+        var subject = [
+            {key: '', label: 'Appointment'},
+            {key: 'english', label: 'English'},
+            {key: 'math', label: 'Math'},
+            {key: 'science', label: 'Science'}
+        ];
 
-<!--[if !IE]>-->
+        scheduler.config.lightbox.sections = [
+            {name: "description", height: 43, map_to: "text", type: "textarea", focus: true},
+            {name: "subject", height: 20, type: "select", options: subject, map_to: "subject"},
+            {name: "time", height: 72, type: "time", map_to: "auto"}
+        ];
+        var day = <?php echo date('d'); ?>;
+        var year = <?php echo date('Y'); ?>;
+        var month = <?php echo date('m'); ?>;
+        //alert(month);
+        scheduler.init('scheduler_here', new Date(year, month - 1, day), "week");
+//scheduler.init('scheduler_here', new Date(<?php echo date('Y') ?>, <?php echo date('m') ?>,<?php echo date('d') ?>), "week");
 
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-
-<!--<![endif]-->
-
-<!--[if IE]>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-<![endif]-->
-
-<!--[if !IE]>-->
-
-<script type="text/javascript">
-    window.jQuery || document.write("<script src='<?php echo base_url(); ?>assets/js/jquery-2.0.3.min.js'>" + "<" + "/script>");</script>
-
-<!--<![endif]-->
-
-<!--[if IE]>
-<script type="text/javascript">
-window.jQuery || document.write("<script src='assets/js/jquery-1.10.2.min.js'>"+"<"+"/script>");
-</script>
-<![endif]-->
-
-<script type="text/javascript">
-    if ("ontouchend" in document)
-        document.write("<script src='<?php echo base_url(); ?>assets/js/jquery.mobile.custom.min.js'>" + "<" + "/script>");</script>
-<script src="<?php echo base_url(); ?>assets/js/bootstrap.min.js"></script>
-
-<!--page specific plugin scripts-->
-
-<script src="<?php echo base_url(); ?>assets/js/jquery-ui-1.10.3.custom.min.js"></script>
-<script src="<?php echo base_url(); ?>assets/js/jquery.ui.touch-punch.min.js"></script>
-<script src="<?php echo base_url(); ?>assets/js/chosen.jquery.min.js"></script>
-<script src="<?php echo base_url(); ?>assets/js/fuelux/fuelux.spinner.min.js"></script>
-<script src="<?php echo base_url(); ?>assets/js/fullcalendar.min.js"></script>
-<script src="<?php echo base_url(); ?>assets/js/bootbox.min.js"></script>
-<script src="<?php echo base_url(); ?>assets/js/date-time/bootstrap-datepicker.min.js"></script>
-<script src="<?php echo base_url(); ?>assets/js/date-time/bootstrap-timepicker.min.js"></script>
-<script src="<?php echo base_url(); ?>assets/js/date-time/moment.min.js"></script>
-<script src="<?php echo base_url(); ?>assets/js/date-time/daterangepicker.min.js"></script>
-<!--ace scripts-->
-
-<script src="<?php echo base_url(); ?>assets/js/ace-elements.min.js"></script>
-<script src="<?php echo base_url(); ?>assets/js/ace.min.js"></script>
-
-
-<script src="<?php echo base_url(); ?>assets/js/bootstrap-colorpicker.min.js"></script>
-<script src="<?php echo base_url(); ?>assets/js/jquery.knob.min.js"></script>
-<script src="<?php echo base_url(); ?>assets/js/jquery.autosize-min.js"></script>
-<script src="<?php echo base_url(); ?>assets/js/jquery.inputlimiter.1.3.1.min.js"></script>
-<script src="<?php echo base_url(); ?>assets/js/jquery.maskedinput.min.js"></script>
-<script src="<?php echo base_url(); ?>assets/js/bootstrap-tag.min.js"></script>
-
-
-
-
-<!--inline scripts related to this page-->
-
-<script type="text/javascript">
-    $(function () {
-        /* initialize the external events
-         -----------------------------------------------------------------*/
-
-        $('#external-events div.external-event').each(function () {
-
-            // create an Event Object (http://arshaw.com/fullcalendar/docs/event_data/Event_Object/)
-            // it doesn't need to have a start or end
-            var eventObject = {
-                title: $.trim($(this).text()) // use the element's text as the event title
-            };
-            // store the Event Object in the DOM element so we can get to it later
-            $(this).data('eventObject', eventObject);
-            // make the event draggable using jQuery UI
-            $(this).draggable({
-                zIndex: 999,
-                revert: true, // will cause the event to go back to its
-                revertDuration: 0  //  original position after the drag
-            });
-        });
-        /* initialize the calendar
-         -----------------------------------------------------------------*/
-
-        var date = new Date();
-        var d = date.getDate();
-        var m = date.getMonth();
-        var y = date.getFullYear();
-        var calendar = $('#calendar').fullCalendar({
-            buttonText: {
-                prev: '<i class="icon-chevron-left"></i>',
-                next: '<i class="icon-chevron-right"></i>'
-            },
-            header: {
-                left: 'prev,next today',
-                center: 'title',
-                right: 'month,agendaWeek,agendaDay'
-            },
-            events: [
+        scheduler.parse([
 <?php
 
 function clean($string) {
-   $string = str_replace(' ', '-', $string); // Replaces all spaces with hyphens.
+    $string = str_replace(' ', '-', $string); // Replaces all spaces with hyphens.
 
-   return preg_replace('/[^A-Za-z0-9\-]/', '', $string); // Removes special chars.
+    return preg_replace('/[^A-Za-z0-9\-]/', '', $string); // Removes special chars.
 }
-if (is_array($sch)) {
-    foreach ($sch as $loop) {
-        $mydate = $loop->date;
-        $prior = $loop->priority;
-        $days = $loop->hours;
-         
-         $informations ='START:'. date('H:i:s', strtotime($loop->start)).':'.clean($loop->name);
-                
-        $d = (int) date("d", strtotime($mydate));
-        $m = (int) date("m", strtotime($mydate))-1;
-        $y = (int) date("Y", strtotime($mydate));
 
-        switch ($prior) {
-            case High:
-                $className = 'label-important';
-                break;
-            case Medium:
-                $className = 'label-success';
-                break;
-            case Low:
-                $className = 'label-grey';
-                break;
-            case File:
-                $className = 'label-blue';
-                break;
+if (is_array($evs)) {
+    foreach ($evs as $loop) {
+
+        $start = date('Y-m-d H:m', strtotime($loop->starts));
+        $end = date('Y-m-d H:m', strtotime($loop->ends));
+        $details = $loop->users . ' :' . clean($loop->details) . 'File: ' . $loop->file;
+        if ($loop->priority == "Low") {
+            $level = 'English';
         }
-        
+        if ($loop->priority == "Medium") {
+            $level = 'Science';
+        }
+        if ($loop->priority == "High") {
+            $level = 'Math';
+        }
         ?>
-                        {
-                            title: '<?php echo $informations.'-'.$loop->user.' '.$loop->file.' '; ?>',
-                            start: new Date(<?php echo $y; ?>, <?php echo $m; ?>, <?php echo $d; ?>),
-                            className: '<?php echo $className; ?>'
 
-                        },
+                    {start_date: "<?php echo $start; ?>", end_date: "<?php echo $end; ?>", text: "<?php echo $details; ?>", subject: '<?php echo $level; ?>'},
         <?php
     }
 }
-?>]
-            ,
-            editable: true,
-            droppable: true, // this allows things to be dropped onto the calendar !!!
-            drop: function (date, allDay) { // this function is called when something is dropped
+?>
 
-                // retrieve the dropped element's stored Event Object
-                var originalEventObject = $(this).data('eventObject');
-                var $extraEventClass = $(this).attr('data-class');
-                // we need to copy it, so that multiple events don't have a reference to the same object
-                var copiedEventObject = $.extend({}, originalEventObject);
-                // assign it the date that was reported
-                copiedEventObject.start = date;
-                copiedEventObject.allDay = allDay;
-                if ($extraEventClass)
-                    copiedEventObject['className'] = [$extraEventClass];
-                // render the event on the calendar
-                // the last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
-                $('#calendar').fullCalendar('renderEvent', copiedEventObject, true);
-                // is the "remove after drop" checkbox checked?
-                if ($('#drop-remove').is(':checked')) {
-                    // if so, remove the element from the "Draggable Events" list
-                    $(this).remove();
-                }
-
-            }
-            ,
-            selectable: true,
-            selectHelper: true,
-            eventClick: function (calEvent, jsEvent, view) {
-
-                var form = $("<form class='form-inline'><label>Schedule Information</label></form>");
-                form.append("<hr><label>" + calEvent.title + "</label> ");
-                form.append("");
-                var div = bootbox.dialog(form,
-                        [
-                            {
-                                "label": " Close",
-                                "class": "btn-small"
-                            }
-                        ]
-                        ,
-                        {
-                            // prompts need a few extra options
-                            "onEscape": function () {
-                                div.modal("hide");
-                            }
-                        }
-                );
-                form.on('submit', function () {
-                    calEvent.title = form.find("input[type=text]").val();
-                    calendar.fullCalendar('updateEvent', calEvent);
-                    div.modal("hide");
-                    return false;
-                });
-                //console.log(calEvent.id);
-                //console.log(jsEvent);
-                //console.log(view);
-
-                // change the border color just for fun
-                //$(this).css('border-color', 'red');
-
-            }
-
-        });
-    })
+        ], "json");
+    }
 </script>
+
+<div class="page-content">
+    <div class="table-header">
+        ADD EVENT<a href="#modal-form" role="button" class="green" data-toggle="modal"><i class="icon-add bigger-210"></i>Add </a>
+    </div>
+    <div class=" col-md-10">
+        <body onload="init();">
+
+            <div id="scheduler_here" class="dhx_cal_container" style='width:100%; height:100%;'>
+                <div class="dhx_cal_navline">
+                    <div class="dhx_cal_prev_button">&nbsp;</div>
+                    <div class="dhx_cal_next_button">&nbsp;</div>
+                    <div class="dhx_cal_today_button"></div>
+                    <div class="dhx_cal_date"></div>
+                    <div class="dhx_cal_tab" name="day_tab" style="right:204px;"></div>
+                    <div class="dhx_cal_tab" name="week_tab" style="right:140px;"></div>
+                    <div class="dhx_cal_tab" name="month_tab" style="right:76px;"></div>
+                </div>
+                <div class="dhx_cal_header">
+                </div>
+                <div class="dhx_cal_data">
+                </div>		
+            </div>
+
+            <div id="modal-form" class="modal hide" tabindex="-1">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="blue bigger">Please fill the Schedule details</h4>
+                </div>
+                <form id="station-form" parsley-validate novalidate role="form" name="login-form" enctype="multipart/form-data"  action='<?= base_url(); ?>index.php/time/create'  method="post">
+
+                    <div class="modal-body overflow-visible">
+                        <div class="row-fluid">
+                            <div class=" span6">
+                                 <div class="form-group"> 
+                                Start time <input class="easyui-datetimebox form-control" name="starts"   data-options="required:true,showSeconds:false" value="<?php echo date('Y-m-d H:i'); ?>" style="width:160px">
+                                End time  <input class="easyui-datetimebox form-control" name="ends" data-options="required:true,showSeconds:false" value="<?php echo date('Y-m-d (H+2):i'); ?>" style="width:160px">
+                            </div>
+                            <hr>
+                            <div class="form-group">
+                                <label>Client</label>
+                                <input class="easyui-combobox" name="clientID" id="clientID" style="width:100%;height:26px" data-options="
+                                       url:'<?php echo base_url() ?>index.php/client/lists',
+                                       method:'get',
+                                       valueField:'id',
+                                       textField:'name',
+                                       multiple:false,
+                                       panelHeight:'auto'
+                                       " >
+                            </div>
+                             <div class="form-group">
+                                <label>Attendant</label>
+                                <input class="easyui-combobox" name="userID" id="userID" style="width:100%;height:26px" data-options="
+                                       url:'<?php echo base_url() ?>index.php/user/lists',
+                                       method:'get',
+                                       valueField:'id',
+                                       textField:'surname',
+                                       multiple:false,
+                                       panelHeight:'auto'
+                                       " >
+                            </div>
+                            <div class="form-group">
+                                <label>File/Case</label>
+                                <input class="easyui-combobox" name="fileID" id="userID" style="width:100%;height:26px" data-options="
+                                       url:'<?php echo base_url() ?>index.php/file/lists',
+                                       method:'get',
+                                       valueField:'id',
+                                       textField:'name',
+                                       multiple:false,
+                                       panelHeight:'auto'
+                                       " >
+                            </div>
+                            </div>
+                            <div class=" span6">
+                                 <div class="form-group">
+                                <label>Service</label>
+                                <input class="easyui-combobox" name="service" id="service" style="width:100%;height:26px" data-options="
+                                       url:'<?php echo base_url() ?>index.php/service/lists',
+                                       method:'get',
+                                       valueField:'name',
+                                       textField:'name',
+                                       multiple:false,
+                                       panelHeight:'auto'
+                                       " >
+                            </div>
+                               <div class="form-group">                       
+                                <label >Intensity/Priority</label>
+                                <select class="form-control" id="priority" name="priority">
+                                    <option value="Low">Low</option> 
+                                    <option value="Medium">Medium</option>  
+                                     <option value="High">High</option>  
+                                </select>                       
+                            </div><!--/form-group-->
+                            <div class="form-group">                        
+                                <input type="text" name="no" value="<?php echo $this->session->userdata('code') . '-' . date('H:i:s') . '/W' . (count($evs) + 1); ?>" placeholder="Event No." id="no" required class="form-control"/>
+
+                            </div>
+                            <div class="form-group">                        
+                                <input type="text" name="cost" placeholder="Cost" id="cost" value="0" class="form-control"/>
+
+                            </div>                           
+                           
+                            <div class="">
+                                <button type="button" class="btn btn-danger pull-left" data-dismiss="modal">Close</button>  <button class="btn btn-success pull-right" type="submit">SUBMIT</button> 
+
+                            </div>
+                            </div>
+                           
+                           
+                            <div class="vspace"></div>     
+                        </div>
+                    </div>
+                </form>
+            </div><!--PAGE CONTENT ENDS-->
+
+
+
+        </body>
+    </div>
+</div>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 <script type="text/javascript">
-    $(function () {
-        $('#id-disable-check').on('click', function () {
-            var inp = $('#form-input-readonly').get(0);
-            if (inp.hasAttribute('disabled')) {
-                inp.setAttribute('readonly', 'true');
-                inp.removeAttribute('disabled');
-                inp.value = "This text field is readonly!";
-            } else {
-                inp.setAttribute('disabled', 'disabled');
-                inp.removeAttribute('readonly');
-                inp.value = "This text field is disabled!";
-            }
-        });
-        $(".chzn-select").chosen();
-        $('[data-rel=tooltip]').tooltip({container: 'body'});
-        $('[data-rel=popover]').popover({container: 'body'});
-        $('textarea[class*=autosize]').autosize({append: "\n"});
-        $('textarea[class*=limited]').each(function () {
-            var limit = parseInt($(this).attr('data-maxlength')) || 100;
-            $(this).inputlimiter({
-                "limit": limit,
-                remText: '%n character%s remaining...',
-                limitText: 'max allowed : %n.'
-            });
-        });
-        $.mask.definitions['~'] = '[+-]';
-        $('.input-mask-date').mask('99/99/9999');
-        $('.input-mask-phone').mask('(999) 999-9999');
-        $('.input-mask-eyescript').mask('~9.99 ~9.99 999');
-        $(".input-mask-product").mask("a*-999-a999", {placeholder: " ", completed: function () {
-                alert("You typed the following: " + this.val());
-            }});
-        $("#input-size-slider").css('width', '200px').slider({
-            value: 1,
-            range: "min",
-            min: 1,
-            max: 6,
-            step: 1,
-            slide: function (event, ui) {
-                var sizing = ['', 'input-mini', 'input-small', 'input-medium', 'input-large', 'input-xlarge', 'input-xxlarge'];
-                var val = parseInt(ui.value);
-                $('#form-field-4').attr('class', sizing[val]).val('.' + sizing[val]);
-            }
-        });
-        $("#input-span-slider").slider({
-            value: 1,
-            range: "min",
-            min: 1,
-            max: 11,
-            step: 1,
-            slide: function (event, ui) {
-                var val = parseInt(ui.value);
-                $('#form-field-5').attr('class', 'span' + val).val('.span' + val).next().attr('class', 'span' + (12 - val)).val('.span' + (12 - val));
-            }
-        });
-        $("#slider-range").css('height', '200px').slider({
-            orientation: "vertical",
-            range: true,
-            min: 0,
-            max: 100,
-            values: [17, 67],
-            slide: function (event, ui) {
-                var val = ui.values[$(ui.handle).index() - 1] + "";
-                if (!ui.handle.firstChild) {
-                    $(ui.handle).append("<div class='tooltip right in' style='display:none;left:15px;top:-8px;'><div class='tooltip-arrow'></div><div class='tooltip-inner'></div></div>");
-                }
-                $(ui.handle.firstChild).show().children().eq(1).text(val);
-            }
-        }).find('a').on('blur', function () {
-            $(this.firstChild).hide();
-        });
-        $("#slider-range-max").slider({
-            range: "max",
-            min: 1,
-            max: 10,
-            value: 2
-        });
-        $("#eq > span").css({width: '90%', 'float': 'left', margin: '15px'}).each(function () {
-            // read initial values from markup and remove that
-            var value = parseInt($(this).text(), 10);
-            $(this).empty().slider({
-                value: value,
-                range: "min",
-                animate: true
-
-            });
-        });
-        $('#id-input-file-1 , #id-input-file-2').ace_file_input({
-            no_file: 'No File ...',
-            btn_choose: 'Choose',
-            btn_change: 'Change',
-            droppable: false,
-            onchange: null,
-            thumbnail: false //| true | large
-                    //whitelist:'gif|png|jpg|jpeg'
-                    //blacklist:'exe|php'
-                    //onchange:''
-                    //
-        });
-        $('#id-input-file-3').ace_file_input({
-            style: 'well',
-            btn_choose: 'Drop files here or click to choose',
-            btn_change: null,
-            no_icon: 'icon-cloud-upload',
-            droppable: true,
-            thumbnail: 'small'
-                    //,icon_remove:null//set null, to hide remove/reset button
-                    /**,before_change:function(files, dropped) {
-                     //Check an example below
-                     //or examples/file-upload.html
-                     return true;
-                     }*/
-                    /**,before_remove : function() {
-                     return true;
-                     }*/
-            ,
-            preview_error: function (filename, error_code) {
-                //name of the file that failed
-                //error_code values
-                //1 = 'FILE_LOAD_FAILED',
-                //2 = 'IMAGE_LOAD_FAILED',
-                //3 = 'THUMBNAIL_FAILED'
-                //alert(error_code);
-            }
-
-        }).on('change', function () {
-            //console.log($(this).data('ace_input_files'));
-            //console.log($(this).data('ace_input_method'));
-        });
-        //dynamically change allowed formats by changing before_change callback function
-        $('#id-file-format').removeAttr('checked').on('change', function () {
-            var before_change
-            var btn_choose
-            var no_icon
-            if (this.checked) {
-                btn_choose = "Drop images here or click to choose";
-                no_icon = "icon-picture";
-                before_change = function (files, dropped) {
-                    var allowed_files = [];
-                    for (var i = 0; i < files.length; i++) {
-                        var file = files[i];
-                        if (typeof file === "string") {
-                            //IE8 and browsers that don't support File Object
-                            if (!(/\.(jpe?g|png|gif|bmp)$/i).test(file))
-                                return false;
-                        } else {
-                            var type = $.trim(file.type);
-                            if ((type.length > 0 && !(/^image\/(jpe?g|png|gif|bmp)$/i).test(type))
-                                    || (type.length == 0 && !(/\.(jpe?g|png|gif|bmp)$/i).test(file.name))//for android's default browser which gives an empty string for file.type
-                                    )
-                                continue; //not an image so don't keep this file
-                        }
-
-                        allowed_files.push(file);
-                    }
-                    if (allowed_files.length == 0)
-                        return false;
-                    return allowed_files;
-                }
-            } else {
-                btn_choose = "Drop files here or click to choose";
-                no_icon = "icon-cloud-upload";
-                before_change = function (files, dropped) {
-                    return files;
-                }
-            }
-            var file_input = $('#id-input-file-3');
-            file_input.ace_file_input('update_settings', {'before_change': before_change, 'btn_choose': btn_choose, 'no_icon': no_icon})
-            file_input.ace_file_input('reset_input');
-        });
-        $('#spinner1').ace_spinner({value: 0, min: 0, max: 200, step: 10, btn_up_class: 'btn-info', btn_down_class: 'btn-info'})
-                .on('change', function () {
-                    //alert(this.value)
-                });
-        $('#spinner2').ace_spinner({value: 0, min: 0, max: 10000, step: 100, icon_up: 'icon-caret-up', icon_down: 'icon-caret-down'});
-        $('#spinner3').ace_spinner({value: 0, min: -100, max: 100, step: 10, icon_up: 'icon-plus', icon_down: 'icon-minus', btn_up_class: 'btn-success', btn_down_class: 'btn-danger'});
-        $('.date-picker').datepicker().next().on(ace.click_event, function () {
-            $(this).prev().focus();
-        });
-        $('#id-date-range-picker-1').daterangepicker().prev().on(ace.click_event, function () {
-            $(this).next().focus();
-        });
-        $('#timepicker1').timepicker({
-            minuteStep: 1,
-            showSeconds: true,
-            showMeridian: false
-        })
-        $('#timepicker2').timepicker({
-            minuteStep: 1,
-            showSeconds: true,
-            showMeridian: false
-        })
-
-        $('#colorpicker1').colorpicker();
-        $('#simple-colorpicker-1').ace_colorpicker();
-        $(".knob").knob();
-        //we could just set the data-provide="tag" of the element inside HTML, but IE8 fails!
-        var tag_input = $('#form-field-tags');
-        if (!(/msie\s*(8|7|6)/.test(navigator.userAgent.toLowerCase())))
-            tag_input.tag({placeholder: tag_input.attr('placeholder')});
-        else {
-            //display a textarea for old IE, because it doesn't support this plugin or another one I tried!
-            tag_input.after('<textarea id="' + tag_input.attr('id') + '" name="' + tag_input.attr('name') + '" rows="3">' + tag_input.val() + '</textarea>').remove();
-            //$('#form-field-tags').autosize({append: "\n"});
-        }
-
-
-        /////////
-        $('#modal-form input[type=file]').ace_file_input({
-            style: 'well',
-            btn_choose: 'Drop files here or click to choose',
-            btn_change: null,
-            no_icon: 'icon-cloud-upload',
-            droppable: true,
-            thumbnail: 'large'
-        })
-
-        //chosen plugin inside a modal will have a zero width because the select element is originally hidden
-        //and its width cannot be determined.
-        //so we set the width after modal is show
-        $('#modal-form').on('show', function () {
-            $(this).find('.chzn-container').each(function () {
-                $(this).find('a:first-child').css('width', '200px');
-                $(this).find('.chzn-drop').css('width', '210px');
-                $(this).find('.chzn-search input').css('width', '200px');
-            });
-        })
-        /**
-         //or you can activate the chosen plugin after modal is shown
-         //this way select element has a width now and chosen works as expected
-         $('#modal-form').on('shown', function () {
-         $(this).find('.modal-chosen').chosen();
-         })
-         */
-
-    });
+            window.jQuery || document.write("<script src='<?= base_url(); ?>assets/js/jquery-2.0.3.min.js'>" + "<" + "/script>");
 </script>
-</body>
-</html>
-
-
-</body>
-</html>
-
-</body>
-</html>
+<script src="<?= base_url(); ?>assets/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="<?= base_url(); ?>js/jquery.easyui.min.js"></script>

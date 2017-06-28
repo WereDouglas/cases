@@ -17,46 +17,60 @@ class Time extends CI_Controller {
 
     public function index() {
 
-        $this->load->view('time-page');
+        $query = $this->Md->query("SELECT * FROM events ");
+        if ($query) {
+            $data['evs'] = $query;
+        } else {
+            $data['evs'] = array();
+        }
+
+        $query = $this->Md->query("SELECT * FROM users ");
+        if ($query) {
+            $data['users'] = $query;
+        } else {
+            $data['users'] = array();
+        }
+        // var_dump($data);
+        $this->load->view('time-page', $data);
     }
 
-    public function admin() {
+    public function calendar() {
 
-        $this->load->view('time-admin');
+        $query = $this->Md->query("SELECT * FROM events");
+        if ($query) {
+            $data['evs'] = $query;
+        } else {
+            $data['evs'] = array();
+        }
+        $this->load->view('calendar-page', $data);
     }
 
     public function create() {
-        $phpdate = strtotime($this->input->post('end'));
-        $ending = date('Y-m-d', $phpdate);
 
 
-        $phpdates = strtotime($this->input->post('start'));
-        $startTime = date('H:i:s', $phpdates);
 
-        $phpdatese = strtotime($this->input->post('end'));
-        $endTime = date('H:i:s', $phpdatese);
-        $hours = abs(($endTime - $startTime));
-
+        $start = date('Y-m-dTH:i:s ', strtotime($this->input->post('starts')));
+       $dated = date('Y-m-d', strtotime($this->input->post('starts')));
+        $ends = date('Y-m-dTH:i:s ', strtotime($this->input->post('ends')));
+       // return;
         $eventID = $this->GUID();
-        $syc = array('id' => $eventID, 'orgID' => $this->session->userdata('orgID'), 'name' => $this->input->post('name'), 'start' => $this->input->post('start'), 'end' => $this->input->post('end'), 'user' => $this->input->post('resource'), 'hours' => $hours, 'file' => $this->input->post('file'), 'created' => date('Y-m-d'), 'date' => $ending, 'action' => "none", 'court' => "false", 'priority' => "medium", 'notify' => "true", 'sync' => 'f', 'cal' => 'f', 'status' => $this->input->post('status'));
+
+        $email = $this->Md->query_cell("SELECT * FROM users WHERE id= '" . $this->input->post('userID') . "'", 'email');
+        $contact = $this->Md->query_cell("SELECT * FROM users where id= '" . $this->input->post('userID') . "'", 'contact');
+        $names = $this->Md->query_cell("SELECT * FROM users where id= '" . $this->input->post('userID') . "'", 'surname');
+        $file = $this->Md->query_cell("SELECT * FROM files where id= '" . $this->input->post('fileID') . "'", 'name');
+
+        $syc = array('id' => $eventID, 'details' => $this->input->post('service'), 'starts' => $start, 'ends' => $ends, 'users' => $names, 'file' => $file, 'created' => date('d-m-Y H:i:s'), 'fileID' => $this->session->userdata('fileID'),'status'=> 'due', 'userID' => $this->input->post('userID'), 'dated' => $dated, 'notif' => 'true', 'priority' => $this->input->post('priority'), 'sync' => date('Y-m-d H:i:s'),'cal'=> 'false','contact'=> $contact,'email'=> $email, 'department'=>'', 'orgID' => $this->session->userdata('orgID'), 'cost' => $this->input->post('cost'), 'no' => $this->input->post('no'));
         $this->Md->save($syc, 'events');
 
-        $message = "You have a task due on " . $ending . " for " . $this->input->post('name');
-        $emails = $this->Md->query_cell("SELECT * FROM users where name= '" . $this->input->post('resource') . "'", 'email');
-        $phones = $this->Md->query_cell("SELECT * FROM users where name= '" . $this->input->post('resource') . "'", 'contact');
-        $names = $this->Md->query_cell("SELECT * FROM users where name= '" . $this->input->post('resource') . "'", 'name');
-
-        $mail = array('messageID' => $this->GUID(), 'body' => $message, 'subject' => 'REMINDER', 'date' => $ending, 'to' => $names, 'created' => date('Y-m-d H:i:s'), 'from' => $this->session->userdata('orgemail'), 'sent' => 'false', 'type' => 'email', 'orgID' => $this->session->userdata('orgID'), 'action' => 'none', 'taskID' => $eventID, 'contact' => $phones, 'email' => $emails);
-        $this->Md->save($mail, 'message');
-
-        $response->id = "task saved";
-        header('Content-Type: application/json');
-        echo json_encode($response);
+        $status .= '<div class="alert alert-success">  <strong>Information submitted</strong></div>';
+        $this->session->set_flashdata('msg', $status);
+        redirect('time/calendar', 'refresh');
     }
 
     public function mobile() {
-        
-        if($this->input->post('details')=="" || $this->input->post('end')=="" || $this->input->post('start')==""|| $this->input->post('orgID')==""){
+
+        if ($this->input->post('details') == "" || $this->input->post('end') == "" || $this->input->post('start') == "" || $this->input->post('orgID') == "") {
             return;
         }
         $phpdate = strtotime($this->input->post('end'));
@@ -72,7 +86,7 @@ class Time extends CI_Controller {
         $hours = abs(($endTime - $startTime));
 
         $eventID = $this->GUID();
-        $syc = array('id' => $eventID, 'orgID' => $this->input->post('orgID'), 'name' => $this->input->post('details'), 'start' => $this->input->post('start'), 'end' => $this->input->post('end'), 'user' => $this->input->post('user'), 'hours' =>  $this->input->post('hours'), 'file' => $this->input->post('file'), 'created' => date('Y-m-d H:i:s'), 'date' =>  $this->input->post('date'), 'action' => "none", 'status' => $this->input->post('status'), 'cost' => $this->input->post('cost'), 'notify' => $this->input->post('notify'), 'cal' => $this->input->post('cal'), 'court' => $this->input->post('court'), 'priority' => $this->input->post('priority'), 'sync' => $this->input->post('sync'));
+        $syc = array('id' => $eventID, 'orgID' => $this->input->post('orgID'), 'name' => $this->input->post('details'), 'start' => $this->input->post('start'), 'end' => $this->input->post('end'), 'user' => $this->input->post('user'), 'hours' => $this->input->post('hours'), 'file' => $this->input->post('file'), 'created' => date('Y-m-d H:i:s'), 'date' => $this->input->post('date'), 'action' => "none", 'status' => $this->input->post('status'), 'cost' => $this->input->post('cost'), 'notif' => $this->input->post('notify'), 'cal' => $this->input->post('cal'), 'court' => $this->input->post('court'), 'priority' => $this->input->post('priority'), 'sync' => $this->input->post('sync'));
         $this->Md->save($syc, 'events');
 
         $message = "You have a task due on " . $ending . " for " . $this->input->post('name');

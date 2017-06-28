@@ -16,20 +16,14 @@ class Web extends CI_Controller {
 
     public function index() {
 
-        $query = $this->Md->query("SELECT name,image FROM org WHERE image<>''");
+        $query = $this->Md->query("SELECT name,image FROM organisation WHERE image<>''");
 
         if ($query) {
             $data['orgs'] = $query;
         } else {
             $data['orgs'] = array();
         }
-        $query = $this->Md->query("SELECT * FROM template WHERE orgID=''  LIMIT 5 ");
-
-        if ($query) {
-            $data['docs'] = $query;
-        } else {
-            $data['docs'] = array();
-        }
+      
         $query = $this->Md->query("SELECT * FROM events WHERE YEAR(STR_TO_DATE(date,'%Y-%m-%d')) = '" . date('Y') . "' ");
         if ($query) {
             $data['payments_year'] = $query;

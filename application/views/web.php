@@ -82,7 +82,7 @@ if (is_array($payments_year) && count($payments_year)) {
     // echo $march.'<br>';
     //  echo $jan.'<br>';
 }
- 
+
 
 if (is_array($clients) && count($clients)) {
     foreach ($clients as $loop) {
@@ -134,7 +134,7 @@ if (is_array($files) && count($files)) {
             $jan3 = $jan3 + 1;
         }
         if (date("m", strtotime($loop->created)) == "2") {
-            $feb3 = $feb3  + 1;
+            $feb3 = $feb3 + 1;
         }
         if (date("m", strtotime($loop->created)) == "3") {
             $mar3 = $mar3 + 1;
@@ -207,17 +207,10 @@ if (is_array($files) && count($files)) {
                     </div>
                     <div class="collapse navbar-collapse" id="collapse">
                         <ul class="nav navbar-nav">
-                            <li class="active">
-                                <a href="#home">Home</a></li>
-                            <li>
-                                <a href="#clients">Clients</a></li>
-                            <li>
-
-                                <a href="#">Vugaco</a></li>
-                            <li>
-                                <a href="#team">Team</a></li>
-                            <li>
-                                <a href="#contact">Contact</a></li>
+                            <li class="active"><a href="#home">Home</a></li>
+                            <li><a href="#clients">Clients</a></li>
+                            <li><a href="#team">Team</a></li>
+                            <li><a href="#contact">Contact</a></li>
 
                         </ul>
                         <ul class="nav navbar-nav navbar-right">
@@ -228,7 +221,7 @@ if (is_array($files) && count($files)) {
                                     <li>
                                         <div class="row">
                                             <div class="col-md-12">
-                                                Login via                                                
+                                               <?php echo $this->session->flashdata('msg'); ?>                                              
                                                 <form id="station-form" name="login-form" enctype="multipart/form-data"  action='<?= base_url(); ?>index.php/home/login'  method="post">
                                                     <div class="form-group">
                                                         <label class="sr-only" for="exampleInputEmail2">Contact</label>

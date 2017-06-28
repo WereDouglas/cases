@@ -16,29 +16,28 @@ class File extends CI_Controller {
     }
 
     public function index() {
-        $query = $this->Md->query("SELECT * FROM users where org = '" . $this->session->userdata('orgid') . "' ");
+        $query = $this->Md->query("SELECT * FROM users where orgID = '" . $this->session->userdata('orgid') . "' ");
 
         if ($query) {
             $data['users'] = $query;
         } else {
             $data['users'] = array();
         }
-        $query = $this->Md->query("SELECT * FROM files where org = '" . $this->session->userdata('orgid') . "' ");
+        $query = $this->Md->query("SELECT *,users.surname AS user,users.image AS user_image,client.image AS client_image,files.name as name,client.name AS client FROM files LEFT JOIN users ON users.id = files.userID LEFT JOIN client ON client.id = files.client where files.orgID = '" . $this->session->userdata('orgID') . "' ");
 
         if ($query) {
             $data['files'] = $query;
         } else {
             $data['files'] = array();
         }
-        $data['procs'] = array();
-
-        $query = $this->Md->query("SELECT * FROM procedures where org = '" . $this->session->userdata('orgid') . "' OR org=''");
-        if ($query)
-            $data['procs'] = $query;
-
-        $this->load->view('file-page', $data);
+        $this->load->view('view-files', $data);
     }
-
+  public function lists() {
+      
+        $query = $this->Md->query("SELECT * FROM files WHERE  orgID='" . $this->session->userdata('orgID') . "' ");
+        //$query = $this->Md->query("SELECT * FROM client");
+        echo json_encode($query);
+    }
     public function add() {
 
         $query = $this->Md->query("SELECT * FROM users where orgID = '" . $this->session->userdata('orgID') . "'");
@@ -317,8 +316,8 @@ class File extends CI_Controller {
     public function delete() {
         $this->load->helper(array('form', 'url'));
         $fileID = $this->uri->segment(3);
-        $query = $this->Md->cascade($fileID, 'file', 'fileID');
-        redirect('/file/view', 'refresh');
+        $query = $this->Md->cascade($fileID, 'files', 'id');
+        redirect('/file', 'refresh');
     }
 
     public function create() {

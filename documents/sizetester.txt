@@ -1,23 +1,57 @@
-Am adding alot of data
-
-adding the full documentation of this application  amd 
-Am adding alot of data
-
-adding the full documentation of this application  amd 
-Am adding alot of data
-
-adding the full documentation of this application  amd 
-Am adding alot of data
-
-adding the full documentation of this application  amd Am adding alot of data
-
-adding the full documentation of this application  amd 
-Am adding alot of data
-
-adding the full documentation of this application  amd 
-Am adding alot of data
-
-adding the full documentation of this application  amd 
-Am adding alot of data
-
-adding the full documentation of this application  amd 
+<th>#</th>
+                                    <th>Date</th>
+                                    <th>No</th>
+                                    <th>Services/Particulars</th>
+                                    <th>Quantity</th>
+                                     <th>Cost</th>
+                                    <th>Total</th>
+                                    <th>Amount paid</th>
+                                    <th>Balance</th>
+                                     <th>Method</th>
+                                    <th>Type</th><th>#</th>
+                                    <th>Date</th>
+                                    <th>No</th>
+                                    <th>Services/Particulars</th>
+                                    <th>Quantity</th>
+                                     <th>Cost</th>
+                                    <th>Total</th>
+                                    <th>Amount paid</th>
+                                    <th>Balance</th>
+                                     <th>Method</th>
+                                    <th>Type</th>
+                                    <th>Client</th>
+                                    <th>File</th>
+                                    <th>Done by</th>                                                                    
+                                    <th>Details</th><th>#</th>
+                                    <th>Date</th>
+                                    <th>No</th>
+                                    <th>Services/Particulars</th>
+                                    <th>Quantity</th>
+                                     <th>Cost</th>
+                                    <th>Total</th>
+                                    <th>Amount paid</th>
+                                    <th>Balance</th>
+                                     <th>Method</th>
+                                    <th>Type</th>
+                                    <th>Client</th>
+                                    <th>File</th>
+                                    <th>Done by</th>                                                                    
+                                    <th>Details</th><th>#</th>
+                                    <th>Date</th>
+                                    <th>No</th>
+                                    <th>Services/Particulars</th>
+                                    <th>Quantity</th>
+                                     <th>Cost</th>
+                                    <th>Total</th>
+                                    <th>Amount paid</th>
+                                    <th>Balance</th>
+                                     <th>Method</th>
+                                    <th>Type</th>
+                                    <th>Client</th>
+                                    <th>File</th>
+                                    <th>Done by</th>                                                                    
+                                    <th>Details</th>
+                                    <th>Client</th>
+                                    <th>File</th>
+                                    <th>Done by</th>                                                                    
+                                    <th>Details</th>

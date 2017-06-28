@@ -1,5 +1,5 @@
-
-<?php require_once(APPPATH . 'views/header-page.php'); ?>       
+<?php require_once(APPPATH . 'views/css-page.php'); ?>
+<link rel="stylesheet" href="<?= base_url(); ?>css/mine.css" />
 
 <?php echo $this->session->flashdata('msg'); ?>
 
@@ -105,23 +105,23 @@
                 ?>  
                 <tr class="odd">
 
-                    <td id="created:<?php echo $loop->documentID; ?>" contenteditable="true">
+                    <td id="created:<?php echo $loop->id; ?>" contenteditable="true">
                         <span class="green"><?php echo $loop->created; ?></span>                        </td>
-                    <td id="name:<?php echo $loop->documentID; ?>" contenteditable="true"><?php echo $loop->name; ?></td>
-                    <td id="fileID:<?php echo $loop->documentID; ?>" contenteditable="true"><?php echo $loop->fileID; ?></td>
-                    <td id="client:<?php echo $loop->documentID; ?>" contenteditable="true"><?php echo $loop->client; ?></td>
-                    <td id="details:<?php echo $loop->documentID; ?>" contenteditable="true"><?php echo $loop->details; ?></td>
-                    <td id="lawyer:<?php echo $loop->documentID; ?>" contenteditable="true"><?php echo $loop->lawyer; ?></td>
-                    <td id="note:<?php echo $loop->documentID; ?>" contenteditable="true"><?php echo $loop->note; ?></td>
+                    <td id="name:<?php echo $loop->id; ?>" contenteditable="true"><?php echo $loop->name; ?></td>
+                    <td ><?php echo $loop->file; ?></td>
+                    <td ><?php echo $loop->client; ?></td>
+                    <td id="details:<?php echo $loop->id; ?>" contenteditable="true"><?php echo $loop->details; ?></td>
+                    <td id="lawyer:<?php echo $loop->id; ?>" contenteditable="true"><?php echo $loop->user; ?></td>
+                    <td id="note:<?php echo $loop->id; ?>" contenteditable="true"><?php echo $loop->note; ?></td>
 
                     <td class="center">
-                        <a class="btn btn-danger btn-xs" href="<?php echo base_url() . "index.php/document/delete/" . $loop->documentID; ?>"><li class="fa fa-trash">Delete</li></a>
+                        <a class="btn btn-danger btn-xs" href="<?php echo base_url() . "index.php/document/delete/" . $loop->id; ?>"><li class="fa fa-trash">Delete</li></a>
                     </td>
                     <td class="center">
                         <a target="new" class="btn btn-successr btn-xs" href="<?php echo base_url() . "documents/" . $loop->name; ?>"><li class="fa fa-download">Download</li></a>
                     </td>
                     <td class="center">
-                        <?php echo $loop->sizes; ?>
+                        <?php echo ($loop->sizes) / 1000; ?>
                     </td>
 
                 </tr>
@@ -160,7 +160,7 @@
             $("td[contenteditable=true]").blur(function () {
                 var field_id = $(this).attr("id");
                 var value = $(this).text();
-                $.post('<?php echo base_url() . "index.php/document/updater/"; ?>', field_id + "=" + value, function (data) {
+                $.post('<?php echo base_url() . "index.php/document/update/"; ?>', field_id + "=" + value, function (data) {
                     if (data != '')
                     {
                         message_status.show();

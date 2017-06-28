@@ -22,14 +22,123 @@ class Expense extends CI_Controller {
         } else {
             $data['users'] = array();
         }
-        $query = $this->Md->query("SELECT * FROM file where orgID = '" . $this->session->userdata('orgID') . "' ");
+        $query = $this->Md->query("SELECT * FROM files where orgID = '" . $this->session->userdata('orgID') . "' ");
 
         if ($query) {
             $data['files'] = $query;
         } else {
             $data['files'] = array();
         }
-        $this->load->view('payments-page', $data);
+        $this->load->view('view-expenses', $data);
+    }
+
+    public function report() {
+
+        $this->load->helper(array('form', 'url'));
+        $from = date('d-m-Y', strtotime($this->input->post('from')));
+        $to = date('d-m-Y', strtotime($this->input->post('to')));
+
+        unset($sql);
+
+        if ($from != '' & $to != '') {
+            $sql[] = "DAY(STR_TO_DATE(expense.date,'%d-%m-%Y')) BETWEEN '$from' AND '$to' ";
+        }
+        if ($this->input->post('storeID') != "") {
+            $storeID = trim($this->input->post('storeID'));
+            $sql[] = "expense.storeID = '" . $storeID . "' ";
+        }
+        if ($this->input->post('type') != "") {
+            $type = trim($this->input->post('type'));
+            $sql[] = "expense.type = '" . $type . " '";
+        }
+        $query = "SELECT *,expense.type As type,users.surname AS user,client.name AS client,files.name AS file,expense.no AS no FROM expense LEFT JOIN users ON users.id = expense.userID LEFT JOIN client ON client.id = expense.clientID LEFT JOIN files ON files.id = expense.fileID";
+        if (!empty($sql)) {
+            $query .= ' WHERE ' . implode(' AND ', $sql);
+        }
+        $sql[] = "expense.orgID = '" . $this->session->userdata('orgID') . "'";
+        $dailys = $this->Md->query($query);
+        //var_dump($daily);
+        if ($dailys) {
+
+            echo '<div class="scroll"> 
+                <table  class="scroll display table table-bordered table-striped scroll" id="dynamic-table"  border="1px" cellpadding="2px" border-width="thin"  style="font-size: 12px; border-collapse: collapse;">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Date</th>
+                                    <th>No</th>
+                                    <th>Services/Particulars</th>
+                                    <th>Quantity</th>
+                                     <th>Cost</th>
+                                    <th>Total</th>
+                                    <th>Amount paid</th>
+                                    <th>Balance</th>
+                                     <th>Wallet</th>
+                                    <th>Type</th>
+                                    <th>Client</th>
+                                    <th>File</th>
+                                    <th>Done by</th>
+                                    <th>Outcome</th>                                   
+                                    <th>Details</th>
+                                   
+                                </tr>
+                            </thead>
+                            <tbody>';
+            //var_dump($dailys);
+            $sum = "0";
+            $paid = "0";
+            $bal = "0";
+            $sum_tax = "0";
+            $count = 1;
+            if (is_array($dailys) && count($dailys)) {
+                foreach ($dailys as $loop) {
+                    echo '       <tr class="odd">
+                                            <td>' . $count++ . '</td>
+                                            <td>' . $loop->date . '</td>
+                                            <td>' . $loop->no . '</td>
+                                                <td>' . $loop->services . '</td>
+                                            <td>' . $loop->qty . '</td>
+                                            <td>' . number_format($loop->price) . '</td>
+                                            <td>' . number_format($loop->total) . '</td>
+                                             <td>' . number_format($loop->amount) . '</td>
+                                            <td>' . number_format($loop->balance) . '</td>
+                                            <td>' . $loop->wallet . '</td>
+                                            <td>' . $loop->type . '</td>
+                                            <td>' . $loop->client . '</td>
+                                            <td>' . $loop->file . '</td>
+                                            <td>' . $loop->user . '</td>
+                                            <td>' . $loop->outcome . '</td>
+                                            <td>' . $loop->details . '</td>
+                                          
+                                        </tr>';
+                    $sum = $sum + $loop->total;
+                      $paid = $paid + $loop->paid;
+                         $bal = $bal + $loop->balance;
+                }
+            }
+            echo '       <tr class="odd">
+                                           <td></td>
+                                           <td></td>
+                                           <td></td>
+                                           <td></td> 
+                                           <td></td>
+                                           <td>TOTAL </td>
+                                           <td >' . number_format($sum) . '</td> 
+                                           <td >' . number_format($paid) . '</td> 
+                                           <td >' . number_format($bal) . '</td> 
+                                           <td></td>
+                                           <td></td>
+                                           <td></td>
+                                           <td></td>
+                                           <td></td>
+                                           <td></td>
+                                            <td></td>
+                                          
+                                            </tr>';
+            echo '    </tbody>
+
+                        </table></div>';
+        }
     }
 
     public function transaction() {
@@ -46,8 +155,8 @@ class Expense extends CI_Controller {
     public function approve() {
         $this->load->helper(array('form', 'url'));
         $id = $this->uri->segment(3);
-       
-         $actives = $this->uri->segment(4);
+
+        $actives = $this->uri->segment(4);
         $active = "false";
 
         if ($actives == "true") {
@@ -56,16 +165,17 @@ class Expense extends CI_Controller {
         if ($actives == "false") {
             $active = "true";
         }
-        $info = array('approved' => $active,'signed'=>$this->session->userdata('username'));
+        $info = array('approved' => $active, 'signed' => $this->session->userdata('username'));
         $this->Md->update_dynamic($id, 'expenseID', 'expenses', $info);
 
         echo 'INFORMATION UPDATED';
     }
-      public function pay() {
+
+    public function pay() {
         $this->load->helper(array('form', 'url'));
         $id = $this->uri->segment(3);
-       
-         $actives = $this->uri->segment(4);
+
+        $actives = $this->uri->segment(4);
         $active = "false";
 
         if ($actives == "true") {
@@ -79,8 +189,6 @@ class Expense extends CI_Controller {
 
         echo 'INFORMATION UPDATED';
     }
-
-    
 
     public function item() {
 
@@ -323,7 +431,6 @@ class Expense extends CI_Controller {
 
         $this->load->view('requisition-page', $data);
     }
-    
 
     public function save() {
 
@@ -369,7 +476,7 @@ class Expense extends CI_Controller {
         $fileID = $this->Md->query_cell("SELECT * FROM file where name= '" . $this->input->post('file') . "' AND orgID='" . $this->session->userdata('orgID') . "'", 'fileID');
 
         if ($this->input->post('amount') != "") {
-            $payment = array('expenseID' => $expenseID, 'orgID' => $this->session->userdata('orgID'), 'clientID' => $clientID, 'fileID' => $fileID, 'details' => $this->input->post('reason'),'wallet' => $this->input->post('wallet'), 'lawyer' => $this->input->post('laywer'), 'paid' => 'false', 'no' => $this->input->post('no'), 'method' => $this->input->post('method'), 'amount' => $this->input->post('amount'), 'balance' => $this->input->post('balance'), 'reason' => $this->input->post('reason'), 'outcome' => $this->input->post('outcome'), 'approved' => 'false', 'signed' => $this->input->post('signed'), 'date' => date('Y-m-d', strtotime($this->input->post('date'))), 'deadline' => date('Y-m-d', strtotime($this->input->post('deadline'))));
+            $payment = array('expenseID' => $expenseID, 'orgID' => $this->session->userdata('orgID'), 'clientID' => $clientID, 'fileID' => $fileID, 'details' => $this->input->post('reason'), 'wallet' => $this->input->post('wallet'), 'lawyer' => $this->input->post('laywer'), 'paid' => 'false', 'no' => $this->input->post('no'), 'method' => $this->input->post('method'), 'amount' => $this->input->post('amount'), 'balance' => $this->input->post('balance'), 'reason' => $this->input->post('reason'), 'outcome' => $this->input->post('outcome'), 'approved' => 'false', 'signed' => $this->input->post('signed'), 'date' => date('Y-m-d', strtotime($this->input->post('date'))), 'deadline' => date('Y-m-d', strtotime($this->input->post('deadline'))));
             $this->Md->save($payment, 'expenses');
         }
 
@@ -489,7 +596,7 @@ class Expense extends CI_Controller {
         $this->load->helper(array('form', 'url'));
         $expID = $this->uri->segment(3);
         $query = $this->Md->cascade($expID, 'expenses', 'expenseID');
-       
+
         redirect('/expense/requisitions', 'refresh');
     }
 
