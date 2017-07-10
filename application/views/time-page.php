@@ -1,271 +1,130 @@
 
-<link rel='stylesheet' type='text/css' href='<?= base_url(); ?>libs/css/smoothness/jquery-ui-1.8.11.custom.css' />
-<link rel="stylesheet" type="text/css" href="<?= base_url(); ?>js/jquery.weekcalendar.css" />
-<link rel="stylesheet" type="text/css" href="<?= base_url(); ?>skins/default.css" />
-<link rel="stylesheet" type="text/css" href="<?= base_url(); ?>skins/gcalendar.css" />
-<style type="text/css">
-    body {
-        font-family: "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
-        margin: 0;
-    }
+<!doctype html>
+<head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <title>Tree mode</title>
 
-    h1 {
-        margin:0 0 2em;
-        padding: 0.5em;
-        font-size: 1.3em;
-    }
 
-    p.description {
-        font-size: 0.8em;
-        padding: 1em;
-        position: absolute;
-        top: 1.2em;
-        margin-right: 400px;
-    }
+    <script src='<?= base_url(); ?>js/dhtmlxscheduler.js' type="text/javascript" charset="utf-8"></script>
+    <script src='<?= base_url(); ?>js/dhtmlxscheduler_timeline.js' type="text/javascript" charset="utf-8"></script>
+    <script src='<?= base_url(); ?>js/dhtmlxscheduler_treetimeline.js' type="text/javascript" charset="utf-8"></script>
 
-    #calendar_selection {
-        font-size: 0.7em;
-        position: absolute;
-        top: 1em;
-        right: 1em;
-        padding: 1em;
-        background: #ffc;
-        border: 1px solid #dda;
-        width: 270px;
-    }
+    <link rel='stylesheet' type='text/css' href='<?= base_url(); ?>css/dhtmlxscheduler.css'>
 
-    #message {
-        font-size: 0.7em;
-        position: absolute;
-        top: 1em;
-        right: 320px;
-        padding: 1em;
-        background: #ddf;
-        border: 1px solid #aad;
-        width: 270px;
-    }
-</style>
 
-<script type='text/javascript' src='<?= base_url(); ?>libs/jquery-1.4.4.min.js'></script>
-<script type='text/javascript' src='<?= base_url(); ?>libs/jquery-ui-1.8.11.custom.min.js'></script>
-<script type='text/javascript' src='<?= base_url(); ?>libs/jquery-ui-i18n.js'></script>
 
-<script type="text/javascript" src="<?= base_url(); ?>libs/date.js"></script>
-<script type="text/javascript" src="<?= base_url(); ?>/js/jquery.weekcalendar.js"></script>
-<script type="text/javascript">
-    (function ($) {
-    var d = new Date();
-            d.setDate(d.getDate() - d.getDay());
-            var year = d.getFullYear();
-            var month = d.getMonth();
-            var day = d.getDate();
-            var eventData1 = {
-            options: {
-            timeslotsPerHour: 4,
-                    timeslotHeight: 20,
-                    defaultFreeBusy: {free: false}
-            },
-                    events : [
+    <style type="text/css" >
+        html, body{
+            margin:0;
+            padding:0;
+            height:100%;
+            overflow:hidden;
+        }
+    </style>
 
+    <script type="text/javascript" charset="utf-8">
+        function init() {
+
+            scheduler.locale.labels.timeline_tab = "Timeline";
+            scheduler.locale.labels.section_custom = "Section";
+            scheduler.config.details_on_create = true;
+            scheduler.config.details_on_dblclick = true;
+            scheduler.config.xml_date = "%Y-%m-%d %H:%i";
+
+            //===============
+            //Configuration
+            //===============
+            var sections = [
 <?php
 
 function clean($string) {
-    $string = str_replace(' ', '', $string); // Replaces all spaces with hyphens.
+    $string = str_replace(' ', '-', $string); // Replaces all spaces with hyphens.
 
     return preg_replace('/[^A-Za-z0-9\-]/', '', $string); // Removes special chars.
 }
 
+if (is_array($users)) {
+    foreach ($users as $loop) {
+        ?>
+                    {key:"<?php echo $loop->id ?>", label:"<?php echo $loop->surname . ' ' . $loop->lastname; ?>"},
+        <?php
+    }
+}
+?>
+           
+            ];
+                    scheduler.createTimelineView({
+                        name: "timeline",
+                        x_unit: "minute",
+                        x_date: "%H:%i",
+                        x_step: 30,
+                        x_size: 24,
+                        x_start: 16,
+                        x_length: 48,
+                        y_unit: sections,
+                        y_property: "section_id",
+                        render: "bar"
+                    });
+
+            //===============
+            //Data loading
+            //===============
+            scheduler.config.lightbox.sections = [
+                {name: "description", height: 130, map_to: "text", type: "textarea", focus: true},
+                {name: "custom", height: 23, type: "select", options: sections, map_to: "section_id"},
+                {name: "time", height: 72, type: "time", map_to: "auto"}
+            ];
+            var day = <?php echo date('d'); ?>;
+            var year = <?php echo date('Y'); ?>;
+            var month = <?php echo date('m'); ?>;
+            scheduler.init('scheduler_here', new Date(year, month - 1, day), "timeline");
+            scheduler.parse([
+
+<?php
 if (is_array($evs)) {
-    $count = 6;
     foreach ($evs as $loop) {
 
         $start = date('Y-m-d H:m', strtotime($loop->starts));
         $end = date('Y-m-d H:m', strtotime($loop->ends));
-        $details = clean($loop->details);
-        //start
-        $syear = date('Y', strtotime($loop->starts));
-        $smonth = date('m', strtotime($loop->starts));
-        $sday = date('d', strtotime($loop->starts));
-        $shr = date('H', strtotime($loop->starts));
-        $smin = date('m', strtotime($loop->starts));
-        //end 
-        $eyear = date('Y', strtotime($loop->ends));
-        $emonth = date('m', strtotime($loop->ends));
-        $eday = date('d', strtotime($loop->ends));
-        $ehr = date('H', strtotime($loop->ends));
-        $emin = date('i', strtotime($loop->ends));
+        $details = $loop->users . ' :' . clean($loop->details) . 'File: ' . $loop->file;
+         if ($loop->priority == "Low") {
+            $color = 'blue';
+        }
+        if ($loop->priority == "Medium") {
+            $color = 'orange';
+        }
+        if ($loop->priority == "High") {
+             $color = 'red';
+        }
+       
         ?>
-
-                      //      {'id':1, 'start': new Date(syear, smonth, sday, shr), 'end': new Date(eyear, emonth, eday, ehr, emin), 'title': '<?php echo $details ?>', userId: 2},
-      
-         {'id':1, 'start': new Date(<?php echo date('Y', strtotime($loop->starts)); ?>, <?php echo date('m', strtotime($loop->starts)); ?>, <?php echo date('d', strtotime($loop->starts)); ?>, <?php echo date('H', strtotime($loop->starts)); ?>), 'end': new Date(<?php echo date('Y', strtotime($loop->ends)); ?>, <?php echo date('m', strtotime($loop->ends)); ?>,<?php echo date('d', strtotime($loop->ends)); ?>, <?php echo date('H', strtotime($loop->ends)); ?>, <?php echo date('i', strtotime($loop->ends)); ?>), 'title': '<?php echo $details ?>', userId: 2},
-      
-            <?php
+                    {start_date: "<?php echo $start; ?>", end_date: "<?php echo $end; ?>", text: "<?php echo $details; ?>", section_id: "<?php echo $loop->userID; ?>",color:"<?php echo $color; ?>"},
+        <?php
     }
 }
-?>
-                    {'id':1, 'start': new Date(year, month, day, 12), 'end': new Date(year, month, day, 13, 30), 'title': 'Lunch with Mike', userId: 0},
-                    {'id':2, 'start': new Date(year, month, day, 14), 'end': new Date(year, month, day, 14, 45), 'title': 'Dev Meeting', userId: 1},
-                    {'id':3, 'start': new Date(year, month, day, 18), 'end': new Date(year, month, day + 1, 18, 45), 'title': 'Hair cut', userId: 1},
-                    {'id':4, 'start': new Date(year, month, day, 8), 'end': new Date(year, month, day + 2, 9, 30), 'title': 'Team breakfast', userId: 0},
-                    {'id':5, 'start': new Date(year, month, day + 1, 14), 'end': new Date(year, month, day + 1, 15), 'title': 'Product showcase', userId: 1}
-                    ],
-                    freebusys: [
-                    {'start': new Date(year, month, day), 'end': new Date(year, month, day + 3), 'free': false, userId: [0, 1, 2, 3]},
-                    {'start': new Date(year, month, day, 8), 'end': new Date(year, month, day, 12), 'free': true, userId: [0, 1, 2, 3]},
-                    {'start': new Date(year, month, day + 1, 8), 'end': new Date(year, month, day + 1, 12), 'free': true, userId: [0, 1, 2, 3]},
-                    {'start': new Date(year, month, day + 2, 8), 'end': new Date(year, month, day + 2, 12), 'free': true, userId: [0, 1, 2, 3]},
-                    {'start': new Date(year, month, day + 1, 14), 'end': new Date(year, month, day + 1, 18), 'free': true, userId: [0, 1, 2, 3]},
-                    {'start': new Date(year, month, day + 2, 8), 'end': new Date(year, month, day + 2, 12), 'free': true, userId: [0, 3]},
-                    {'start': new Date(year, month, day + 2, 14), 'end': new Date(year, month, day + 2, 18), 'free': true, userId: 1}
-                    ]
-            };
-            d = new Date();
-            d.setDate(d.getDate() - (d.getDay() - 3));
-            year = d.getFullYear();
-            month = d.getMonth();
-            day = d.getDate();
-            var eventData2 = {
-            options: {
-            timeslotsPerHour: 3,
-                    timeslotHeight: 30,
-                    defaultFreeBusy: {free: false}
-            },
-                    events: [
-                    {'id': 1, 'start': new Date(year, month, day, 12), 'end': new Date(year, month, day, 13, 00), 'title': 'Lunch with Sarah', userId: [1, 2]},
-                    {'id': 2, 'start': new Date(year, month, day, 14), 'end': new Date(year, month, day, 14, 40), 'title': 'Team Meeting', userId: 0},
-                    {'id': 3, 'start': new Date(year, month, day + 1, 18), 'end': new Date(year, month, day + 1, 18, 40), 'title': 'Meet with Joe', userId: 1},
-                    {'id': 4, 'start': new Date(year, month, day - 1, 8), 'end': new Date(year, month, day - 1, 9, 20), 'title': 'Coffee with Alison', userId: 1},
-                    {'id': 5, 'start': new Date(year, month, day + 1, 14), 'end': new Date(year, month, day + 1, 15, 00), 'title': 'Product showcase', userId: 0}
-                    ],
-                    freebusys: [
-                    {'start': new Date(year, month, day - 1, 8), 'end': new Date(year, month, day - 1, 18), 'free': true, userId: [0, 1, 2, 3]},
-                    {'start': new Date(year, month, day, 8), 'end': new Date(year, month, day + 0, 18), 'free': true, userId: [0, 1, 2, 3]},
-                    {'start': new Date(year, month, day + 1, 8), 'end': new Date(year, month, day + 1, 18), 'free': true, userId: [0, 3]},
-                    {'start': new Date(year, month, day + 2, 14), 'end': new Date(year, month, day + 2, 18), 'free': true, userId: 1}
-                    ]
-            };
-            function updateMessage() {
-            var dataSource = $('#data_source').val();
-                    $('#message').fadeOut(function () {
-            if (dataSource === '1') {
-            $('#message').text('Displaying event data set 1 with timeslots per hour of 4 and timeslot height of 20px. Moreover, the calendar is free by default.');
-            } else if (dataSource === '2') {
-            $('#message').text('Displaying event data set 2 with timeslots per hour of 3 and timeslot height of 30px. Moreover, the calendar is busy by default.');
-            } else {
-            $('#message').text('Displaying no events.');
-            }
+?>            {start_date: "2017-06-30 12:00", end_date: "2017-06-30 18:00", text: "Task D-12458", section_id: 4}
+            ], "json");
+        }
+    </script>
 
-            $(this).fadeIn();
-            });
-            }
 
-    $(document).ready(function () {
-    var $calendar = $('#calendar').weekCalendar({
-    timeslotsPerHour: 4,
-            scrollToHourMillis: 0,
-            height: function ($calendar) {
-            return $(window).height() - $('h1').outerHeight(true);
-            },
-            eventRender: function (calEvent, $event) {
-            if (calEvent.end.getTime() < new Date().getTime()) {
-            $event.css('backgroundColor', '#aaa');
-                    $event.find('.wc-time').css({
-            backgroundColor: '#999',
-                    border: '1px solid #888'
-            });
-            }
-            },
-            eventNew: function (calEvent, $event, FreeBusyManager, calendar) {
-            var isFree = true;
-                    $.each(FreeBusyManager.getFreeBusys(calEvent.start, calEvent.end), function () {
-                    if (
-                            this.getStart().getTime() != calEvent.end.getTime()
-                            && this.getEnd().getTime() != calEvent.start.getTime()
-                            && !this.getOption('free')
-                            ) {
-                    isFree = false;
-                            return false;
-                    }
-                    });
-                    if (!isFree) {
-            alert('looks like you tried to add an event on busy part !');
-                    $(calendar).weekCalendar('removeEvent', calEvent.id);
-                    return false;
-            }
-
-            alert('You\'ve added a new event. You would capture this event, add the logic for creating a new event with your own fields, data and whatever backend persistence you require.');
-                    calEvent.id = calEvent.userId + '_' + calEvent.start.getTime();
-                    $(calendar).weekCalendar('updateFreeBusy', {
-            userId: calEvent.userId,
-                    start: calEvent.start,
-                    end: calEvent.end,
-                    free: false
-            });
-            },
-            data: function (start, end, callback) {
-            var dataSource = $('#data_source').val();
-                    if (dataSource === '1') {
-            callback(eventData1);
-            } else if (dataSource === '2') {
-            callback(eventData2);
-            } else {
-            callback({
-            options: {
-            defaultFreeBusy: {
-            free: true
-            }
-            },
-                    events: []
-            });
-            }
-            },
-            users: ['<?php
-foreach ($users as $loop) {
-    echo $loop->surname;
-}
-?>', 'user 1', 'user 2', 'long username', 'user 4'],
-            showAsSeparateUser: true,
-            displayOddEven: true,
-            displayFreeBusys: true,
-            daysToShow: 7,
-            switchDisplay: {'1 day': 1, '3 next days': 3, 'work week': 5, 'full week': 7},
-            headerSeparator: ' ',
-            useShortDayNames: true,
-            // I18N
-            firstDayOfWeek: $.datepicker.regional[''].firstDay,
-            shortDays: $.datepicker.regional[''].dayNamesShort,
-            longDays: $.datepicker.regional[''].dayNames,
-            shortMonths: $.datepicker.regional[''].monthNamesShort,
-            longMonths: $.datepicker.regional[''].monthNames,
-            dateFormat: 'd F y'
-    });
-            $('#data_source').change(function () {
-    $calendar.weekCalendar('refresh');
-            updateMessage();
-    });
-            updateMessage();
-    });
-    })(jQuery);
-</script>
+    <script src="<?= base_url(); ?>js/raven.min.js"></script>
 </head>
-<body>
-    <h1>Weekly Schedule</h1>
-
-    <p class="description">
-        This calendar demonstrates the differents new options that allow user
-        management and freebusy display / computation.
-    </p>
-
-    <div id="message" class="ui-corner-all"></div>
-
-    <div id="calendar_selection" class="ui-corner-all">
-        <strong>Event Data Source: </strong>
-        <select id="data_source">
-            <option value="">Select Event Data</option>
-            <option value="1">Event Data 1</option>
-            <option value="2">Event data 2</option>
-        </select>
+<body onload="init();">
+    <div id="scheduler_here" class="dhx_cal_container" style='width:100%; height:100%;'>
+        <div class="dhx_cal_navline">
+            <div class="dhx_cal_prev_button">&nbsp;</div>
+            <div class="dhx_cal_next_button">&nbsp;</div>
+            <div class="dhx_cal_today_button"></div>
+            <div class="dhx_cal_date"></div>
+            <div class="dhx_cal_tab" name="day_tab" style="right:204px;"></div>
+            <div class="dhx_cal_tab" name="week_tab" style="right:140px;"></div>
+            <div class="dhx_cal_tab" name="timeline_tab" style="right:280px;"></div>
+            <div class="dhx_cal_tab" name="month_tab" style="right:76px;"></div>
+        </div>
+        <div class="dhx_cal_header">
+        </div>
+        <div class="dhx_cal_data">
+        </div>		
     </div>
-
-    <div id="calendar"></div>
+</body>

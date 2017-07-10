@@ -80,7 +80,7 @@ class User extends CI_Controller {
             $base64 = base64_encode($data);
             $submitted = date('Y-m-d');
             $userfile = $data['file_name'];
-            $users = array('id' => $userid, 'idNO' => $this->session->userdata('no'),'contact' => $this->session->userdata('contact'),'contact2' => $this->session->userdata('contact2'), 'surname' => $this->input->post('surname'), 'lastname' => $this->input->post('lastname'),'email' => $this->input->post('email'),'nationality' => $this->input->post('nationality'),'address' => $this->input->post('address'),'kin' =>'','kincontact' =>'' ,'passwords' => md5($this->input->post('passwords')), 'roles' => $this->input->post('role'),'gender' => $this->input->post('gender') ,'image' => $base64, 'initialPassword' => $this->input->post('password'),'account' =>'' ,'status' => $this->input->post('status'),'practice' =>'','specialisation' =>'','sub' =>'','created' => date('d-m-Y H:i:s'), 'department' => $this->input->post('department'), 'orgID' => $this->session->userdata('orgID'));
+            $users = array('id' => $userid, 'idNO' => $this->input->post('no'),'contact' => $this->input->post('contact'),'contact2' => $this->input->post('contact2'), 'surname' => $this->input->post('surname'), 'lastname' => $this->input->post('lastname'),'email' => $this->input->post('email'),'nationality' => $this->input->post('nationality'),'address' => $this->input->post('address'),'kin' =>'','kincontact' =>'' ,'passwords' => md5($this->input->post('passwords')), 'roles' => $this->input->post('role'),'gender' => $this->input->post('gender') ,'image' => $base64, 'initialPassword' => $this->input->post('password'),'account' =>'' ,'status' => $this->input->post('status'),'practice' =>'','specialisation' =>'','sub' =>'','created' => date('d-m-Y H:i:s'), 'department' => $this->input->post('department'), 'orgID' => $this->session->userdata('orgID'));
             $this->Md->save($users, 'users');
             $this->session->set_flashdata('msg', '<div class="alert alert-success">  <strong>Information saved</strong></div>');
 
@@ -342,8 +342,8 @@ class User extends CI_Controller {
 
         $this->load->helper(array('form', 'url'));
         $userID = $this->uri->segment(3);
-        $query = $this->Md->cascade($userID, 'users', 'userID');
-        redirect('user/staff', 'refresh');
+        $query = $this->Md->cascade($userID, 'users', 'id');
+        redirect('user', 'refresh');
     }
 
     public function user() {

@@ -18,24 +18,14 @@ class Document extends CI_Controller {
     public function index() {
 
         $this->load->helper(array('form', 'url'));
-        $query = $this->Md->query("SELECT *,files.name AS file,document.id AS id,document.name AS name,users.surname AS user,client.name AS client FROM document LEFT JOIN  users ON users.id = document.userID LEFT JOIN client ON client.id = document.clientID LEFT JOIN files ON files.id = document.fileID  WHERE document.orgID = '" . $this->session->userdata('orgID') . "' ");
+        $query = $this->Md->query("SELECT *,document.created AS created,files.name AS file,document.id AS id,document.name AS name,client.name AS client FROM document LEFT JOIN client ON client.id = document.clientID LEFT JOIN files ON files.id = document.fileID  WHERE document.orgID = '" . $this->session->userdata('orgID') . "' ");
 
         if ($query) {
             $data['docs'] = $query;
         } else {
             $data['docs'] = array();
         }
-        $query = $this->Md->query("SELECT * FROM files where orgID = '" . $this->session->userdata('orgID') . "'");
-        //  var_dump($query);
-        if ($query) {
-            $data['files'] = $query;
-        } else {
-            $data['files'] = array();
-        }
-        $query = $this->Md->query("SELECT * FROM users where  orgID='" . $this->session->userdata('orgID') . "'");
-        if ($query) {
-            $data['users'] = $query;
-        }
+       
 
         $this->load->view('view-document', $data);
     }

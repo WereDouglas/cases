@@ -1,15 +1,13 @@
-<?php require_once(APPPATH . 'views/css-page.php'); ?>
-<link rel="stylesheet" href="<?= base_url(); ?>css/mine.css" />
+<?php require_once(APPPATH . 'views/inner-css.php'); ?>
 <?php echo $this->session->flashdata('msg'); ?>
 
-<div class=" col-md-12 x_panel">
-    <h2>FILES </h2>   
-    <div class="x_content scroll">
-
-        <table id="datatable" class="table table-striped table-bordered scroll ">
+<div class=" col-md-12">
+    <div class="alert alert-info" id="status"></div>
+    <div class="row-fluid">
+        <table id="sample-table-2" class="table table-striped table-bordered table-hover">
             <thead>
                 <tr>
-                    <th>#</th>
+                    <th><a href="#modal-form" role="button" class="green" data-toggle="modal"><i class="icon-pencil bigger-130"></i>Add </a></th>
                     <th>NAME</th>
                     <th>TYPE</th>
                     <th>DETAILS</th>
@@ -151,11 +149,130 @@
         </table>
     </div>
 </div>
+<!-- Modal -->
+
+<div id="modal-form" class="modal hide" tabindex="-1">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="blue bigger">Please fill the client details</h4>
+    </div>
+    <form id="station-form" parsley-validate novalidate role="form" name="login-form" enctype="multipart/form-data"  action='<?= base_url(); ?>index.php/file/create'  method="post">
+
+        <div class="modal-body overflow-visible">
+            <div class="row-fluid">
+                <div class=" span6">
+                    <div class="form-group">
+                        <label>Client</label>
+                        <input class="easyui-combobox" name="clientID" id="clientID" style="width:100%;height:26px" data-options="
+                               url:'<?php echo base_url() ?>index.php/client/lists',
+                               method:'get',
+                               valueField:'id',
+                               textField:'name',
+                               multiple:false,
+                               panelHeight:'auto'
+                               " >
+                    </div>
+                    <div class="form-group">
+                        <label>C/O</label>
+                        <input class="easyui-combobox" name="userID" id="userID" style="width:100%;height:26px" data-options="
+                               url:'<?php echo base_url() ?>index.php/user/lists',
+                               method:'get',
+                               valueField:'id',
+                               textField:'surname',
+                               multiple:false,
+                               panelHeight:'auto'
+                               " >
+                    </div>
+
+                    <div class="form-group">                       
+                        <label >Type</label>
+                        <select class="form-control" id="type" name="type">
+                            <option value="General">General</option> 
+                            <option value="Litigation">Litigation</option> 
+                            <option value="Conclusive">Conclusive</option>
+                            <option value="Non-conclusive">Non-conclusive</option> 
+                            <option value="General">ADR</option> 
+                        </select>                       
+                    </div><!--/form-group-->
+                    <div class="form-group">                       
+                        <label >Law/Sector</label>
+                        <select class="form-control" id="law" name="law">
+                            <option value="Civil">Civil</option> 
+                            <option value="Criminal">Criminal</option> 
+                            <option value="Litigation">Litigation</option>
+                            <option value="Family">Family</option> 
+                            <option value="Land">Land</option> 
+                            <option value="Debt">Debt</option>
+                            <option value="Other">Other</option> 
+                        </select>                       
+                    </div><!--/form-group-->
+                    <div class="form-group">                        
+                        <input type="text" name="no" value="<?php echo $this->session->userdata('code') . '-' . date('d-m-Y') . '/W' . (count($files) + 1); ?>" placeholder="Registration No." id="no" required class="form-control"/>
+
+                    </div>
+                    <div class="form-group">                        
+                        <input type="text" name="name" placeholder="File name" id="name" required class="form-control"/>
+
+                    </div>
+                    <div class="form-group">                        
+                        <input type="number" name="contact" placeholder="256" id="contact"  class="form-control"/>
+
+                    </div>
+                    <div class="control-group">                        
+                        <input type="text" name="subject" placeholder="Subject" id="subject"  class="form-control"/>
+
+                    </div>
+                    <div class="form-group">                        
+                        <input type="text" name="citation" placeholder="Citation /Peugeon No." id="citation" class="form-control"/>
+
+                    </div></div>
+                <div class=" span6"> 
+
+                    <div class="form-group">                       
+                        <label >Active/Status</label>
+                        <select class="form-control" id="status" name="status">
+                            <option value="Yes">yes</option> 
+                            <option value="No">No</option>                           
+                        </select>                       
+                    </div><!--/form-group-->
+                    <div class="control-group">                        
+                        <input type="text" name="note" placeholder="Notes" id="note"  class="form-control"/>
+
+                    </div>
+
+                    <div class="form-group">                       
+                        <label >Progress on file/case</label>
+                        <select class="form-control" id="progress" name="progress">
+                            <option value="Concept">Concept</option> 
+                            <option value="WIP(Initial stage)">WIP(Initial stage)</option>
+                            <option value="Suspended">Suspended</option>  
+                            <option value="Abandoned">Abandoned</option>  
+                            <option value="Active">Active</option> 
+                            <option value="Inactive">Inactive</option> 
+                            <option value="Unsupported">Unsupported</option> 
+                            <option value="Moved">Moved</option> 
+                        </select>                       
+                    </div><!--/form-group-->
+
+                    <div class="form-group"> 
+                        Date opened <input class="easyui-datebox form-control" name="opened"   data-options="required:true" value="<?php echo date('Y-m-d'); ?>" style="width:160px">
+                    </div>
+                    <div class="form-group"> 
+                        Date due  <input class="easyui-datebox form-control" name="due" data-options="required:true" value="<?php echo date('Y-m-d'); ?>" style="width:160px">
+                    </div>
+                    <div class="">
+                        <button type="button" class="btn btn-danger pull-left" data-dismiss="modal">Close</button>  <button class="btn btn-success pull-right" type="submit">SUBMIT</button> 
+
+                    </div>
+                </div>
 
 
-
-<?php require_once(APPPATH . 'views/footer-page.php'); ?>
-
+                <div class="vspace"></div>     
+            </div>
+        </div>
+    </form>
+</div><!--PAGE CONTENT ENDS-->
+<?php require_once(APPPATH . 'views/inner-js.php'); ?>
 <script type="text/javascript">
     $(document).ready(function ()
     {
@@ -279,17 +396,29 @@
     });
 </script>
 <script>
+    $(document).ready(function () {
+        $('#loading_card').hide();
+        $("#status").hide();
+        $(function () {
+            //acknowledgement message
+            var message_status = $("#status");
+            $("td[contenteditable=true]").blur(function () {
+                var field_id = $(this).attr("id");
+                var value = $(this).text();
+                $.post('<?php echo base_url() . "index.php/file/update/"; ?>', field_id + "=" + value, function (data) {
+                    if (data != '')
+                    {
+                        message_status.show();
+                        message_status.text(data);
+                        //hide the message
+                        setTimeout(function () {
+                            message_status.hide()
+                        }, 4000);
+                    }
+                });
+            });
 
-    function NavigateToSite(ele) {
-        var selectedVal = $(ele).attr("value");
-        //var selectedVal = document.getElementById("myLink").getAttribute('value');
-        //href= "index.php/patient/add_user/'
-        $.post("<?php echo base_url() ?>index.php/admin/reset", {
-            id: selectedVal
-        }, function (response) {
-            alert(response);
         });
-
-    }
+    });
 
 </script>

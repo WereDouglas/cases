@@ -1,5 +1,5 @@
-<?php require_once(APPPATH . 'views/css-page.php'); ?>
-<link rel="stylesheet" href="<?= base_url(); ?>css/mine.css" />
+<?php require_once(APPPATH . 'views/inner-css.php'); ?>
+<?php echo $this->session->flashdata('msg'); ?>
 <style>
     horizontal .control-label {
         padding-top: 7px;
@@ -31,81 +31,73 @@
 </style>
 <?php echo $this->session->flashdata('msg'); ?>
 
+<div class="row-fluid">
+    <table id="sample-table-2" class="table table-striped table-bordered table-hover">
+        <thead>
+            <tr>
+                <th><a href="#modal-form" role="button" class="green" data-toggle="modal"><i class="icon-pencil bigger-130"></i>Add </a></th>
 
-<div class=" col-md-12  col-sm-12 x_panel">
-    <div class="alert alert-info" id="status"></div>
-    WALLETS
-    <button type="button" class=" links" data-toggle="modal" data-target=".bs-example-modal-sm">ADD</button>
+                <th>DATE</th>
+                <th>PARTICULARS</th>
+                <th>AMOUNT</th>
+                <th>REFERENCE</th>
+                <th>METHOD</th> 
+                <th>USER</th> 
+                <th>ACTION</th>
 
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            //var_dump($expenses);
+            $count = 1;
+            foreach ($wallets as $loop) {
+                ?>  
+                <tr class="odd edit_tr" id="<?php echo $loop->id; ?>">
+                    <td><?php echo $count++; ?></td>
 
-    <div class="x_content scroll">
+                    <td id="date:<?php echo $loop->id; ?>" contenteditable="true">
+                        <?php echo $loop->date; ?>                     
+                    </td>
 
-        <table id="datatable" class="table table-striped table-bordered scroll ">
-            <thead>
-                <tr>
-                    <th>#</th>
-                   
-                    <th>DATE</th>
-                    <th>PARTICULARS</th>
-                    <th>AMOUNT</th>
-                    <th>REFERENCE</th>
-                    <th>METHOD</th> 
-                    <th>USER</th> 
-                    <th>ACTION</th>
+                    <td id="particulars:<?php echo $loop->id; ?>" contenteditable="true">
+                        <?php echo $loop->particulars; ?>                     
+                    </td>
+                    <td id="amount:<?php echo $loop->id; ?>" contenteditable="true">
+                        <?php echo number_format($loop->amount); ?>                     
+                    </td>
+                    <td id="reference:<?php echo $loop->id; ?>" contenteditable="true">
+                        <?php echo $loop->reference; ?>                     
+                    </td>
+                    <td id="method:<?php echo $loop->id; ?>" contenteditable="true">
+                        <?php echo $loop->method; ?>
+                        <select  name="type" class="editbox" id="method_input_<?php echo $loop->id; ?>" >
+                            <option value="<?php echo $loop->method; ?>" title="<?php echo $loop->method; ?>"><?php echo $loop->method; ?></option>
+                            <option value="Cash" />Cash
+                            <option value="Cheque" />Cheque
+
+                        </select>
+                    </td>
+                    <td >
+                        <?php echo $loop->user; ?>                   
+                    </td>
+
+                    <td class="center">
+                        <a class="btn btn-danger btn-xs" href="<?php echo base_url() . "index.php/wallet/delete/" . $loop->id; ?>"><li class="fa fa-trash">Delete</li></a>
+                    </td>
+
 
                 </tr>
-            </thead>
-            <tbody>
+
                 <?php
-                //var_dump($expenses);
-                $count = 1;
-                foreach ($wallets as $loop) {
-                    ?>  
-                    <tr class="odd edit_tr" id="<?php echo $loop->id; ?>">
-                        <td><?php echo $count++; ?></td>
-                        
-                        <td id="date:<?php echo $loop->id; ?>" contenteditable="true">
-                            <?php echo $loop->date; ?>                     
-                        </td>
+            }
+            ?>
 
-                        <td id="particulars:<?php echo $loop->id; ?>" contenteditable="true">
-                            <?php echo $loop->particulars; ?>                     
-                        </td>
-                        <td id="amount:<?php echo $loop->id; ?>" contenteditable="true">
-                            <?php echo number_format($loop->amount); ?>                     
-                        </td>
-                        <td id="reference:<?php echo $loop->id; ?>" contenteditable="true">
-                            <?php echo $loop->reference; ?>                     
-                        </td>
-                        <td id="method:<?php echo $loop->id; ?>" contenteditable="true">
-                            <?php echo $loop->method; ?>
-                            <select  name="type" class="editbox" id="method_input_<?php echo $loop->id; ?>" >
-                                <option value="<?php echo $loop->method; ?>" title="<?php echo $loop->method; ?>"><?php echo $loop->method; ?></option>
-                                <option value="Cash" />Cash
-                                <option value="Cheque" />Cheque
-
-                            </select>
-                        </td>
-                        <td >
-                            <?php echo $loop->user; ?>                   
-                        </td>
-
-                        <td class="center">
-                            <a class="btn btn-danger btn-xs" href="<?php echo base_url() . "index.php/wallet/delete/" . $loop->id; ?>"><li class="fa fa-trash">Delete</li></a>
-                        </td>
-
-
-                    </tr>
-
-                    <?php
-                }
-                ?>
-
-            </tbody>
-        </table>
-    </div>
+        </tbody>
+    </table>
 </div>
-<div class="modal bs-example-modal-sm" tabindex="-1" role="dialog" aria-hidden="true">
+</div>
+<div id="modal-form" class="modal hide" tabindex="-1">
     <div class="modal-dialog">
 
         <div class="modal-content ">
@@ -151,35 +143,34 @@
 </div>
 <!-- jQuery -->
 
-<!-- /sidebar chats -->  
-<?php require_once(APPPATH . 'views/js-page.php'); ?>
-<script src="<?= base_url(); ?>js/validator.js"></script>
+<?php require_once(APPPATH . 'views/inner-js.php'); ?>
+
 <script>
-                                                    $(document).ready(function () {
-                                                        $('#loading_card').hide();
-                                                        $("#status").hide();
-                                                        $(function () {
-                                                            //acknowledgement message
-                                                            var message_status = $("#status");
-                                                            $("td[contenteditable=true]").blur(function () {
-                                                                var field_id = $(this).attr("id");
-                                                                var value = $(this).text();
-                                                                $.post('<?php echo base_url() . "index.php/user/update/"; ?>', field_id + "=" + value, function (data) {
-                                                                    if (data != '')
-                                                                    {
-                                                                        message_status.show();
-                                                                        message_status.text(data);
-                                                                        //hide the message
-                                                                        setTimeout(function () {
-                                                                            message_status.hide()
-                                                                        }, 4000);
-                                                                    }
-                                                                });
-                                                            });
+    $(document).ready(function () {
+        $('#loading_card').hide();
+        $("#status").hide();
+        $(function () {
+            //acknowledgement message
+            var message_status = $("#status");
+            $("td[contenteditable=true]").blur(function () {
+                var field_id = $(this).attr("id");
+                var value = $(this).text();
+                $.post('<?php echo base_url() . "index.php/wallet/update/"; ?>', field_id + "=" + value, function (data) {
+                    if (data != '')
+                    {
+                        message_status.show();
+                        message_status.text(data);
+                        //hide the message
+                        setTimeout(function () {
+                            message_status.hide()
+                        }, 4000);
+                    }
+                });
+            });
 
-                                                        });
+        });
 
-                                                    });
+    });
 
 </script>
 <script type="text/javascript">

@@ -1,91 +1,79 @@
-<?php require_once(APPPATH . 'views/css-page.php'); ?>
-<link rel="stylesheet" href="<?= base_url(); ?>css/mine.css" />
-
-<div class="page-content">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="block-web">
-                <div class="header">
-                    <span class="content-header">CARDS  <a href="javascript:void(0);" class="add_user" data-toggle="modal" data-target="#myModal"> <i class="fa fa-plus-square"></i> <span> New</span> </a>
-                    </span>
-                    <?php echo $this->session->flashdata('msg'); ?>
-                </div>
-                <div class="alert alert-info" id="status"></div>
-                <div class="porlets-content">
-                    <div class="table-responsive scroll">
-                        <table  class="display table table-bordered table-striped" id="dynamic-table">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Name</th>
-                                    <th>Contact</th>
-                                    <th>Address</th>                                   
-                                    <th>E-mail</th>                 
-                                    <th class="hidden-phone">Created</th>
-                                    <th class="hidden-phone">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-
-                                <?php
-                                if (is_array($users) && count($users)) {
-                                    foreach ($users as $loop) {
-                                        $id = $loop->id;
-                                        ?>  
-                                        <tr class="odd edit_tr" id="<?php echo $id; ?>">
-
-                                            <td> 
-                                                <?php
-                                                if ($loop->image != "") {
-
-                                                    echo '<img height="50px" width="50px" src="data:image/jpeg;base64,' . $loop->image . '" />';
-                                                } else {
-                                                    ?>
-                                                    <img  height="50px" width="50px"  src="<?= base_url(); ?>images/user_place.png"  />
-                                                    <?php
-                                                }
-                                                ?>
-                                            </td>
-                                            <td id="name:<?php echo $loop->id; ?>" contenteditable="true">
-                                                <?php echo $loop->name; ?>
-                                            </td>
-                                            <td id="contact:<?php echo $loop->id; ?>" contenteditable="true">
-                                                <?php echo $loop->contact; ?>
-                                            </td>
-                                            <td id="address:<?php echo $loop->id; ?>" contenteditable="true">
-                                                <?php echo $loop->address; ?>
-                                            </td>
-                                            <td id="email:<?php echo $loop->id; ?>" contenteditable="true">
-                                                <?php echo $loop->email; ?>
-                                            </td>
-
-                                            <td id="created:<?php echo $loop->id; ?>" contenteditable="true"><?php echo $loop->orgID; ?></td>
-
-                                            <td >
-                                                <a class="btn btn-primary btn-xs" href="<?php echo base_url() . "index.php/client/profile/" . $loop->id; ?>"><li class="fa fa-folder">View</li></a>
-
-                                                <a class="btn btn-danger btn-xs" href="<?php echo base_url() . "index.php/client/delete/" . $loop->id; ?>"><li class="fa fa-trash-o">Delete</li></a>
-
-                                            </td> 
+<?php require_once(APPPATH . 'views/inner-css.php'); ?>
+<?php echo $this->session->flashdata('msg'); ?>
 
 
-                                        </tr>
-                                        <?php
-                                    }
-                                }
+
+<div class="alert alert-info" id="status"></div>
+
+<div class="row-fluid">
+    <table id="sample-table-2" class="table table-striped table-bordered table-hover">
+        <thead>
+            <tr>
+                <th> <a href="javascript:void(0);" class="add_user" data-toggle="modal" data-target="#myModal"> <i class="fa fa-plus-square"></i> <span> New</span> </a>
+                </th>
+                <th>Name</th>
+                <th>Contact</th>
+                <th>Address</th>                                   
+                <th>E-mail</th>                 
+                <th class="hidden-phone">Created</th>
+                <th class="hidden-phone">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            <?php
+            if (is_array($users) && count($users)) {
+                foreach ($users as $loop) {
+                    $id = $loop->id;
+                    ?>  
+                    <tr class="odd edit_tr" id="<?php echo $id; ?>">
+
+                        <td> 
+                            <?php
+                            if ($loop->image != "") {
+
+                                echo '<img height="50px" width="50px" src="data:image/jpeg;base64,' . $loop->image . '" />';
+                            } else {
                                 ?>
+                                <img  height="50px" width="50px"  src="<?= base_url(); ?>images/user_place.png"  />
+                                <?php
+                            }
+                            ?>
+                        </td>
+                        <td id="name:<?php echo $loop->id; ?>" contenteditable="true">
+                            <?php echo $loop->name; ?>
+                        </td>
+                        <td id="contact:<?php echo $loop->id; ?>" contenteditable="true">
+                            <?php echo $loop->contact; ?>
+                        </td>
+                        <td id="address:<?php echo $loop->id; ?>" contenteditable="true">
+                            <?php echo $loop->address; ?>
+                        </td>
+                        <td id="email:<?php echo $loop->id; ?>" contenteditable="true">
+                            <?php echo $loop->email; ?>
+                        </td>
 
-                            </tbody>
+                        <td id="created:<?php echo $loop->id; ?>" contenteditable="true"><?php echo $loop->orgID; ?></td>
 
-                        </table>
-                    </div><!--/table-responsive-->
-                </div><!--/porlets-content-->
+                        <td >
+                            <a class="btn btn-primary btn-xs" href="<?php echo base_url() . "index.php/client/profile/" . $loop->id; ?>"><li class="fa fa-folder">View</li></a>
+
+                            <a class="btn btn-danger btn-xs" href="<?php echo base_url() . "index.php/client/delete/" . $loop->id; ?>"><li class="fa fa-trash-o">Delete</li></a>
+
+                        </td> 
 
 
-            </div><!--/block-web--> 
-        </div><!--/col-md-12--> 
-    </div><!--/row-->           
-</div><!--/page-content end--> 
+                    </tr>
+                    <?php
+                }
+            }
+            ?>
+
+        </tbody>
+
+    </table>
+</div><!--/table-responsive-->
+
 <!-- Modal -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -207,8 +195,7 @@
 </div>
 <!-- sidebar chats -->
 
-
-<?php require_once(APPPATH . 'views/footer-page.php'); ?>
+<?php require_once(APPPATH . 'views/inner-js.php'); ?>
 
 <script>
     $(document).ready(function () {

@@ -23,7 +23,7 @@ class File extends CI_Controller {
         } else {
             $data['users'] = array();
         }
-        $query = $this->Md->query("SELECT *,users.surname AS user,users.image AS user_image,client.image AS client_image,files.name as name,client.name AS client FROM files LEFT JOIN users ON users.id = files.userID LEFT JOIN client ON client.id = files.client where files.orgID = '" . $this->session->userdata('orgID') . "' ");
+        $query = $this->Md->query("SELECT *,files.type AS type,users.surname AS user,users.image AS user_image,client.image AS client_image,files.name as name,client.name AS client FROM files LEFT JOIN users ON users.id = files.userID LEFT JOIN client ON client.id = files.client where files.orgID = '" . $this->session->userdata('orgID') . "' ");
 
         if ($query) {
             $data['files'] = $query;
@@ -32,12 +32,14 @@ class File extends CI_Controller {
         }
         $this->load->view('view-files', $data);
     }
-  public function lists() {
-      
+
+    public function lists() {
+
         $query = $this->Md->query("SELECT * FROM files WHERE  orgID='" . $this->session->userdata('orgID') . "' ");
         //$query = $this->Md->query("SELECT * FROM client");
         echo json_encode($query);
     }
+
     public function add() {
 
         $query = $this->Md->query("SELECT * FROM users where orgID = '" . $this->session->userdata('orgID') . "'");
@@ -308,8 +310,8 @@ class File extends CI_Controller {
         $this->load->helper(array('form', 'url'));
         $id = $this->input->post('id');
 
-        $file = array('name' => $this->input->post('name'), 'type' => $this->input->post('type'), 'details' => $this->input->post('details'), 'subject' => $this->input->post('subject'), 'client' => $this->input->post('client'), 'lawyer' => $this->input->post('lawyer'), 'no' => $this->input->post('no'), 'type' => $this->input->post('type'), 'citation' => $this->input->post('citation'), 'law' => $this->input->post('law'), 'status' => $this->input->post('status'),'sync' =>  date('Y-m-d H:i:s'));
-        $this->Md->update_dynamic($id, 'fileID', 'file', $file);
+        $file = array('name' => $this->input->post('name'), 'type' => $this->input->post('type'), 'details' => $this->input->post('details'), 'subject' => $this->input->post('subject'),'no' => $this->input->post('no'), 'type' => $this->input->post('type'), 'citation' => $this->input->post('citation'), 'law' => $this->input->post('law'), 'status' => $this->input->post('status'), 'created' => date('d-m-Y H:i:s'));
+        $this->Md->update_dynamic($id, 'id', 'file', $file);
         echo 'FILE INFORMATION UPDATED';
     }
 
@@ -323,42 +325,20 @@ class File extends CI_Controller {
     public function create() {
 
         $this->load->helper(array('form', 'url'));
-        $types = $this->input->post('type');
 
-        $app = "O";
-        switch ($types) {
-            case Litigation:
-                $app = "L";
-                break;
-            case General:
-                $app = "G";
-                break;
-        }
-        $contact = $this->Md->query_cell("SELECT * FROM users where name= '" . $this->input->post('client') . "' AND orgID='" . $this->session->userdata('orgID') . "'", 'contact');
+        if ($this->input->post('name') != "" || $this->input->post('no') != "") {
 
-        $no = $this->session->userdata('code') . "/" . $app . "/" . date('y') . "/" . date('m') . (int) date('d') . (int) date('H') . (int) date('i') . (int) date('ss');
-        $orgID = $this->session->userdata('orgID');
-        if ($this->input->post('client') != "" || $this->input->post('name') != "") {
-            $files = array('fileID' => $this->GUID(), 'client' => $this->input->post('client'), 'contact' => $contact, 'lawyer' => $this->input->post('lawyer'), 'orgID' => $this->session->userdata('orgID'), 'details' => $this->input->post('details'), 'name' => $this->input->post('name'), 'contact_person' => $this->input->post('contact_person'), 'contact_number' => $this->input->post('contact_number'), 'opened' => date('Y-m-d', strtotime($this->input->post('opened'))), 'type' => $this->input->post('type'), 'created' => date('Y-m-d'), 'status' => 'Active', 'no' => $this->input->post('no'), 'subject' => $this->input->post('subject'), 'case' => $this->input->post('case'), 'note' => $this->input->post('note'), 'progress' => $this->input->post('progress'), 'citation' => $this->input->post('citation'), 'law' => $this->input->post('law'), 'action' => 'none', 'due' =>  date('Y-m-d', strtotime($this->input->post('due'))),'sync' =>  date('Y-m-d H:i:s'));
-            $this->Md->save($files, 'file');
+            $files = array('id' => $this->GUID(), 'name' => $this->input->post('name'), 'client' => $this->input->post('clientID'), 'userID' => $this->input->post('userID'),'contact' => $this->input->post('contact'),'no' => $this->input->post('no'),'type' => $this->input->post('type'),'subject' => $this->input->post('subject'),'citation' => $this->input->post('citation'),'law' => $this->input->post('law'),'status' => $this->input->post('status'),'note' => $this->input->post('note'),'opened' => date('d-m-Y', strtotime($this->input->post('opened'))),'due' => date('d-m-Y', strtotime($this->input->post('due'))), 'created' => date('d-m-Y H:i:s'), 'orgID' => $this->session->userdata('orgID'), 'progress' => $this->input->post('progress'));
+            $this->Md->save($files, 'files');
+            $this->session->set_flashdata('msg', '<div class="alert alert-success"> <strong>New File Saved</strong></div>');
 
-            $this->session->set_flashdata('msg', '<div class="alert alert-success">
-                                   <strong>New File Saved</strong>									
-						</div>');
-             $emails = $this->Md->query_cell("SELECT * FROM users where name= '" .$this->input->post('lawyer') . "'", 'email');
-             $phones = $this->Md->query_cell("SELECT * FROM users where name= '" .$this->input->post('lawyer') . "'", 'contact');
-             $names = $this->Md->query_cell("SELECT * FROM users where name= '" .$this->input->post('lawyer'). "'", 'name');           
-             $message='You have been assigned to the file '.$this->input->post('name').' ';
-             $mail = array('messageID' => $this->GUID(), 'body' => $message, 'subject' => 'REMINDER', 'date' => date('Y-m-d'), 'to' => $names, 'created' => date('Y-m-d'), 'from' => $this->session->userdata('orgemail'), 'sent' => 'false', 'type' => 'email', 'orgID' => $this->session->userdata('orgID'), 'action' => 'none', 'taskID' => $taskID, 'contact' => $phones, 'email' => $emails);
-             $this->Md->save($mail, 'message'); 
-            
-            
+            redirect('/file', 'refresh');
         } else {
 
             $this->session->set_flashdata('msg', '<div class="alert alert-erro"><strong>Invalid fields</strong></div>');
         }
 
-        redirect('/file/view', 'refresh');
+        redirect('/file', 'refresh');
     }
 
     public function advanced() {
@@ -391,7 +371,7 @@ class File extends CI_Controller {
                 $field_name = $split_data[0];
                 if (!empty($user_id) && !empty($field_name) && !empty($val)) {
                     //update the values
-                    $task = array($field_name => $val,'sync' =>  date('Y-m-d H:i:s'));
+                    $task = array($field_name => $val, 'sync' => date('Y-m-d H:i:s'));
                     // $this->Md->update($user_id, $task, 'tasks');
                     $this->Md->update_dynamic($user_id, 'fileID', 'file', $task);
                     echo "Updated";

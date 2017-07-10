@@ -16,30 +16,7 @@
                 <?php $months = array(1 => "January", 2 => "February", 3 => "March", 4 => "April", 5 => "May", 6 => "June", 7 => "July", 8 => "August", 9 => "September", 10 => "October", 11 => "November", 12 => "December"); ?>
                 <div class="row">
 
-                    <div class="col-md-3" style="margin-top:3px;">
-                        <label>Store</label>
-                        <div class=" form-group">
-                            <input class="easyui-combobox form-control" name="storeID" id="storeID"  data-options="
-                                   url:'<?php echo base_url() ?>index.php/store/lists',
-                                   method:'get',
-                                   valueField:'id',
-                                   textField:'name',
-                                   multiple:false,
-                                   panelHeight:'auto'
-                                   ">
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class=" form-group">
-                            <label>Type</label>
-                            <select class="form-control"  name="type" id="type" >
-                                <option value=""></option>
-                                <option value="Sale">Sale</option>
-                                <option value="Purchase">Purchase</option>
-                            </select>
-                        </div>
-                    </div>
-
+                 
                     <div class="col-md-2" style="margin-top:3px;">
 
                         <div class=" form-group">
@@ -50,14 +27,15 @@
                     <div class="col-md-2" style="margin-top:3px;"><div class=" form-group">
                             <label >To:</label> 
                             <input class="easyui-datebox form-control" name="to" id="to" value="<?php echo date('d-m-Y'); ?>"/>
-                        </div></div>
-                    <div class="col-md-5" style="margin-top:30px;">                     
-
-                        <button type="button" class="btn btn-info btn-small" id="generate" >generate</button>
-                        <input type="button" name="exportExcel" id="exportExcel" onclick="ExportToExcel('dynamic-table')" value="Export to Excel">
-                        <input type="button" class="btn btn-default  printdiv-btn btn-primary icon-ok" value="print" />
+                        </div>
+                         <button type="button" class="btn btn-info btn-small" id="generate" >generate</button>
+                        <input type="button" class="btn btn-info btn-small" name="exportExcel" id="exportExcel" onclick="ExportToExcel('dynamic-table')" value="Export to Excel">
+                        <input type="button" class="btn  printdiv-btn btn-primary icon-ok" value="print" />
 
                     </div>
+                   
+                       
+                   
                 </div>
 
 

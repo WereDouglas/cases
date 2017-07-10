@@ -17,14 +17,14 @@ class Time extends CI_Controller {
 
     public function index() {
 
-        $query = $this->Md->query("SELECT * FROM events ");
+        $query = $this->Md->query("SELECT * FROM events WHERE  orgID='" . $this->session->userdata('orgID') . "'");
         if ($query) {
             $data['evs'] = $query;
         } else {
             $data['evs'] = array();
         }
 
-        $query = $this->Md->query("SELECT * FROM users ");
+        $query = $this->Md->query("SELECT * FROM users WHERE  orgID='" . $this->session->userdata('orgID') . "'");
         if ($query) {
             $data['users'] = $query;
         } else {
@@ -36,7 +36,7 @@ class Time extends CI_Controller {
 
     public function calendar() {
 
-        $query = $this->Md->query("SELECT * FROM events");
+        $query = $this->Md->query("SELECT * FROM events WHERE  orgID='" . $this->session->userdata('orgID') . "'");
         if ($query) {
             $data['evs'] = $query;
         } else {
@@ -50,9 +50,13 @@ class Time extends CI_Controller {
 
 
         $start = date('Y-m-dTH:i:s ', strtotime($this->input->post('starts')));
-       $dated = date('Y-m-d', strtotime($this->input->post('starts')));
+        $dated = date('Y-m-d', strtotime($this->input->post('starts')));
         $ends = date('Y-m-dTH:i:s ', strtotime($this->input->post('ends')));
-       // return;
+       
+        
+        $ends = strtr($ends, array('EAT' => 'T' /* , ... */));
+        $start = strtr($start, array('EAT' => 'T' /* , ... */));
+
         $eventID = $this->GUID();
 
         $email = $this->Md->query_cell("SELECT * FROM users WHERE id= '" . $this->input->post('userID') . "'", 'email');
@@ -60,7 +64,7 @@ class Time extends CI_Controller {
         $names = $this->Md->query_cell("SELECT * FROM users where id= '" . $this->input->post('userID') . "'", 'surname');
         $file = $this->Md->query_cell("SELECT * FROM files where id= '" . $this->input->post('fileID') . "'", 'name');
 
-        $syc = array('id' => $eventID, 'details' => $this->input->post('service'), 'starts' => $start, 'ends' => $ends, 'users' => $names, 'file' => $file, 'created' => date('d-m-Y H:i:s'), 'fileID' => $this->session->userdata('fileID'),'status'=> 'due', 'userID' => $this->input->post('userID'), 'dated' => $dated, 'notif' => 'true', 'priority' => $this->input->post('priority'), 'sync' => date('Y-m-d H:i:s'),'cal'=> 'false','contact'=> $contact,'email'=> $email, 'department'=>'', 'orgID' => $this->session->userdata('orgID'), 'cost' => $this->input->post('cost'), 'no' => $this->input->post('no'));
+        $syc = array('id' => $eventID, 'details' => $this->input->post('service'), 'starts' => $start, 'ends' => $ends, 'users' => $names, 'file' => $file, 'created' => date('d-m-Y H:i:s'), 'fileID' => $this->session->userdata('fileID'), 'status' => 'due', 'userID' => $this->input->post('userID'), 'dated' => $dated, 'notif' => 'true', 'priority' => $this->input->post('priority'), 'sync' => date('Y-m-d H:i:s'), 'cal' => 'false', 'contact' => $contact, 'email' => $email, 'department' => '', 'orgID' => $this->session->userdata('orgID'), 'cost' => $this->input->post('cost'), 'no' => $this->input->post('no'));
         $this->Md->save($syc, 'events');
 
         $status .= '<div class="alert alert-success">  <strong>Information submitted</strong></div>';

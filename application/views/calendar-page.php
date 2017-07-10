@@ -55,11 +55,11 @@
     }
 
     .dhx_cal_event.event_english div, .dhx_cal_event_line.event_english{
-        background-color: #c0dcf3 !important;
-        border-color: #c0dcf3 !important;
+        background-color: #0078d7 !important;
+        border-color: #0078d7 !important;
     }
     .dhx_cal_event_clear.event_english{
-        color:#c0dcf3 !important;
+        color:#0078d7 !important;
     }
 </style>
 

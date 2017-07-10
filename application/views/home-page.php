@@ -273,7 +273,7 @@
                                 <li><a href="<?php echo base_url() . "index.php/branch"; ?>" target="frame">Branches/Offices</a></li>
                                 <li><a href="<?php echo base_url() . "index.php/organisation"; ?>" target="frame">Company/Organisation</a></li>
                                 <li><a href="<?php echo base_url() . "index.php/organisation/profile"; ?>" target="frame"><i class="fa fa-cogs" style="color:#60ace0"></i> Organisational profile<span class="label label-success pull-right">manage</span></a></li>
-                                <li><a href="<?php echo base_url() . "file/Case%20Professional.pro"; ?>"><i class="fa fa-laptop" style="color:#60ace0"></i> Desktop application</a></li>
+                                <li><a href="<?php echo base_url() . "file/Case%20professional.msi"; ?>"><i class="fa fa-laptop" style="color:#60ace0"></i> Desktop application</a></li>
 
                             </ul>
                         </li>

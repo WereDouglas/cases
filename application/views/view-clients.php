@@ -1,16 +1,13 @@
 <?php require_once(APPPATH . 'views/inner-css.php'); ?>
 
 <div class="col-md-12">
-
-
     <div class="alert alert-info" id="status"></div>
-
     <div class="row-fluid">
         <table id="sample-table-2" class="table table-striped table-bordered table-hover">
             <thead>
                 <tr>
 
-                    <th>#<a href="#modal-form" role="button" class="green" data-toggle="modal"><i class="icon-pencil bigger-130"></i>Add </a></th>
+                    <th><a href="#modal-form" role="button" class="green" data-toggle="modal"><i class="icon-pencil bigger-130"></i>Add </a></th>
                     <th>Name</th>
                     <th>Email</th>
                     <th>Contact</th>                                   

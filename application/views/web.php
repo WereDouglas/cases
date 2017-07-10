@@ -221,7 +221,7 @@ if (is_array($files) && count($files)) {
                                     <li>
                                         <div class="row">
                                             <div class="col-md-12">
-                                               <?php echo $this->session->flashdata('msg'); ?>                                              
+                                                <?php echo $this->session->flashdata('msg'); ?>                                              
                                                 <form id="station-form" name="login-form" enctype="multipart/form-data"  action='<?= base_url(); ?>index.php/home/login'  method="post">
                                                     <div class="form-group">
                                                         <label class="sr-only" for="exampleInputEmail2">Contact</label>
@@ -381,7 +381,9 @@ if (is_array($files) && count($files)) {
             foreach ($orgs as $loop) {
                 ?> 
                 <div class="col-md-2 col-sm-4 col-xs-12">
-                    <img class="client_img"  src="<?php base_url(); ?>uploads/<?php echo $loop->image ?>" alt="" />
+                    <img class="client_img" src="data:image/jpeg;base64,<?php echo $loop->image; ?>" alt="<?php echo $loop->name; ?>" />';
+
+
                 </div>
                 <?php
             }
@@ -399,7 +401,7 @@ if (is_array($files) && count($files)) {
                     <div class=" col-md-12 label label-success">Analytics</div>
                     <div class="col-md-12 label label-info">Time sheets</div>
                     <div class="col-md-12 label label-warning">Mobile App</div>
-                    <div class="col-md-12 label label-danger">Windows Desktop application</div>
+                    <div class="col-md-12 label label-danger"><a href="<?php echo base_url() . "file/Case%20professional.msi"; ?>"><i class="fa fa-laptop" style="color:#ffff"></i> Windows Desktop application</a></div>
                 </div>
                 <div  class="col-md-3 col-sm-6 col-xs-12">
                     <h3>Latest Templates</h3>
